@@ -46,7 +46,10 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  /* scroll-behavior: smooth; */
+}
+
 
 @-ms-viewport {
   width: device-width; }
@@ -8455,12 +8458,13 @@ textarea.form-control {
     .blog-entry .text .heading {
       color: #ffffff;
       font-size: 18px;
-      margin-top: 16px;
-      margin-bottom: 16px; }
+      margin-top: 15px;
+      margin-bottom: 15px; }
       .blog-entry .text .heading a {
         font-weight: 500;
         font-size: 30px;
-        color: #ffffff; }
+        color: #ffffff; 
+        margin: 20px !important}
         .blog-entry .text .heading a:hover, .blog-entry .text .heading a:focus, .blog-entry .text .heading a:active {
           color: #ff9100; }
     .blog-entry .text .meta-chat {
