@@ -7520,7 +7520,7 @@ h1, h2, h3, h5,
     background: -webkit-linear-gradient(45deg, #000000 0%, #1f1f1f 100%);
     background: -o-linear-gradient(45deg, #000000 0%, #1f1f1f 100%);
     background: -ms-linear-gradient(45deg, #000000 0%, #1f1f1f 100%);
-    background: linear-gradient(45deg, #000000 0%, #1f1f1f 100%);
+    background: linear-gradient(45deg, #000000 0%, #181818 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#1f1f1f', GradientType=1 ); }
 
 #particles-js {
@@ -7904,7 +7904,7 @@ h1, h2, h3, h5,
     background: -webkit-linear-gradient(45deg, #b86532 0%, #bb6835 100%);
     background: -o-linear-gradient(45deg, #b86532 0%, #bb6835 100%);
     background: -ms-linear-gradient(45deg, #b86532 0%, #bb6835 100%);
-    background: linear-gradient(45deg, #b86532 0%, #bb6835 100%);
+    background: linear-gradient(45deg, #aa531c 0%, #c76c34 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b86532', endColorstr='#bb6835', GradientType=1 ); }
   .ftco-section-parallax .heading-section-white h2 {
     /*font-weight: 400 !important;*/ }
@@ -8459,7 +8459,7 @@ textarea.form-control {
       margin-bottom: 16px; }
       .blog-entry .text .heading a {
         font-weight: 500;
-        font-size: 25px;
+        font-size: 30px;
         color: #ffffff; }
         .blog-entry .text .heading a:hover, .blog-entry .text .heading a:focus, .blog-entry .text .heading a:active {
           color: #ff9100; }
@@ -8864,7 +8864,7 @@ textarea.form-control {
 
 .tag-purple{
   color: #ffffff !important;
-  background: #6200ff !important;
+  background: #7727f8 !important;
 }
 
 .tag-grey{
@@ -9137,4 +9137,8 @@ a.anchor {
   position: relative;
   top: -100px;
   visibility: hidden;
+}
+
+.delete-me{
+  color: #c94d00;
 }
