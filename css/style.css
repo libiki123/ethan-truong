@@ -7671,7 +7671,8 @@ h1, h2, h3,
   .btn.btn-primary {
     background: #f08949;
     border: 2px solid #f08949;
-    color: #ffffff; }
+    color: #ffffff; 
+    margin-bottom: 5px;}
     .btn.btn-primary:hover {
       border: 2px solid #f08949;
       background: transparent;
