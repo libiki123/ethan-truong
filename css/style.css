@@ -7330,14 +7330,14 @@ a {                                                           /* a link-search*/
     text-decoration: none;
     color: #ffffff; }
 
-h1, h2, h3, h5,
-.h1, .h2, .h3, .h5 {
+h1, h2, h3,
+.h1, .h2, .h3  {
   line-height: 1.5;
   color: #FFB236;
   font-weight: 400; }
 
- h4,
- .h4 {
+ h4, h5
+ .h4, .h5 {
   line-height: 1.5;
   color: #ffffff;
   font-weight: 400; }
@@ -8457,13 +8457,11 @@ textarea.form-control {
     .blog-entry .text .heading {
       color: #ffffff;
       font-size: 18px;
-      margin-top: 15px;
-      margin-bottom: 15px; }
+      margin:20px }
       .blog-entry .text .heading a {
         font-weight: 500;
         font-size: 30px;
-        color: #ffffff; 
-        margin: 20px !important}
+        color: #ffffff;}
         .blog-entry .text .heading a:hover, .blog-entry .text .heading a:focus, .blog-entry .text .heading a:active {
           color: #ff9100; }
     .blog-entry .text .meta-chat {
@@ -9126,6 +9124,7 @@ textarea.form-control {
 #video {
   width: 40vw;
   height: 435px;
+  border-radius: 5px;
 }
 
 @media only screen and (max-width: 600px) {
