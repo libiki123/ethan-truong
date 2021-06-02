@@ -8447,7 +8447,7 @@ textarea.form-control {
   border-radius: 10px;}
   @media (min-width: 768px) {
     .blog-entry {
-      margin-bottom: 30px; } }
+      margin-bottom: 60px; } }
   @media (max-width: 767.98px) {
     .blog-entry {
       margin-bottom: 30px; } }
@@ -8460,8 +8460,8 @@ textarea.form-control {
       font-size: 18px;
       margin:20px }
       .blog-entry .text .heading a {
-        font-weight: 500;
-        font-size: 30px;
+        font-weight: 550;
+        font-size: 28px;
         color: #ffffff;}
         .blog-entry .text .heading a:hover, .blog-entry .text .heading a:focus, .blog-entry .text .heading a:active {
           color: #ff9100; }
@@ -8861,7 +8861,12 @@ textarea.form-control {
 
 .tag-red{
   color: #ffffff !important;
-  background: #ff0000 !important;
+  background: #eb2e2e !important;
+}
+
+.tag-blue{
+  color: #ffffff !important;
+  background: #3aa6ff !important;
 }
 
 .tag-purple{
@@ -8881,7 +8886,7 @@ textarea.form-control {
 
 .tag-orange{
   color: #ffffff !important;
-  background: #ff9a16 !important;
+  background: #ffac3f !important;
 }
 
 .tag-green{
@@ -8896,7 +8901,7 @@ textarea.form-control {
 
 .tag-mobile{
   color: #ffffff !important;
-  background: #78bdad !important;
+  background: #07d4a4 !important;
 }
 
 
