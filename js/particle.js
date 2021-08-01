@@ -9,7 +9,7 @@ particlesJS("particles-js", {
       }
     },
     "color": {
-      "value": "#c94d00"
+      "value": "#FF7F00"              // Animate dots color
     },
     "shape": {
       "type": "circle",
@@ -22,7 +22,7 @@ particlesJS("particles-js", {
       }
     },
     "opacity": {
-      "value": 0.6,
+      "value": 0.8,                   // dots opacity
       "random": false,
       "anim": {
         "enable": false,
@@ -44,8 +44,8 @@ particlesJS("particles-js", {
     "line_linked": {
       "enable": true,
       "distance": 150,
-      "color": "#f8a571",
-      "opacity": 0.45,
+      "color": "#FF9700",       // Animate line connecting dots color
+      "opacity": 0.4,
       "width": 1
     },
     "move": {

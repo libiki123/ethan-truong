@@ -5016,6 +5016,9 @@ button.bg-light:focus {
 .bg-dark {
   background-color: #181818 !important; }
 
+.bg-dark-light {
+  background-color: #333333 !important; }
+
 a.bg-dark:hover, a.bg-dark:focus,
 button.bg-dark:hover,
 button.bg-dark:focus {
@@ -8438,6 +8441,7 @@ textarea.form-control {
 
 .blog-entry {                                     /* project background-search*/
   background: #222222;
+  min-height: 550px;
   -webkit-box-shadow: 10px 10px 18px -12px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 10px 10px 18px -12px rgba(0, 0, 0, 0.75);
   -ms-box-shadow: 10px 10px 18px -12px rgba(0, 0, 0, 0.75);
@@ -8864,14 +8868,39 @@ textarea.form-control {
   background: #eb2e2e !important;
 }
 
+.tag-red-light{
+  color: #ffffff !important;
+  background: #f75958 !important;
+}
+
 .tag-blue-light{
   color: #ffffff !important;
   background: #36b5ff !important;
 }
 
+.tag-blue-dark{
+  color: #ffffff !important;
+  background: #2d8af3 !important;
+}
+
 .tag-purple{
   color: #ffffff !important;
   background: #7727f8 !important;
+}
+
+.tag-purple-dark{
+  color: #ffffff !important;
+  background: #4900be !important;
+}
+
+.tag-pink{
+  color: #ffffff !important;
+  background: #ff5bf1 !important;
+}
+
+.tag-pink-dark{
+  color: #ffffff !important;
+  background: #fc4371 !important;
 }
 
 .tag-grey{
@@ -8881,7 +8910,7 @@ textarea.form-control {
 
 .tag-black{
   color: #ffffff !important;
-  background: #000000 !important;
+  background: #111111 !important;
 }
 
 .tag-orange{
@@ -8889,14 +8918,24 @@ textarea.form-control {
   background: #ffac3f !important;
 }
 
+.tag-orange-dark{
+  color: #ffffff !important;
+  background: #f88d00 !important;
+}
+
 .tag-green{
   color: #ffffff !important;
   background: #33be62 !important;
 }
 
-.tag-jam{
+.tag-green-light{
   color: #ffffff !important;
-  background: #f75958 !important;
+  background: #00caa9 !important;
+}
+
+.tag-green-dark{
+  color: #ffffff !important;
+  background: #007e6d !important;
 }
 
 .tag-mobile{
@@ -9147,6 +9186,26 @@ a.anchor {
   visibility: hidden;
 }
 
-.delete-me{
-  color: #c94d00;
+.header{
+  margin-top: 10px;
+}
+
+.header img {
+  float: left;
+  margin-top: 5px;
+  width: 35px;
+  height: 35px;
+  color: #fff;
+}
+
+.header h2 {
+  position: relative;
+  left: 10px;
+  color: #fff;
+  font-weight: bold;
+}
+
+hr.rounded {
+  border-top: 8px solid #fd9431;
+  border-radius: 4px;
 }
