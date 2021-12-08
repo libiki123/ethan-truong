@@ -107,7 +107,8 @@ ol,
 ul,
 dl {
   margin-top: 0;
-  margin-bottom: 1rem; }
+  margin-bottom: 1rem; 
+  padding-inline-start: 30px;}
 
 ol ol,
 ul ul,
@@ -6200,13 +6201,17 @@ button.bg-dark:focus {
 .mb-4-2{
   margin-top: 0.5em;
   }
-  .mb-4-3{
-    margin-top: 0.7em;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    background: #202020cc;
-    border-radius: 10px;
-    }
+.mb-4-3{
+  margin-top: 0.7em;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #202020cc;
+  border-radius: 10px;
+  }
+.mb-4-4{
+  margin-top: 2em;
+  margin-bottom: 0.5rem !important;
+  }
 
 .ml-4,
 .mx-4 {
@@ -6232,7 +6237,7 @@ button.bg-dark:focus {
   margin-left: 3rem !important; }
 
 .mb-6 {
-  margin-bottom: 4em !important; }
+  margin-bottom: 3em !important; }
 
 
 
@@ -6333,6 +6338,9 @@ button.bg-dark:focus {
 
 .p-5 {
   padding: 3rem !important; }
+
+.p-6 {
+  padding: 3.2rem !important; }
 
 .pt-5,
 .py-5 {
@@ -7333,6 +7341,15 @@ a {                                                           /* a link-search*/
     text-decoration: none;
     color: #ffffff; }
 
+.a1 {                                                           /* a link-search*/
+  -webkit-transition: .3s all ease;
+  -o-transition: .3s all ease;
+  transition: .3s all ease;
+  color: #FFB236; }
+  .a1:hover {
+    text-decoration: none;
+    color: #cf7741; }
+
 h1, h2, h3,
 .h1, .h2, .h3  {
   line-height: 1.5;
@@ -7688,6 +7705,12 @@ h1, h2, h3,
         border: 2px solid transparent;
         background: transparent;
         color: #fff; }
+  .btn.disabled {
+    border: 2px solid #f08949;
+    background: transparent;
+    color: #f08949; 
+    margin-bottom: 5px;}
+
   .btn.btn-outline-white {
     border-color: rgba(255, 255, 255, 0.8);
     background: none;
@@ -8441,7 +8464,7 @@ textarea.form-control {
 
 .blog-entry {                                     /* project background-search*/
   background: #222222;
-  min-height: 550px;
+  min-height: 430px;
   -webkit-box-shadow: 10px 10px 18px -12px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 10px 10px 18px -12px rgba(0, 0, 0, 0.75);
   -ms-box-shadow: 10px 10px 18px -12px rgba(0, 0, 0, 0.75);
@@ -8484,7 +8507,6 @@ textarea.form-control {
       font-size: 15px; }
       .blog-entry .meta > div a:hover {
         color: white; }
-      
     .blog-entry .block-20:hover {
       transform: scale(1.1); }
 
@@ -8941,6 +8963,11 @@ textarea.form-control {
 .tag-mobile{
   color: #ffffff !important;
   background: #07d4a4 !important;
+}
+
+.tag-green-yellow-dark{
+  color: #ffffff !important;
+  background: #9fe400 !important;
 }
 
 
