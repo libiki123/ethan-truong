@@ -8462,6 +8462,18 @@ textarea.form-control {
   position: relative;
   display: block; }
 
+.block-21 {
+  overflow: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 300px;
+  position: relative;
+  display: block; }
+  .block-21:hover{
+    transform: scale(1.03);
+  }
+
 .blog-entry {                                     /* project background-search*/
   background: #222222;
   min-height: 580px;
