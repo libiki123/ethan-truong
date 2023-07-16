@@ -8453,6 +8453,15 @@ textarea.form-control {
     text-transform: uppercase;
     letter-spacing: .1em; }
 
+    .block-10-auto {
+      overflow: hidden;
+      background-size:contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      height: 100px;
+      position:relative;
+      display: block; }
+
 .block-20 {
   overflow: hidden;
   background-size: cover;
@@ -8461,6 +8470,15 @@ textarea.form-control {
   height: 300px;
   position: relative;
   display: block; }
+
+  .block-30 {
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 500px;
+    position: relative;
+    display: block; }
 
 .block-21 {
   overflow: hidden;
