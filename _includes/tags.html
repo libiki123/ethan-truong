@@ -1,0 +1,3 @@
+<ul class="tags">
+  {% for t in include.tags %}<li class="tag" data-tag="{{ t | slugify }}">{{ t }}</li>{% endfor %}
+</ul>

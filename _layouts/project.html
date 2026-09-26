@@ -1,0 +1,40 @@
+---
+layout: default
+---
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">{{ page.engine | capitalize }} project</p>
+    <h1>{{ page.title }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container--narrow">
+    <video class="project__video" controls autoplay muted loop playsinline src="{{ '/assets/media/' | append: page.media | append: '.mp4' | relative_url }}"></video>
+
+    {% include tags.html tags=page.tags %}
+
+    <dl class="stats">
+      <div><dt>Status</dt><dd>{{ page.status }}</dd></div>
+      <div><dt>Type</dt><dd>{{ page.type }}</dd></div>
+      <div><dt>{{ page.duration_label | default: 'Duration' }}</dt><dd>{{ page.duration }}</dd></div>
+    </dl>
+
+    <div class="prose">{{ content }}</div>
+
+    <div class="project__links">
+      {% for l in page.links %}
+      <a class="btn" href="{{ l.url }}" target="_blank" rel="noopener"><i class="{{ l.icon }}"></i> {{ l.label }}</a>
+      {% endfor %}
+      {% if page.private %}
+      <span class="muted"><i class="fas fa-lock"></i> Source code is private</span>
+      {% endif %}
+      {% if page.stores %}
+      <a href="{{ page.stores.google_play }}" target="_blank" rel="noopener"><img class="store-badge" src="{{ '/assets/images/badge-google-play.png' | relative_url }}" alt="Get it on Google Play" /></a>
+      <a href="{{ page.stores.app_store }}" target="_blank" rel="noopener"><img class="store-badge" src="{{ '/assets/images/badge-app-store.png' | relative_url }}" alt="Download on the App Store" /></a>
+      {% endif %}
+    </div>
+
+    <p><a href="{{ '/#projects' | relative_url }}"><i class="fas fa-arrow-left"></i> All projects</a></p>
+  </div>
+</section>

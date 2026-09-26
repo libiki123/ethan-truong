@@ -1,0 +1,13 @@
+{% assign p = include.project %}
+<article class="card reveal">
+  <a class="card__media" href="{{ p.url | relative_url }}" aria-label="{{ p.title }}">
+    <video data-lazy muted loop playsinline preload="none" src="{{ '/assets/media/' | append: p.media | append: '-preview.mp4' | relative_url }}"></video>
+  </a>
+  <div class="card__body">
+    <h3 class="card__title"><a href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
+    {% include tags.html tags=p.tags %}
+    <ul class="card__highlights">
+      {% for h in p.highlights %}<li>{{ h }}</li>{% endfor %}
+    </ul>
+  </div>
+</article>

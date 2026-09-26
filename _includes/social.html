@@ -1,0 +1,5 @@
+<ul class="social">
+  {% for s in site.social %}
+  <li><a href="{{ s.url }}" aria-label="{{ s.name }}"{% unless s.url contains 'mailto:' %} target="_blank" rel="noopener"{% endunless %}><i class="{{ s.icon }}"></i></a></li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,11 @@
+<header class="nav" id="nav">
+  <div class="container nav__inner">
+    <a class="nav__brand" href="{{ '/' | relative_url }}"><i class="fas fa-gamepad"></i> <span>{{ site.title }}</span></a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
+      <a href="{{ '/#projects' | relative_url }}"{% if page.collection == 'projects' %} aria-current="page"{% endif %}>Projects</a>
+      <a href="{{ '/resume.html' | relative_url }}"{% if page.url == '/resume.html' %} aria-current="page"{% endif %}>Resume</a>
+      <a class="btn btn--small" href="{{ '/#contact' | relative_url }}">Contact</a>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,41 @@
+- company: Mavis X
+  url: https://skymavis.com/
+  logo: skymavis-logo.png
+  role: Web3 Game Developer — Unity 3D
+  period: Sep 2023 – Dec 2024
+  type: Contract
+  highlights:
+    - Prototyped and developed Web3 gameplay features using Unity and C# for decentralized gaming experiences.
+    - Integrated third-party tools and SDKs to rapidly prototype and experiment with decentralized game mechanics.
+    - Designed UI/UX elements tailored for blockchain-based game ecosystems.
+    - Developed a Unity Editor tool for automated UI layout imports, significantly improving development efficiency.
+    - Collaborated with blockchain engineers to ensure seamless integration of smart contracts and game features.
+    - Focused on iterative development and rapid prototyping to refine Web3 game concepts.
+
+- company: Carem Studio
+  url: https://inspirelab.io/vn
+  logo: inspire-logo.png
+  role: Game Developer — Unity 3D
+  period: April 2022 – July 2023
+  type: Full-time
+  highlights:
+    - Developed engaging gameplay features using Unity and C#, including interactive elements, physics systems, AI behavior, and player controls.
+    - Designed and programmed intuitive UI elements, menus, and user input systems to deliver an immersive user experience.
+    - Managed the integration of various game assets like 3D models, textures, animations, and audio.
+    - Collaborated effectively with cross-functional teams (artists, designers) throughout the game development lifecycle, from concept to execution.
+    - Utilized Git for version control and integrated third-party SDKs for analytics, ads, and in-app purchases.
+
+- company: Marion Surgical
+  url: https://www.marionsurgical.com/
+  logo: marion-logo.png
+  role: Game Developer — Unreal VR
+  period: June 2021 – Dec 2021
+  type: Full-time
+  highlights:
+    - Collaborated with clients to transform their concepts into playable VR demos, ensuring their vision was realized.
+    - Developed clean, maintainable, and optimized code for immersive VR experiences.
+    - Created visually appealing VFX and shaders to enhance the immersive quality of VR prototypes.
+    - Independently solved technical challenges using documentation and community resources.
+    - Worked effectively within diverse teams to develop various aspects and features of VR games.
+    - Utilized Blender for creating animations and resolving model issues to improve the overall VR experience.
+    - Implemented advanced Oculus features like Passthrough and Hand Tracking to enhance VR project functionalities.

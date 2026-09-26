@@ -1,0 +1,30 @@
+title: Ethan Truong
+description: Game developer portfolio — Unity and Unreal projects by Ethan Truong.
+url: https://libiki123.github.io
+baseurl: /ethan-truong
+lang: en
+
+email: bangatruong@gmail.com
+social:
+  - { name: LinkedIn, icon: fab fa-linkedin, url: "https://www.linkedin.com/in/ethan-truong-abc123/" }
+  - { name: GitHub, icon: fab fa-github, url: "https://github.com/libiki123" }
+  - { name: Email, icon: fas fa-envelope, url: "mailto:bangatruong@gmail.com" }
+
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+defaults:
+  - scope: { type: projects }
+    values: { layout: project }
+
+plugins:
+  - jekyll-redirect-from
+
+exclude:
+  - AGENTS.md
+  - CLAUDE.md
+  - README.md
+  - Gemfile
+  - Gemfile.lock
