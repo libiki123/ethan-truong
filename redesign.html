@@ -1,0 +1,219 @@
+---
+layout: null
+permalink: /redesign/
+---
+{% comment %} ponytail: temp sandbox for the fox redesign; self-contained so the live site is untouched. Delete once index.html is migrated. {% endcomment %}
+{% assign art = '/assets/images/Redesign/' | relative_url %}
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Redesign sandbox | {{ site.title }}</title>
+  <link rel="icon" type="image/png" href="{{ '/assets/images/favicon.png' | relative_url }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --paper: #fcedd5;      /* sampled from the torn-paper band in Home_L3_2 */
+      --paper-2: #f6e3c8;
+      --ink: #3b2414;        /* dark-brown outline colour */
+      --ink-soft: #7a5a42;
+      --accent: #e8741c;     /* fox orange */
+      --line: #d9bf9c;
+      --radius: 14px;
+      --max: 1140px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.7 "Work Sans", system-ui, sans-serif; }
+    img, video { display: block; max-width: 100%; }
+    a { color: var(--accent); text-decoration: none; }
+    h1, h2, h3 { font-family: "Fraunces", Georgia, serif; line-height: 1.15; margin: 0 0 .4em; }
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+    /* Nav: small text over the sky, like the mockup */
+    .nav { position: fixed; top: 0; right: 0; left: 0; z-index: 10; display: flex; justify-content: flex-end; gap: 28px; padding: 20px 32px; transition: background .3s; }
+    .nav.is-scrolled { background: var(--paper); box-shadow: 0 1px 0 var(--line); }
+    .nav a { font-family: "Fraunces", serif; font-weight: 600; letter-spacing: .04em; color: var(--ink); text-transform: uppercase; font-size: .95rem; }
+    .nav a:hover { color: var(--accent); }
+
+    /* Hero: plate + fox sprite positioned in plate-relative % so they scale together */
+    .hero { position: relative; overflow: hidden; clip-path: inset(0); } /* clip-path also clips the fixed scene below */
+    /* Back layers + fox live in a fixed scene moved only by the eased scroll value, so native wheel steps never jolt them. L3 + text scroll natively. */
+    .hero__scene { position: fixed; top: 0; left: 0; right: 0; aspect-ratio: 1672 / 941; }
+    .hero__stage { position: relative; aspect-ratio: 1672 / 941; }
+    .hero__layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left center; will-change: transform; }
+    /* Parallax: layers lag the scroll by (1 - rate). L1 sky/valley 0.25, L2 hill + fox 0.55, L3 rocks/paper 1.0 (static). */
+    .hero__l1 { transform: translateY(calc(var(--p, 0px) * -.25)); }
+    .hero__l2 { transform: translateY(calc(var(--p, 0px) * -.55)); }
+    .hero__fox {
+      position: absolute; left: 14.57%; top: 36.25%; width: 15.91%; aspect-ratio: 277 / 311;
+      filter: drop-shadow(0 10px 6px rgba(59, 36, 20, .28));
+      transform: translateY(calc(var(--p, 0px) * -.55));
+      will-change: transform;
+    }
+    /* fox-sprite.webp: all 12 frames of Home_Fox_Sheet_5 (sleep, wake, sit) cut out whole into 277x311 cells, each anchored on its front toe at the ground so the paws stay planted. JS sets --f. */
+    .hero__sprite { display: block; height: 100%; background: url("{{ art }}fox-sprite.webp") 0 0 / 1200% 100% no-repeat; background-position-x: calc(var(--f, 0) * 100% / 11); animation: breathe 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+    @keyframes breathe { 50% { transform: scale(1.015, .985); } }
+    /* Headline sits below the plate: the torn edge starts at 85-95% of the stage, so anything inside it covers the bushes. */
+    .hero__intro { position: relative; padding: 8px 16px 0; text-align: center; background: var(--paper); }
+    .hero__intro h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; }
+    .hero__intro p { margin: 0; color: var(--ink-soft); }
+    .zzz { position: absolute; left: 27%; top: 43%; font-family: "Fraunces", serif; color: var(--ink); opacity: .7; font-size: clamp(1rem, 2vw, 1.6rem); animation: zzz 3.2s ease-in-out infinite; }
+    .is-awake .zzz { visibility: hidden; }
+    .is-awake .hero__sprite { animation: none; }
+    @keyframes zzz { 0% { transform: translateY(6px); opacity: 0; } 40% { opacity: .7; } 100% { transform: translateY(-18px); opacity: 0; } }
+
+    /* Sections */
+    .section { padding: 72px 0; }
+    .section__head { text-align: center; margin-bottom: 36px; }
+    .section__head h2 { display: inline-block; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: .03em; padding-bottom: .15em; border-bottom: 3px solid var(--accent); }
+    .banner { position: relative; aspect-ratio: 16 / 4; margin: 0 auto 40px; border: 2px dashed var(--line); border-radius: var(--radius); display: grid; place-items: center; color: var(--ink-soft); font-size: .9rem; overflow: hidden; }
+    .banner__fox { position: absolute; bottom: 8%; width: 16%; aspect-ratio: 277 / 311; background: url("{{ art }}fox-sprite.webp") 0 0 / 1200% 100% no-repeat; /* frame 0: asleep */ left: 42%; transform: translateX(60vw); transition: transform 1.6s cubic-bezier(.25, .8, .3, 1); filter: drop-shadow(0 8px 5px rgba(59, 36, 20, .25)); }
+    .banner.is-in .banner__fox { transform: none; }
+    .placeholder { text-align: center; color: var(--ink-soft); max-width: 520px; margin: 0 auto; }
+
+    /* Cards: reuse project-card.html markup, restyled for paper */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+    .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .2s; }
+    .card:hover { transform: translateY(-4px); }
+    .card__media { display: block; aspect-ratio: 16 / 9; background: var(--paper-2); }
+    .card__media video { width: 100%; height: 100%; object-fit: cover; }
+    .card__body { padding: 16px 18px 18px; }
+    .card__title { font-size: 1.2rem; }
+    .card__title a { color: var(--ink); }
+    .card__highlights { margin: 10px 0 0; padding-left: 1.1em; color: var(--ink-soft); font-size: .92rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
+    .tag { padding: .1em .65em; border-radius: 999px; font-size: .75rem; font-weight: 500; background: var(--paper-2); color: var(--ink); border: 1px solid var(--line); }
+    .more { text-align: center; margin-top: 32px; }
+    .btn { display: inline-block; padding: .6em 1.4em; border: 2px solid var(--ink); border-radius: 999px; color: var(--ink); font-weight: 600; }
+    .btn:hover { background: var(--ink); color: var(--paper); }
+
+    .social { display: flex; justify-content: center; gap: 12px; list-style: none; padding: 0; margin: 0; }
+    .social a { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--ink); color: var(--ink); font-size: 1.15rem; }
+    .social a:hover { background: var(--ink); color: var(--paper); }
+    footer { text-align: center; padding: 24px 0 40px; color: var(--ink-soft); font-size: .85rem; }
+
+    /* Phone: taller crop keeping the tree + fox (left side); castle falls off */
+    @media (max-width: 640px) {
+      .nav { gap: 18px; padding: 12px 16px; background: var(--paper); }
+      .nav a { font-size: .85rem; }
+      .hero__stage, .hero__scene { aspect-ratio: 9 / 13; }
+      .hero__layer { object-position: 18% center; }
+      /* Plate is cover-cropped at 18%: desktop % remapped to this 9/13 crop (1000px-wide plate at 390px, 110px cut off the left). */
+      .hero__fox { left: 9.27%; top: 36.24%; width: 40.76%; }
+      .zzz { left: 41%; top: 43%; }
+      .banner { aspect-ratio: 16 / 7; }
+      .banner__fox { width: 34%; left: 33%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero__sprite, .zzz { animation: none; }
+      .hero__fox, .hero__layer { transform: none; }
+      .hero__scene { position: absolute; }
+      .banner__fox { transition: none; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <a href="#home">Home</a>
+    <a href="#design">Design</a>
+    <a href="#dev">Dev</a>
+    <a href="{{ '/resume.html' | relative_url }}">Resume</a>
+  </nav>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero__stage">
+        <div class="hero__scene">
+          <img class="hero__layer hero__l1" src="{{ art }}Home_L1_2.png" alt="A painted storybook valley with a village, castle and waterfall" />
+          <img class="hero__layer hero__l2" src="{{ art }}Home_L2_2.png" alt="" />
+          <div class="hero__fox" id="heroFox" role="img" aria-label="A little fox asleep on the hill"><i class="hero__sprite"></i></div>
+          <span class="zzz" aria-hidden="true">z</span>
+        </div>
+        <img class="hero__layer hero__l3" src="{{ art }}Home_L3_2.png" alt="" />
+      </div>
+    </section>
+    <div class="hero__intro">
+      <h1>Hi! I'm Ethan Truong</h1>
+      <p>Game Developer · Unity &amp; Unreal</p>
+    </div>
+
+    <section class="section" id="design">
+      <div class="container">
+        <header class="section__head"><h2>Design</h2></header>
+        <div class="banner">design-banner.png (todo)<i class="banner__fox" aria-hidden="true"></i></div>
+        <p class="placeholder">Design content goes here. Still to decide what it shows.</p>
+      </div>
+    </section>
+
+    <section class="section" id="dev">
+      <div class="container">
+        <header class="section__head"><h2>Dev</h2></header>
+        <div class="banner">dev-banner.png (todo)<i class="banner__fox" aria-hidden="true"></i></div>
+        <div class="grid">
+          {% assign featured = site.projects | sort: "order" %}
+          {% for p in featured limit: 3 %}{% include project-card.html project=p %}{% endfor %}
+        </div>
+        <p class="more"><a class="btn" href="{{ '/#projects' | relative_url }}">All projects</a></p>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container section__head">
+        <h2>Say hi</h2>
+        <p class="placeholder" style="margin-bottom:1.2em">Feel free to send me a message, I'll try to respond as quickly as I can!</p>
+        {% include social.html %}
+      </div>
+    </section>
+  </main>
+  <footer>© {{ site.time | date: "%Y" }} Ethan Truong</footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    const fox = document.getElementById('heroFox');
+    const hero = document.getElementById('home');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Scene eases toward the real scroll position each frame, so wheel steps glide instead of jump.
+    let y = scrollY, raf = 0;
+    // Wake plays on a timer (20 fps) once scrolling starts, so every frame shows; back at the top it plays in reverse.
+    let f = 0, target = 0, timer = 0;
+    const step = () => {
+      f += Math.sign(target - f);
+      fox.style.setProperty('--f', f);
+      hero.classList.toggle('is-awake', f > 0);
+      if (f === target) { clearInterval(timer); timer = 0; }
+    };
+    const render = () => {
+      y += (scrollY - y) * 0.12;
+      if (Math.abs(scrollY - y) < 0.5) y = scrollY;
+      const h = hero.offsetHeight;
+      hero.style.setProperty('--p', `${Math.min(y, h)}px`);
+      target = y / h > 0.03 ? 11 : 0;
+      if (f !== target && !timer) timer = setInterval(step, 1000 / 20);
+      raf = y === scrollY ? 0 : requestAnimationFrame(render);
+    };
+    const onScroll = () => {
+      nav.classList.toggle('is-scrolled', scrollY > 10);
+      if (!still && !raf) raf = requestAnimationFrame(render);
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Fox walks into each banner; card previews play only while visible.
+    const io = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        if (target.tagName === 'VIDEO') isIntersecting ? target.play().catch(() => {}) : target.pause();
+        else if (isIntersecting) target.classList.add('is-in');
+      }
+    }, { rootMargin: '0px 0px -15% 0px' });
+    document.querySelectorAll('.banner, video[data-lazy]').forEach((el) => io.observe(el));
+  </script>
+</body>
+</html>
