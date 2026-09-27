@@ -4,6 +4,13 @@ permalink: /redesign/
 ---
 {% comment %} ponytail: temp sandbox for the fox redesign; self-contained so the live site is untouched. Delete once index.html is migrated. {% endcomment %}
 {% assign art = '/assets/images/Redesign/' | relative_url %}
+{% capture dp %}Level Design Doc: Forest Temple|Blockout, pacing curve and encounter beats for a three-room dungeon|fa-map
+Core Loop Breakdown|Session loop, reward cadence and retention hooks for a merge puzzler|fa-arrows-rotate
+Enemy Design Sheet|Stats, telegraphs and counterplay for five melee archetypes|fa-dragon
+Economy Balance Model|Currency sources and sinks tuned over a 30-day player curve|fa-coins
+UI Flow: First-Time User|Screen-by-screen onboarding flow with drop-off checkpoints|fa-mobile-screen
+Boss Encounter Pitch|Three-phase fight with arena changes and a readable tell per phase|fa-skull{% endcapture %}
+{% assign design_placeholders = dp | strip | newline_to_br | split: "<br />" %}
 <!DOCTYPE html>
 <html lang="{{ site.lang }}">
 <head>
@@ -63,6 +70,8 @@ permalink: /redesign/
     .hero__intro { position: relative; padding: 8px 16px 0; text-align: center; background: var(--paper); }
     .hero__intro h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; }
     .hero__intro p { margin: 0; color: var(--ink-soft); }
+    .hero__intro .hero__lead { max-width: 620px; margin: 1em auto 1.4em; color: var(--ink); }
+    .hero__intro .social { margin-bottom: 1.4em; }
     .zzz { position: absolute; left: 27%; top: 43%; font-family: "Fraunces", serif; color: var(--ink); opacity: .7; font-size: clamp(1rem, 2vw, 1.6rem); animation: zzz 3.2s ease-in-out infinite; }
     .is-awake .zzz { visibility: hidden; }
     .is-awake .hero__sprite { animation: none; }
@@ -76,6 +85,8 @@ permalink: /redesign/
     .banner__fox { position: absolute; bottom: 8%; width: 16%; aspect-ratio: 277 / 311; background: url("{{ art }}fox-sprite.webp") 0 0 / 1200% 100% no-repeat; /* frame 0: asleep */ left: 42%; transform: translateX(60vw); transition: transform 1.6s cubic-bezier(.25, .8, .3, 1); filter: drop-shadow(0 8px 5px rgba(59, 36, 20, .25)); }
     .banner.is-in .banner__fox { transform: none; }
     .placeholder { text-align: center; color: var(--ink-soft); max-width: 520px; margin: 0 auto; }
+    .card__media.card__media--icon { display: grid; place-items: center; font-size: 2.6rem; color: var(--ink-soft); }
+    .tag.tag--todo { background: var(--accent); border-color: var(--accent); color: #fff; }
 
     /* Cards: reuse project-card.html markup, restyled for paper */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
@@ -142,13 +153,28 @@ permalink: /redesign/
     <div class="hero__intro">
       <h1>Hi! I'm Ethan Truong</h1>
       <p>Game Developer · Unity &amp; Unreal</p>
+      <p class="hero__lead">A dedicated Game Developer who enjoys creating engaging gaming experiences. I combine technical skills with creative problem-solving to build games that players want to play.</p>
+      {% include social.html %}
+      <a class="btn" href="#dev">See my work <i class="fas fa-arrow-down"></i></a>
     </div>
 
     <section class="section" id="design">
       <div class="container">
         <header class="section__head"><h2>Design</h2></header>
         <div class="banner">design-banner.png (todo)<i class="banner__fox" aria-hidden="true"></i></div>
-        <p class="placeholder">Design content goes here. Still to decide what it shows.</p>
+        {% comment %} ponytail: made-up placeholder cards until real design work exists; delete before this goes live. {% endcomment %}
+        <div class="grid">
+          {% for line in design_placeholders %}{% assign d = line | strip | split: "|" %}
+          <article class="card">
+            <div class="card__media card__media--icon"><i class="fas {{ d[2] }}" aria-hidden="true"></i></div>
+            <div class="card__body">
+              <h3 class="card__title">{{ d[0] }}</h3>
+              <ul class="tags"><li class="tag tag--todo">Placeholder</li></ul>
+              <ul class="card__highlights"><li>{{ d[1] }}</li></ul>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
       </div>
     </section>
 
