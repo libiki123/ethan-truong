@@ -209,42 +209,19 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           background 0.2s,
           color 0.2s;
       }
-      .nav__links a:hover,
+      .nav__links a:hover {
+        background: var(--accent);
+        color: var(--paper);
+      }
+      /* The current section is marked with an orange underline, not a fill. Home never shows it: it is the default. */
       .nav__links a[aria-current] {
-        background: var(--accent);
-        color: var(--paper);
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 3px;
+        text-underline-offset: 6px;
       }
-      /* "You are here": while you are inside a section, the burger gets an orange fill and a dot, but only once the tab has fully folded back (JS sets .is-retracted when the links finish collapsing and drops it as the menu starts to open; .is-here is set by the scroll-spy and is off on Home). */
-      .nav__burger {
-        position: relative;
-        transition:
-          background 0.25s ease,
-          color 0.25s ease;
-      }
-      .nav__links.is-retracted .nav__burger.is-here {
-        background: var(--accent);
-        color: var(--paper);
-      }
-      .nav__burger::after {
-        content: "";
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        width: 8px;
-        height: 8px;
-        border: 2px solid var(--paper);
-        border-radius: 50%;
-        background: var(--accent-ink);
-        opacity: 0;
-        transform: scale(0.4);
-        transition:
-          opacity 0.25s ease,
-          transform 0.25s ease;
-      }
-      .nav__links.is-retracted .nav__burger.is-here::after {
-        opacity: 1;
-        transform: scale(1);
-        background: var(--ink); /* dark dot on the orange burger so it stays visible */
+      .nav__links a[aria-current]:hover {
+        text-decoration-color: var(--paper);
       }
       .sec h2[tabindex="-1"]:focus {
         outline: 0; /* the heading takes focus on arrival from the map, without a ring */
@@ -2494,16 +2471,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }),
       );
 
-      // Where-am-I indicator: a thin band across the middle of the screen decides which section you are in. That section's link in the top bar is marked (aria-current, so it lights up when the menu opens) and its name shows beside the burger while the menu is closed. The intro counts as Home.
+      // Where-am-I indicator: a thin band across the middle of the screen decides which section you are in. That section's link in the top bar gets aria-current, which draws its underline when the menu opens. The intro counts as Home.
       {
         const items = [...document.querySelectorAll(".nav__items a")];
-        const burgerBtn = navLinks.querySelector(".nav__burger");
-        // The burger tint waits for the tab to be fully retracted: .is-retracted is set when the links finish collapsing and dropped as soon as the menu starts to open.
-        const navItems = navLinks.querySelector(".nav__items");
-        const retracted = () => getComputedStyle(navItems).maxWidth === "0px";
-        navLinks.classList.toggle("is-retracted", retracted());
-        navItems.addEventListener("transitionrun", (e) => e.propertyName === "max-width" && navLinks.classList.remove("is-retracted"));
-        navItems.addEventListener("transitionend", (e) => e.propertyName === "max-width" && navLinks.classList.toggle("is-retracted", retracted()));
         const zones = new Map([
           [document.getElementById("home"), "home"],
           [document.querySelector(".hero__intro"), "home"],
@@ -2512,16 +2482,10 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           [document.getElementById("resume"), "resume"],
         ]);
         const mark = (id) => {
-          let name = "";
           for (const a of items) {
-            const on = a.getAttribute("href") === "#" + id;
-            if (on) {
-              a.setAttribute("aria-current", "true");
-              name = a.textContent;
-            } else a.removeAttribute("aria-current");
+            if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
+            else a.removeAttribute("aria-current");
           }
-          burgerBtn.classList.toggle("is-here", id !== "home");
-          burgerBtn.title = id === "home" ? "" : "You are in: " + name;
         };
         if ("IntersectionObserver" in window) {
           const spy = new IntersectionObserver(
