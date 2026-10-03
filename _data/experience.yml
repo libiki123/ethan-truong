@@ -1,6 +1,7 @@
 - company: Mavis X
   url: https://skymavis.com/
   logo: skymavis-logo.png
+  logo_size: [1200, 627]
   role: Web3 Game Developer — Unity 3D
   period: Sep 2023 – Dec 2024
   type: Contract
@@ -15,6 +16,7 @@
 - company: Carem Studio
   url: https://inspirelab.io/vn
   logo: inspire-logo.png
+  logo_size: [297, 170]
   role: Game Developer — Unity 3D
   period: April 2022 – July 2023
   type: Full-time
@@ -28,6 +30,7 @@
 - company: Marion Surgical
   url: https://www.marionsurgical.com/
   logo: marion-logo.png
+  logo_size: [500, 300]
   role: Game Developer — Unreal VR
   period: June 2021 – Dec 2021
   type: Full-time

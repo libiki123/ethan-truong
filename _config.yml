@@ -16,11 +16,17 @@ collections:
     permalink: /projects/:name/
 
 defaults:
+  - scope: { path: assets }
+    values: { sitemap: false }
   - scope: { type: projects }
     values: { layout: project }
 
+author: Ethan Truong
+
 plugins:
   - jekyll-redirect-from
+  - jekyll-sitemap
+  - jekyll-seo-tag
 
 exclude:
   - AGENTS.md
@@ -28,3 +34,4 @@ exclude:
   - README.md
   - Gemfile
   - Gemfile.lock
+  - plans

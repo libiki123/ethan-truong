@@ -24,7 +24,7 @@ particles: true
     {% for job in site.data.experience %}
     <article class="job reveal">
       <a class="job__logo" href="{{ job.url }}" target="_blank" rel="noopener">
-        <img src="{{ '/assets/images/' | append: job.logo | relative_url }}" alt="{{ job.company }} logo" loading="lazy" />
+        <img src="{{ '/assets/images/' | append: job.logo | relative_url }}" alt="{{ job.company }} logo" width="{{ job.logo_size[0] }}" height="{{ job.logo_size[1] }}" loading="lazy" />
       </a>
       <div class="job__body">
         <h3><a href="{{ job.url }}" target="_blank" rel="noopener">{{ job.company }}</a></h3>
@@ -49,7 +49,7 @@ particles: true
     {% assign engines = "unity,unreal" | split: "," %}
     {% for engine in engines %}
     <h3 class="engine-heading">
-      <img src="{{ '/assets/images/' | append: engine | append: '-icon.png' | relative_url }}" alt="" />
+      <img src="{{ '/assets/images/' | append: engine | append: '-icon.png' | relative_url }}" alt="" width="36" height="36" />
       {{ engine | capitalize }}
     </h3>
     <div class="grid">

@@ -96,7 +96,7 @@ ul { padding-left: 1.2em; }
   display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start;
   background: var(--surface); border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
 }
-.job__logo img { width: 100%; border-radius: 8px; background: #fff; }
+.job__logo img { width: 100%; height: auto; border-radius: 8px; background: #fff; }
 .job__role { margin: 0; font-weight: 500; }
 .job ul { margin: 1em 0 0; color: #cfcfcf; }
 .job li { margin-bottom: .35em; }
