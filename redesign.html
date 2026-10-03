@@ -214,40 +214,37 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         background: var(--accent);
         color: var(--paper);
       }
-      /* "You are here": the current section's name sits beside the burger, but only once the tab has fully folded back (JS sets .is-retracted when the links finish collapsing, and drops it the moment the menu starts to open). It hides fast, shows after the fold. Empty at the top of the page. */
-      .nav__here {
-        max-width: 0;
-        padding: 0;
-        overflow: hidden;
-        white-space: nowrap;
-        opacity: 0;
-        color: var(--accent-ink);
-        font: 600 0.85rem / 1 "Fraunces", serif;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+      /* "You are here": while you are inside a section, the burger gets an orange fill and a dot, but only once the tab has fully folded back (JS sets .is-retracted when the links finish collapsing and drops it as the menu starts to open; .is-here is set by the scroll-spy and is off on Home). */
+      .nav__burger {
+        position: relative;
         transition:
-          max-width 0.15s ease,
-          padding 0.15s ease,
-          opacity 0.1s ease;
+          background 0.25s ease,
+          color 0.25s ease;
       }
-      .nav__here::before {
-        content: "";
-        display: inline-block;
-        width: 0.5em;
-        height: 0.5em;
-        margin-right: 0.6em;
-        border-radius: 50%;
+      .nav__links.is-retracted .nav__burger.is-here {
         background: var(--accent);
-        vertical-align: 0.08em;
+        color: var(--paper);
       }
-      .nav__links.is-retracted .nav__here.is-on {
-        max-width: 8em;
-        padding: 0 8px 0 12px;
-        opacity: 1;
+      .nav__burger::after {
+        content: "";
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 8px;
+        height: 8px;
+        border: 2px solid var(--paper);
+        border-radius: 50%;
+        background: var(--accent-ink);
+        opacity: 0;
+        transform: scale(0.4);
         transition:
-          max-width 0.4s ease,
-          padding 0.4s ease,
-          opacity 0.25s ease;
+          opacity 0.25s ease,
+          transform 0.25s ease;
+      }
+      .nav__links.is-retracted .nav__burger.is-here::after {
+        opacity: 1;
+        transform: scale(1);
+        background: var(--ink); /* dark dot on the orange burger so it stays visible */
       }
       .sec h2[tabindex="-1"]:focus {
         outline: 0; /* the heading takes focus on arrival from the map, without a ring */
@@ -2009,7 +2006,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           <a href="#dev">Dev</a>
           <a href="#resume">Exp</a>
         </div>
-        <span class="nav__here" id="navHere" aria-hidden="true"></span>
         <button class="nav__mode" id="modeToggle" type="button" aria-label="Night mode (planned, no visual change yet)" aria-pressed="false" title="Morning / night (planned)">
           <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4" />
@@ -2501,8 +2497,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       // Where-am-I indicator: a thin band across the middle of the screen decides which section you are in. That section's link in the top bar is marked (aria-current, so it lights up when the menu opens) and its name shows beside the burger while the menu is closed. The intro counts as Home.
       {
         const items = [...document.querySelectorAll(".nav__items a")];
-        const here = document.getElementById("navHere");
-        // The label waits for the tab to be fully retracted: .is-retracted is set when the links finish collapsing and dropped as soon as the menu starts to open.
+        const burgerBtn = navLinks.querySelector(".nav__burger");
+        // The burger tint waits for the tab to be fully retracted: .is-retracted is set when the links finish collapsing and dropped as soon as the menu starts to open.
         const navItems = navLinks.querySelector(".nav__items");
         const retracted = () => getComputedStyle(navItems).maxWidth === "0px";
         navLinks.classList.toggle("is-retracted", retracted());
@@ -2524,8 +2520,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               name = a.textContent;
             } else a.removeAttribute("aria-current");
           }
-          here.textContent = id === "home" ? "" : name;
-          here.classList.toggle("is-on", id !== "home");
+          burgerBtn.classList.toggle("is-here", id !== "home");
+          burgerBtn.title = id === "home" ? "" : "You are in: " + name;
         };
         if ("IntersectionObserver" in window) {
           const spy = new IntersectionObserver(
