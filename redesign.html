@@ -1,245 +1,968 @@
 ---
 layout: null
+sitemap: false
 permalink: /redesign/
 ---
-{% comment %} ponytail: temp sandbox for the fox redesign; self-contained so the live site is untouched. Delete once index.html is migrated. {% endcomment %}
-{% assign art = '/assets/images/Redesign/' | relative_url %}
-{% capture dp %}Level Design Doc: Forest Temple|Blockout, pacing curve and encounter beats for a three-room dungeon|fa-map
-Core Loop Breakdown|Session loop, reward cadence and retention hooks for a merge puzzler|fa-arrows-rotate
-Enemy Design Sheet|Stats, telegraphs and counterplay for five melee archetypes|fa-dragon
-Economy Balance Model|Currency sources and sinks tuned over a 30-day player curve|fa-coins
-UI Flow: First-Time User|Screen-by-screen onboarding flow with drop-off checkpoints|fa-mobile-screen
-Boss Encounter Pitch|Three-phase fight with arena changes and a readable tell per phase|fa-skull{% endcapture %}
-{% assign design_placeholders = dp | strip | newline_to_br | split: "<br />" %}
-<!DOCTYPE html>
+
+{% comment %} ponytail: temp sandbox for the fox redesign; self-contained so the
+live site is untouched. Delete once index.html is migrated. {% endcomment %} {%
+assign art = '/assets/images/Redesign/' | relative_url %}
+<!doctype html>
 <html lang="{{ site.lang }}">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex" />
-  <title>Redesign sandbox | {{ site.title }}</title>
-  <link rel="icon" type="image/png" href="{{ '/assets/images/favicon.png' | relative_url }}" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <style>
-    :root {
-      --paper: #fcedd5;      /* sampled from the torn-paper band in Home_L3_2 */
-      --paper-2: #f6e3c8;
-      --ink: #3b2414;        /* dark-brown outline colour */
-      --ink-soft: #7a5a42;
-      --accent: #e8741c;     /* fox orange */
-      --line: #d9bf9c;
-      --radius: 14px;
-      --max: 1140px;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.7 "Work Sans", system-ui, sans-serif; }
-    img, video { display: block; max-width: 100%; }
-    a { color: var(--accent); text-decoration: none; }
-    h1, h2, h3 { font-family: "Fraunces", Georgia, serif; line-height: 1.15; margin: 0 0 .4em; }
-    .container { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
-
-    /* Nav: small text over the sky, like the mockup */
-    .nav { position: fixed; top: 0; right: 0; left: 0; z-index: 10; display: flex; justify-content: flex-end; gap: 28px; padding: 20px 32px; transition: background .3s; }
-    .nav.is-scrolled { background: var(--paper); box-shadow: 0 1px 0 var(--line); }
-    .nav a { font-family: "Fraunces", serif; font-weight: 600; letter-spacing: .04em; color: var(--ink); text-transform: uppercase; font-size: .95rem; }
-    .nav a:hover { color: var(--accent); }
-
-    /* Hero: plate + fox sprite positioned in plate-relative % so they scale together */
-    .hero { position: relative; overflow: hidden; clip-path: inset(0); } /* clip-path also clips the fixed scene below */
-    /* Back layers + fox live in a fixed scene moved only by the eased scroll value, so native wheel steps never jolt them. L3 + text scroll natively. */
-    .hero__scene { position: fixed; top: 0; left: 0; right: 0; aspect-ratio: 1672 / 941; }
-    .hero__stage { position: relative; aspect-ratio: 1672 / 941; }
-    .hero__layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left center; will-change: transform; }
-    /* Parallax: layers lag the scroll by (1 - rate). L1 sky/valley 0.25, L2 hill + fox 0.55, L3 rocks/paper 1.0 (static). */
-    .hero__l1 { transform: translateY(calc(var(--p, 0px) * -.25)); }
-    .hero__l2 { transform: translateY(calc(var(--p, 0px) * -.55)); }
-    .hero__fox {
-      position: absolute; left: 14.57%; top: 36.25%; width: 15.91%; aspect-ratio: 277 / 311;
-      filter: drop-shadow(0 10px 6px rgba(59, 36, 20, .28));
-      transform: translateY(calc(var(--p, 0px) * -.55));
-      will-change: transform;
-    }
-    /* fox-sprite.webp: all 12 frames of Home_Fox_Sheet_5 (sleep, wake, sit) cut out whole into 277x311 cells, each anchored on its front toe at the ground so the paws stay planted. JS sets --f. */
-    .hero__sprite { display: block; height: 100%; background: url("{{ art }}fox-sprite.webp") 0 0 / 1200% 100% no-repeat; background-position-x: calc(var(--f, 0) * 100% / 11); animation: breathe 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
-    @keyframes breathe { 50% { transform: scale(1.015, .985); } }
-    /* Headline sits below the plate: the torn edge starts at 85-95% of the stage, so anything inside it covers the bushes. */
-    .hero__intro { position: relative; padding: 8px 16px 0; text-align: center; background: var(--paper); }
-    .hero__intro h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; }
-    .hero__intro p { margin: 0; color: var(--ink-soft); }
-    .hero__intro .hero__lead { max-width: 620px; margin: 1em auto 1.4em; color: var(--ink); }
-    .hero__intro .social { margin-bottom: 1.4em; }
-    .zzz { position: absolute; left: 27%; top: 43%; font-family: "Fraunces", serif; color: var(--ink); opacity: .7; font-size: clamp(1rem, 2vw, 1.6rem); animation: zzz 3.2s ease-in-out infinite; }
-    .is-awake .zzz { visibility: hidden; }
-    .is-awake .hero__sprite { animation: none; }
-    @keyframes zzz { 0% { transform: translateY(6px); opacity: 0; } 40% { opacity: .7; } 100% { transform: translateY(-18px); opacity: 0; } }
-
-    /* Sections */
-    .section { padding: 72px 0; }
-    .section__head { text-align: center; margin-bottom: 36px; }
-    .section__head h2 { display: inline-block; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: .03em; padding-bottom: .15em; border-bottom: 3px solid var(--accent); }
-    .banner { position: relative; aspect-ratio: 16 / 4; margin: 0 auto 40px; border: 2px dashed var(--line); border-radius: var(--radius); display: grid; place-items: center; color: var(--ink-soft); font-size: .9rem; overflow: hidden; }
-    .banner__fox { position: absolute; bottom: 8%; width: 16%; aspect-ratio: 277 / 311; background: url("{{ art }}fox-sprite.webp") 0 0 / 1200% 100% no-repeat; /* frame 0: asleep */ left: 42%; transform: translateX(60vw); transition: transform 1.6s cubic-bezier(.25, .8, .3, 1); filter: drop-shadow(0 8px 5px rgba(59, 36, 20, .25)); }
-    .banner.is-in .banner__fox { transform: none; }
-    .placeholder { text-align: center; color: var(--ink-soft); max-width: 520px; margin: 0 auto; }
-    .card__media.card__media--icon { display: grid; place-items: center; font-size: 2.6rem; color: var(--ink-soft); }
-    .tag.tag--todo { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-    /* Cards: reuse project-card.html markup, restyled for paper */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-    .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .2s; }
-    .card:hover { transform: translateY(-4px); }
-    .card__media { display: block; aspect-ratio: 16 / 9; background: var(--paper-2); }
-    .card__media video { width: 100%; height: 100%; object-fit: cover; }
-    .card__body { padding: 16px 18px 18px; }
-    .card__title { font-size: 1.2rem; }
-    .card__title a { color: var(--ink); }
-    .card__highlights { margin: 10px 0 0; padding-left: 1.1em; color: var(--ink-soft); font-size: .92rem; }
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
-    .tag { padding: .1em .65em; border-radius: 999px; font-size: .75rem; font-weight: 500; background: var(--paper-2); color: var(--ink); border: 1px solid var(--line); }
-    .more { text-align: center; margin-top: 32px; }
-    .btn { display: inline-block; padding: .6em 1.4em; border: 2px solid var(--ink); border-radius: 999px; color: var(--ink); font-weight: 600; }
-    .btn:hover { background: var(--ink); color: var(--paper); }
-
-    .social { display: flex; justify-content: center; gap: 12px; list-style: none; padding: 0; margin: 0; }
-    .social a { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--ink); color: var(--ink); font-size: 1.15rem; }
-    .social a:hover { background: var(--ink); color: var(--paper); }
-    footer { text-align: center; padding: 24px 0 40px; color: var(--ink-soft); font-size: .85rem; }
-
-    /* Phone: taller crop keeping the tree + fox (left side); castle falls off */
-    @media (max-width: 640px) {
-      .nav { gap: 18px; padding: 12px 16px; background: var(--paper); }
-      .nav a { font-size: .85rem; }
-      .hero__stage, .hero__scene { aspect-ratio: 9 / 13; }
-      .hero__layer { object-position: 18% center; }
-      /* Plate is cover-cropped at 18%: desktop % remapped to this 9/13 crop (1000px-wide plate at 390px, 110px cut off the left). */
-      .hero__fox { left: 9.27%; top: 36.24%; width: 40.76%; }
-      .zzz { left: 41%; top: 43%; }
-      .banner { aspect-ratio: 16 / 7; }
-      .banner__fox { width: 34%; left: 33%; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      .hero__sprite, .zzz { animation: none; }
-      .hero__fox, .hero__layer { transform: none; }
-      .hero__scene { position: absolute; }
-      .banner__fox { transition: none; transform: none; }
-    }
-  </style>
-</head>
-<body>
-  <nav class="nav" id="nav">
-    <a href="#home">Home</a>
-    <a href="#design">Design</a>
-    <a href="#dev">Dev</a>
-    <a href="{{ '/resume.html' | relative_url }}">Resume</a>
-  </nav>
-
-  <main>
-    <section class="hero" id="home">
-      <div class="hero__stage">
-        <div class="hero__scene">
-          <img class="hero__layer hero__l1" src="{{ art }}Home_L1_2.png" alt="A painted storybook valley with a village, castle and waterfall" />
-          <img class="hero__layer hero__l2" src="{{ art }}Home_L2_2.png" alt="" />
-          <div class="hero__fox" id="heroFox" role="img" aria-label="A little fox asleep on the hill"><i class="hero__sprite"></i></div>
-          <span class="zzz" aria-hidden="true">z</span>
-        </div>
-        <img class="hero__layer hero__l3" src="{{ art }}Home_L3_2.png" alt="" />
-      </div>
-    </section>
-    <div class="hero__intro">
-      <h1>Hi! I'm Ethan Truong</h1>
-      <p>Game Developer · Unity &amp; Unreal</p>
-      <p class="hero__lead">A dedicated Game Developer who enjoys creating engaging gaming experiences. I combine technical skills with creative problem-solving to build games that players want to play.</p>
-      {% include social.html %}
-      <a class="btn" href="#dev">See my work <i class="fas fa-arrow-down"></i></a>
-    </div>
-
-    <section class="section" id="design">
-      <div class="container">
-        <header class="section__head"><h2>Design</h2></header>
-        <div class="banner">design-banner.png (todo)<i class="banner__fox" aria-hidden="true"></i></div>
-        {% comment %} ponytail: made-up placeholder cards until real design work exists; delete before this goes live. {% endcomment %}
-        <div class="grid">
-          {% for line in design_placeholders %}{% assign d = line | strip | split: "|" %}
-          <article class="card">
-            <div class="card__media card__media--icon"><i class="fas {{ d[2] }}" aria-hidden="true"></i></div>
-            <div class="card__body">
-              <h3 class="card__title">{{ d[0] }}</h3>
-              <ul class="tags"><li class="tag tag--todo">Placeholder</li></ul>
-              <ul class="card__highlights"><li>{{ d[1] }}</li></ul>
-            </div>
-          </article>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="dev">
-      <div class="container">
-        <header class="section__head"><h2>Dev</h2></header>
-        <div class="banner">dev-banner.png (todo)<i class="banner__fox" aria-hidden="true"></i></div>
-        <div class="grid">
-          {% assign featured = site.projects | sort: "order" %}
-          {% for p in featured limit: 3 %}{% include project-card.html project=p %}{% endfor %}
-        </div>
-        <p class="more"><a class="btn" href="{{ '/#projects' | relative_url }}">All projects</a></p>
-      </div>
-    </section>
-
-    <section class="section" id="contact">
-      <div class="container section__head">
-        <h2>Say hi</h2>
-        <p class="placeholder" style="margin-bottom:1.2em">Feel free to send me a message, I'll try to respond as quickly as I can!</p>
-        {% include social.html %}
-      </div>
-    </section>
-  </main>
-  <footer>© {{ site.time | date: "%Y" }} Ethan Truong</footer>
-
-  <script>
-    const nav = document.getElementById('nav');
-    const fox = document.getElementById('heroFox');
-    const hero = document.getElementById('home');
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Scene eases toward the real scroll position each frame, so wheel steps glide instead of jump.
-    let y = scrollY, raf = 0;
-    // Wake plays on a timer (20 fps) once scrolling starts, so every frame shows; back at the top it plays in reverse.
-    let f = 0, target = 0, timer = 0;
-    const step = () => {
-      f += Math.sign(target - f);
-      fox.style.setProperty('--f', f);
-      hero.classList.toggle('is-awake', f > 0);
-      if (f === target) { clearInterval(timer); timer = 0; }
-    };
-    const render = () => {
-      y += (scrollY - y) * 0.12;
-      if (Math.abs(scrollY - y) < 0.5) y = scrollY;
-      const h = hero.offsetHeight;
-      hero.style.setProperty('--p', `${Math.min(y, h)}px`);
-      target = y / h > 0.03 ? 11 : 0;
-      if (f !== target && !timer) timer = setInterval(step, 1000 / 20);
-      raf = y === scrollY ? 0 : requestAnimationFrame(render);
-    };
-    const onScroll = () => {
-      nav.classList.toggle('is-scrolled', scrollY > 10);
-      if (!still && !raf) raf = requestAnimationFrame(render);
-    };
-    addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    // Fox walks into each banner; card previews play only while visible.
-    const io = new IntersectionObserver((entries) => {
-      for (const { target, isIntersecting } of entries) {
-        if (target.tagName === 'VIDEO') isIntersecting ? target.play().catch(() => {}) : target.pause();
-        else if (isIntersecting) target.classList.add('is-in');
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Redesign sandbox | {{ site.title }}</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ '/assets/images/favicon.png' | relative_url }}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <style>
+      :root {
+        --paper: #fcf0db; /* = intro-bg.webp wall colour and the solid bottom of Home_L3_7 */
+        --paper-2: #f6e3c8;
+        --ink: #3b2414; /* dark-brown outline colour */
+        --ink-soft: #7a5a42;
+        --accent: #e8741c; /* fox orange */
+        --line: #d9bf9c;
+        --radius: 14px;
+        --max: 1140px;
       }
-    }, { rootMargin: '0px 0px -15% 0px' });
-    document.querySelectorAll('.banner, video[data-lazy]').forEach((el) => io.observe(el));
-  </script>
-</body>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          400 16px/1.7 "Work Sans",
+          system-ui,
+          sans-serif;
+      }
+      img,
+      video {
+        display: block;
+        max-width: 100%;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", Georgia, serif;
+        line-height: 1.15;
+        margin: 0 0 0.4em;
+      }
+      .container {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+
+      /* Nav: two paper pills (icon left, links right) floating over the painting */
+      .nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 28px;
+        pointer-events: none; /* only the stickers catch clicks, so the map stays clickable under the bar */
+      }
+      .nav__brand,
+      .nav__links {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        background: var(--paper);
+        border: 1px solid var(--ink);
+        border-radius: 999px;
+        box-shadow: 0 2px 0 rgba(59, 36, 20, 0.35);
+      }
+      .nav__brand {
+        padding: 4px;
+      }
+      /* ponytail: name hidden until hover/focus, then the pill grows to the right to reveal it */
+      .nav__name {
+        max-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        opacity: 0;
+        transition:
+          max-width 0.35s ease,
+          opacity 0.25s ease,
+          margin 0.35s ease;
+      }
+      .nav__brand:hover .nav__name,
+      .nav__brand:focus-visible .nav__name {
+        max-width: 10em;
+        margin: 0 12px 0 8px;
+        opacity: 1;
+      }
+      .nav__brand img {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+      }
+      .nav__links {
+        gap: 2px;
+        padding: 4px;
+      }
+      .nav__links a {
+        padding: 6px 16px;
+        border-radius: 999px;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .nav__links a:hover,
+      .nav__links a[aria-current] {
+        background: var(--accent);
+        color: var(--paper);
+      }
+
+      /* Hero: plate + fox sprite positioned in plate-relative % so they scale together */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        clip-path: inset(0);
+      } /* clip-path also clips the fixed scene below */
+      /* Back layers + fox live in a fixed scene moved only by the eased scroll value, so native wheel steps never jolt them. L3 + text scroll natively. */
+      .hero__scene {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        aspect-ratio: 1672 / 941;
+        container-type: size;
+      }
+      .hero__stage {
+        position: relative;
+        aspect-ratio: 1672 / 941;
+      }
+      .hero__layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: left center;
+        will-change: transform;
+      }
+      /* Parallax: layers lag the scroll by (1 - rate). L1 sky/valley 0.25, L2 hill + fox 0.55, L3 rocks/paper 1.0 (static). */
+      .hero__l1 {
+        transform: translateY(calc(var(--p, 0px) * -0.25));
+      }
+      /* L2, the fox and the zzz share one box, so on phone the hill can be resized without remapping the fox. */
+      .hero__hill {
+        position: absolute;
+        inset: 0;
+        transform: translateY(calc(var(--p, 0px) * -0.55));
+        scale: 0.62;
+        translate: 0 -14%;
+        transform-origin: left bottom;
+        will-change: transform;
+      }
+      .hero__l2 {
+        inset: auto 0 0 0;
+        height: auto;
+        aspect-ratio: 1672 / 1317;
+      } /* Home_L2_5_new is 1672x1317: bottom-anchored, the extra canopy overflows above the 16:9 box (not clipped, so .hero__hill can scale) */
+      .hero__l3 {
+        inset: auto auto 0 0;
+        width: 125%;
+        max-width: none;
+        height: 125%;
+        scale: 0.8;
+        transform-origin: left bottom;
+        translate: 0 -6%;
+        box-shadow: 0 30vh 0 var(--paper);
+      } /* the shadow refills the strip the lift uncovers; 6cqh = 6% of the scene-tall box on desktop */
+      .hero__l2,
+      .hero__l3 {
+        pointer-events: none;
+      }
+
+      .hero__fox {
+        position: absolute;
+        left: 12.5%;
+        top: 42%;
+        width: 15.91%;
+        aspect-ratio: 277 / 311;
+        filter: drop-shadow(0 10px 6px rgba(59, 36, 20, 0.28));
+      }
+      .seeds {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 5;
+        display: none;
+      }
+      @media (hover: hover) and (pointer: fine) and (min-width: 641px) and (prefers-reduced-motion: no-preference) {
+        .seeds {
+          display: block;
+        }
+      } /* dandelion trail: desktop pointers only; the script also bails out on phones */
+      .hero__scene {
+        background: linear-gradient(#0992fc 0%, #6fb4f0 20%, #1ea8f8 75%);
+      }
+      /* ponytail: one wide painting (16:9) serves desktop and phone. Desktop: fills the scene exactly. Phone: right-anchored crop (see media query). */
+      .hero__l1 {
+        inset: auto;
+        top: 0;
+        left: auto;
+        right: 0;
+        width: auto;
+        max-width: none;
+        height: 86%;
+        aspect-ratio: 3200 / 1335;
+      }
+      /* fox-sprite.webp: all 12 frames of Home_Fox_Sheet_5 (sleep, wake, sit) cut out whole into 277x311 cells, each anchored on its front toe at the ground so the paws stay planted. JS sets --f. */
+      .hero__sprite {
+        display: block;
+        height: 100%;
+        background: url("{{ art }}fox-sprite.webp") 0 0 / 1200% 100% no-repeat;
+        background-position-x: calc(var(--f, 0) * 100% / 11);
+        animation: breathe 3.2s ease-in-out infinite;
+        transform-origin: 50% 100%;
+      }
+      @keyframes breathe {
+        50% {
+          transform: scale(1.015, 0.985);
+        }
+      }
+      /* Headline sits below the plate: the torn edge starts at 85-95% of the stage, so anything inside it covers the bushes. */
+      /* intro-bg.webp: book scene on the right, flat #fcedd5 wall at the top-left, so the torn edge above flows straight into it.
+       Text sits in flow; the image slides up under it by 14% of its width, just under the ~16% of empty wall, so nothing hits the brush cup. */
+      .hero__intro {
+        --drop: max(30px, calc(310px - 27vh)); /* pushes the text down; the art's margin cancels it, so the painting stays put and h1 clears the nav at page bottom */
+        position: relative;
+        margin-top: -3px;
+        padding-top: 6px;
+        background: var(--paper);
+      } /* -3px hides the sub-pixel seam where the fixed scene peeks past L3 */
+      .hero__intro__text {
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
+        padding: var(--drop) 16px 0 4%;
+      }
+      .hero__intro__art {
+        display: block;
+        width: min(100%, calc((100vh - 110px) * 2.33));
+        margin: calc(-14% - var(--drop)) 0 0 auto;
+        mask-image: linear-gradient(to right, transparent, #000 10%);
+      } /* ponytail: 110px = nav 66 + footer 43; on a short window the page bottom would otherwise leave the book's top under the fixed nav. Ceiling: a window under ~600px tall clips the desk's left edge */
+      .hero__intro h1 {
+        font-size: clamp(1.8rem, 3.4vw, 3rem);
+        font-weight: 800;
+      }
+      .hero__intro p {
+        margin: 0;
+        color: var(--ink-soft);
+      }
+      .hero__intro .hero__lead {
+        margin: 0.8em 0 1.2em;
+        color: var(--ink);
+      }
+      .hero__intro .social {
+        justify-content: flex-start;
+        margin-bottom: 1.2em;
+      }
+      .hero__intro .btn,
+      .hero__intro .social a {
+        position: relative;
+        z-index: 1;
+        background: var(--paper);
+      } /* solid, so the mug art that rises behind them does not show through */
+      .hero__intro .btn {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .hero__intro .btn:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .zzz {
+        position: absolute;
+        left: 25%;
+        top: 49%;
+        font-family: "Fraunces", serif;
+        color: var(--ink);
+        opacity: 0.7;
+        font-size: clamp(1rem, 2vw, 1.6rem);
+        animation: zzz 3.2s ease-in-out infinite;
+      }
+      .is-awake .zzz {
+        visibility: hidden;
+      }
+      .is-awake .hero__sprite {
+        animation: none;
+      }
+      @keyframes zzz {
+        0% {
+          transform: translateY(6px);
+          opacity: 0;
+        }
+        40% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(-18px);
+          opacity: 0;
+        }
+      }
+
+      /* Sections */
+      .section {
+        padding: 72px 0;
+      }
+      .section__head {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+      .section__head h2 {
+        display: inline-block;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        padding-bottom: 0.15em;
+        border-bottom: 3px solid var(--accent);
+      }
+      /* Location scenes: one full-width painting per section, the fox's next stop. --bg picks the image (all 1672x941). */
+      .scene {
+        padding-top: 72px;
+        overflow: hidden;
+      }
+      .scene__scroll {
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .scene__stage {
+        position: relative;
+        aspect-ratio: 1672 / 941;
+        min-width: 100%;
+        background: var(--bg) 0 0 / 100% 100%;
+        transform-origin: 50% 100%;
+      }
+      /* Walking into the place: the scene zooms in as it scrolls into view. Scroll-driven, so browsers without it just show the still scene. */
+      @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+          .scene__stage {
+            animation: approach linear both;
+            animation-timeline: view();
+            animation-range: entry 0% cover 45%;
+          }
+          @keyframes approach {
+            from {
+              transform: scale(1.2) translateY(6%);
+            }
+          }
+        }
+      }
+      /* Dev gallery: the top three projects play inside the three blank canvases of castle-bg.webp, placed in % of the image. */
+      .frame {
+        position: absolute;
+        left: var(--x);
+        top: 36.5%;
+        width: 15.6%;
+        height: 21.4%;
+        background: var(--paper-2);
+        transition: box-shadow 0.2s;
+      }
+      .frame video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .frame:hover,
+      .frame:focus-visible {
+        outline: 0;
+        box-shadow:
+          0 0 0 4px rgba(232, 116, 28, 0.7),
+          0 0 32px rgba(255, 214, 150, 0.7);
+      }
+      .frame__plate {
+        position: absolute;
+        left: 50%;
+        top: 122%;
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: 120%;
+        padding: 0.25em 0.8em;
+        border-radius: 3px;
+        background: #fffaf0;
+        box-shadow: 0 3px 8px rgba(59, 36, 20, 0.3);
+        color: var(--ink);
+        font:
+          600 clamp(0.72rem, 1vw, 0.95rem)/1.25 "Fraunces",
+          serif;
+      }
+      .placeholder {
+        text-align: center;
+        color: var(--ink-soft);
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      /* Cards: reuse project-card.html markup, restyled for paper */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+      }
+      .card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: transform 0.2s;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+      }
+      .card__media {
+        display: block;
+        aspect-ratio: 16 / 9;
+        background: var(--paper-2);
+      }
+      .card__media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card__body {
+        padding: 16px 18px 18px;
+      }
+      .card__title {
+        font-size: 1.2rem;
+      }
+      .card__title a {
+        color: var(--ink);
+      }
+      .card__highlights {
+        margin: 10px 0 0;
+        padding-left: 1.1em;
+        color: var(--ink-soft);
+        font-size: 0.92rem;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .tag {
+        padding: 0.1em 0.65em;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: var(--paper-2);
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .more {
+        text-align: center;
+        margin-top: 32px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.6em 1.4em;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .btn:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      .social {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .social a {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        border: 2px solid var(--ink);
+        color: var(--ink);
+        font-size: 1.15rem;
+      }
+      .social a:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      footer {
+        text-align: center;
+        padding: 10px 0;
+        background: #a05329;
+        color: var(--paper);
+        font-size: 0.85rem;
+      } /* sampled from the desk wood at the bottom of intro-bg */
+
+      /* Phone: taller crop keeping the tree + fox (left side); castle falls off */
+      @media (max-width: 640px) {
+        .nav {
+          padding: 10px 12px;
+        }
+        .nav__brand img {
+          width: 30px;
+          height: 30px;
+        }
+        .nav__links a {
+          padding: 5px 9px;
+          font-size: 0.78rem;
+          letter-spacing: 0.02em;
+        }
+        .hero__stage {
+          aspect-ratio: 9 / 8.7;
+        }
+        .hero__scene {
+          aspect-ratio: 9 / 9.5;
+        }
+        .hero__scene {
+          background: linear-gradient(#0492fc 50px, #7ac8fb 30%, #1ea8f8 75%);
+        }
+        /* ponytail: phone shows the right 53% of the wide painting, same crop as the old portrait art. */
+        .hero__l1 {
+          inset: auto;
+          top: 0;
+          left: auto;
+          right: -38%;
+          width: auto;
+          max-width: none;
+          height: 86%;
+          aspect-ratio: 3200 / 1335;
+        }
+        /* Hill and L3 shrink into one bottom-anchored box so the sky above is free for the map. Tune --hill-w / --hill-x. */
+        .hero__stage {
+          --hill-w: 135%;
+          --hill-x: -5%;
+        }
+        .hero__hill {
+          scale: 0.88;
+          translate: 0 -12%;
+        }
+        .hero__hill,
+        .hero__l3 {
+          inset: auto auto 0 var(--hill-x);
+          width: var(--hill-w);
+          height: auto;
+          aspect-ratio: 1672 / 1317;
+        }
+        .hero__l3 {
+          box-shadow: 0 30vh 0 var(--paper);
+          aspect-ratio: 1672 / 941;
+          transform: none;
+          max-width: none;
+          scale: 0.92;
+        }
+        .hero__fox {
+          top: 58.56%;
+        } /* same spot as desktop: (42% of 941 + 376px of canopy) / 1317 */
+        .zzz {
+          top: 62.96%;
+        }
+        .hero__intro {
+          --drop: 0px;
+          text-align: center;
+        }
+        .hero__intro__text {
+          padding: 0 16px;
+        }
+        .hero__intro .social {
+          justify-content: center;
+        }
+        .hero__intro__art {
+          margin: 24px 0 0;
+          width: 100%;
+          mask-image: none;
+        } /* intro-bg-m.webp: just the book half of intro-bg, so it stays readable at phone width */
+        .scene__stage {
+          width: 900px;
+        } /* wide scene pans sideways on phone */
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .hero__sprite,
+        .zzz {
+          animation: none;
+        }
+        .hero__hill,
+        .hero__layer {
+          transform: none;
+        }
+        .hero__scene {
+          position: absolute;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav" id="nav">
+      <a class="nav__brand" href="#home" aria-label="Ethan Truong, home">
+        <img src="{{ '/assets/images/favicon.png' | relative_url }}" alt="" />
+        <span class="nav__name">Ethan Truong</span>
+      </a>
+      <div class="nav__links">
+        <a href="#home" aria-current="page">Home</a>
+        <a>Design</a>
+        <a>Dev</a>
+        <a>Resume</a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero" id="home">
+        <canvas class="seeds" id="seeds" aria-hidden="true"></canvas>
+        <div class="hero__stage">
+          <div class="hero__scene">
+            <img
+              class="hero__layer hero__l1"
+              src="{{ art }}map-l1-wide-final.webp"
+              alt="A painted storybook valley with a village, castle and waterfall"
+            />
+            <div class="hero__hill">
+              <img
+                class="hero__layer hero__l2"
+                src="{{ art }}Home_L2_5_new.png"
+                alt=""
+              />
+              <div
+                class="hero__fox"
+                id="heroFox"
+                role="img"
+                aria-label="A little fox asleep on the hill"
+              >
+                <i class="hero__sprite"></i>
+              </div>
+              <span class="zzz" aria-hidden="true">z</span>
+            </div>
+          </div>
+          <img
+            class="hero__layer hero__l3"
+            src="{{ art }}Home_L3_7.png"
+            alt=""
+          />
+        </div>
+      </section>
+      <div class="hero__intro">
+        <div class="hero__intro__text">
+          <h1>Hi! I'm Ethan Truong</h1>
+          <p>Game Designer | Developer</p>
+          <p class="hero__lead">
+            I've spent almost five years making games, and my favourite part is
+            the moment an idea turns into something playable. Working on both
+            design and code taught me how to take that idea all the way to a
+            finished game, then polish it for wherever it lands, from iOS and
+            Android to TikTok.
+          </p>
+          {% include social.html %}
+          <a class="btn" href="#dev"
+            >See my work <i class="fas fa-arrow-up"></i
+          ></a>
+        </div>
+        <picture
+          ><source
+            media="(max-width: 640px)"
+            srcset="{{ art }}intro-bg-m.webp" />
+          <img
+            class="hero__intro__art"
+            src="{{ art }}intro-bg.webp"
+            alt="The fox in an open storybook: planning at a chart whiteboard on one page, coding on a laptop on the other"
+        /></picture>
+      </div>
+
+      <!-- ponytail: Design, Dev and Resume are hidden while the new flow is built; drop the hidden attributes to bring them back. -->
+      <section class="scene" id="design" hidden>
+        <header class="section__head"><h2>Design</h2></header>
+        <div class="scene__scroll">
+          <div
+            class="scene__stage"
+            style="--bg:url('{{ art }}market-bg.webp')"
+            role="img"
+            aria-label="A village fair around a fountain in the town square"
+          ></div>
+        </div>
+      </section>
+
+      <section class="scene" id="dev" hidden>
+        <header class="section__head"><h2>Dev</h2></header>
+        <div class="scene__scroll">
+          <div class="scene__stage" style="--bg:url('{{ art }}castle-bg.webp')">
+            {% assign featured = site.projects | sort: "order" %}{% assign xs =
+            "17.5,42.6,65.1" | split: "," %} {% for p in featured limit: 3 %}<a
+              class="frame"
+              style="--x:{{ xs[forloop.index0] }}%"
+              href="{{ p.url | relative_url }}"
+              ><video
+                data-lazy
+                muted
+                loop
+                playsinline
+                preload="none"
+                src="{{ '/assets/media/' | append: p.media | append: '-preview.mp4' | relative_url }}"
+                aria-hidden="true"
+              ></video
+              ><span class="frame__plate">{{ p.title }}</span></a
+            >
+            {% endfor %}
+          </div>
+        </div>
+        <p class="more">
+          <a class="btn" href="{{ '/#projects' | relative_url }}"
+            >All projects</a
+          >
+        </p>
+      </section>
+
+      <section class="scene" id="resume" hidden>
+        <header class="section__head"><h2>Resume</h2></header>
+        <div class="scene__scroll">
+          <div
+            class="scene__stage"
+            style="--bg:url('{{ art }}harbour-bg.webp')"
+            role="img"
+            aria-label="A harbour at sunset with a treasure map on the pier"
+          ></div>
+        </div>
+        <p class="more">
+          <a class="btn" href="{{ '/resume.html' | relative_url }}"
+            >Full resume</a
+          >
+        </p>
+      </section>
+    </main>
+    <footer>© {{ site.time | date: "%Y" }} Ethan Truong</footer>
+
+    <script>
+      const fox = document.getElementById("heroFox");
+      const hero = document.getElementById("home");
+      const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Scene eases toward the real scroll position each frame, so wheel steps glide instead of jump.
+      let y = scrollY,
+        raf = 0;
+      // Wake plays on a timer (20 fps) once scrolling starts, so every frame shows; back at the top it plays in reverse.
+      let f = 0,
+        target = 0,
+        timer = 0;
+      const step = () => {
+        f += Math.sign(target - f);
+        fox.style.setProperty("--f", f);
+        hero.classList.toggle("is-awake", f > 0);
+        if (f === target) {
+          clearInterval(timer);
+          timer = 0;
+        }
+      };
+      const render = () => {
+        y += (scrollY - y) * 0.12;
+        if (Math.abs(scrollY - y) < 0.5) y = scrollY;
+        y = Math.min(y, scrollY / 0.55); // scrolling up fast, the lagging L2 would rise above L3's torn edge and open a gap; cap the lag so it never passes its rest spot
+        const h = hero.offsetHeight;
+        hero.style.setProperty("--p", `${Math.min(y, h)}px`);
+        target = y / h > 0.03 ? 11 : 0;
+        if (f !== target && !timer) timer = setInterval(step, 1000 / 20);
+        raf = y === scrollY ? 0 : requestAnimationFrame(render);
+      };
+      const onScroll = () => {
+        if (!still && !raf) raf = requestAnimationFrame(render);
+      };
+      addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+
+      // Dandelion trail: seeds are blown backwards off the cursor path, drift, spin and fade. Capped, and idle when the cursor is still.
+      (() => {
+        const cv = document.getElementById("seeds");
+        if (
+          !cv ||
+          !matchMedia(
+            "(hover: hover) and (pointer: fine) and (min-width: 641px) and (prefers-reduced-motion: no-preference)",
+          ).matches
+        )
+          return;
+        const ctx = cv.getContext("2d");
+        const atlas = new Image();
+        atlas.src = "{{ art }}dandelion-seeds.webp"; // one row of square cells; the cell count is read from the image
+        const MAX = 48, // particle cap
+          GAP = 30, // px of cursor travel per spawn
+          SIZE = [14, 46], // on-screen px, weighted towards small
+          LIFE = [1400, 2800]; // ms
+        const seeds = [];
+        let last = null,
+          lastT = 0,
+          dirX = 0,
+          dirY = 0,
+          speed = 0,
+          travelled = 0,
+          loop = 0,
+          t0 = 0,
+          dpr = 1;
+        const size = () => {
+          dpr = Math.min(devicePixelRatio || 1, 2);
+          cv.width = innerWidth * dpr;
+          cv.height = innerHeight * dpr;
+        };
+        size();
+        addEventListener("resize", size);
+        const rnd = (a, b) => a + Math.random() * (b - a);
+        const spawn = (x, y) => {
+          if (seeds.length >= MAX) seeds.shift();
+          const m = Math.hypot(dirX, dirY) || 1,
+            ang = Math.atan2(-dirY / m, -dirX / m) + rnd(-0.9, 0.9), // straight back from the cursor, fanned left and right
+            big = Math.pow(Math.random(), 2.2),
+            kick = (40 + Math.min(speed, 2000) * 0.07) * rnd(0.55, 1.35) * (1.15 - 0.45 * big);
+          seeds.push({
+            x: x + rnd(-6, 6),
+            y: y + rnd(-6, 6),
+            vx: Math.cos(ang) * kick,
+            vy: Math.sin(ang) * kick,
+            a: rnd(0, 6.28),
+            w: rnd(0.8, 3) * (Math.random() < 0.5 ? -1 : 1),
+            sw: rnd(0, 6.28),
+            sf: rnd(1.2, 2.6),
+            s: SIZE[0] + (SIZE[1] - SIZE[0]) * big,
+            f: Math.random(),
+            born: performance.now(),
+            life: rnd(LIFE[0], LIFE[1]),
+          });
+        };
+        const frame = (now) => {
+          const dt = Math.min((now - t0) / 1000, 0.05),
+            C = atlas.naturalHeight,
+            cells = Math.max(1, Math.round(atlas.naturalWidth / C));
+          t0 = now;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          ctx.beginPath();
+          ctx.rect(0, 0, innerWidth, Math.max(0, hero.getBoundingClientRect().bottom));
+          ctx.clip(); // seeds never leave the home background
+          ctx.shadowColor = "rgba(59, 36, 20, 0.35)";
+          ctx.shadowBlur = 2;
+          const drag = Math.exp(-1.3 * dt);
+          for (let i = seeds.length - 1; i >= 0; i--) {
+            const p = seeds[i],
+              age = (now - p.born) / p.life;
+            if (age >= 1) {
+              seeds.splice(i, 1);
+              continue;
+            }
+            p.sw += dt * p.sf;
+            p.vx = p.vx * drag + Math.sin(p.sw) * 26 * dt; // breeze: sideways sway
+            p.vy = p.vy * drag + Math.cos(p.sw * 0.8) * 20 * dt - 6 * dt; // and a slow lift
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.a += p.w * dt;
+            ctx.globalAlpha = Math.min(age / 0.07, 1) * Math.min(1, (1 - age) / 0.5) * 0.95;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.a);
+            ctx.drawImage(atlas, Math.floor(p.f * cells) * C, 0, C, C, -p.s / 2, -p.s / 2, p.s, p.s);
+            ctx.restore();
+          }
+          loop = seeds.length ? requestAnimationFrame(frame) : 0;
+          if (!loop) ctx.clearRect(0, 0, innerWidth, innerHeight);
+        };
+        const reset = () => {
+          last = null;
+          dirX = dirY = speed = travelled = 0;
+        };
+        addEventListener(
+          "pointermove",
+          (e) => {
+            if (e.pointerType !== "mouse" || e.clientY > hero.getBoundingClientRect().bottom) return reset();
+            if (last) {
+              const dx = e.clientX - last.x,
+                dy = e.clientY - last.y,
+                d = Math.hypot(dx, dy);
+              if (d > 0.5) {
+                speed += (d / (Math.max(e.timeStamp - lastT, 8) / 1000) - speed) * 0.3;
+                dirX += (dx / d - dirX) * 0.35; // smoothed heading of the cursor
+                dirY += (dy / d - dirY) * 0.35;
+                travelled += d;
+              }
+            }
+            last = { x: e.clientX, y: e.clientY };
+            lastT = e.timeStamp;
+            if (travelled < GAP || Math.hypot(dirX, dirY) < 0.2) return;
+            travelled = 0;
+            spawn(e.clientX, e.clientY);
+            if (Math.random() < 0.4) spawn(e.clientX, e.clientY);
+            if (!loop && atlas.complete) {
+              t0 = performance.now();
+              loop = requestAnimationFrame(frame);
+            }
+          },
+          { passive: true },
+        );
+        document.addEventListener("mouseleave", reset);
+      })();
+
+      // Card previews play only while visible.
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const { target, isIntersecting } of entries) {
+            if (target.tagName === "VIDEO")
+              isIntersecting ? target.play().catch(() => {}) : target.pause();
+            else if (isIntersecting) target.classList.add("is-in");
+          }
+        },
+        { rootMargin: "0px 0px -15% 0px" },
+      );
+      document
+        .querySelectorAll("video[data-lazy]")
+        .forEach((el) => io.observe(el));
+    </script>
+  </body>
 </html>
