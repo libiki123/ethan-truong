@@ -11,6 +11,7 @@ highlights:
 genre: Flight prototype
 role: Lead Developer
 blurb: "A flying helicopter in Unreal."
+tasks: [Flight, Vehicle]
 year: "2021"
 status: Ongoing
 type: Individual

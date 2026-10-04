@@ -11,6 +11,7 @@ highlights:
 genre: VR simulation
 role: Lead Developer
 blurb: "VR screwdriver and power drill."
+tasks: [Screw Mechanic, Objects]
 year: "2021"
 status: Complete
 type: Individual

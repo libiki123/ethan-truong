@@ -12,6 +12,7 @@ highlights:
 genre: 2D RPG platformer
 role: Lead Developer
 blurb: "A 2D RPG platformer with enemy AI."
+tasks: [Player Movement, Enemy AI]
 year: "2021 – present"
 status: Ongoing
 type: Individual

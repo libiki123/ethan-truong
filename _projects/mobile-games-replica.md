@@ -11,6 +11,7 @@ highlights:
 genre: Casual
 role: Lead Developer
 blurb: "Recreations of mobile classics."
+tasks: [Core Mechanics, Polish]
 year: "2021"
 status: Complete
 type: Individual

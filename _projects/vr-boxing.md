@@ -12,6 +12,7 @@ highlights:
 genre: VR boxing
 role: Lead Developer
 blurb: "A VR boxing game with enemy AI."
+tasks: [Hit Detection, Enemy AI]
 year: "2021"
 status: Complete
 type: Individual

@@ -12,6 +12,7 @@ highlights:
 genre: FPS shooter
 role: Developer
 blurb: "Zombie shooter from a helicopter."
+tasks: [Design, QA, Team]
 year: "2023"
 status: Complete
 type: Indie

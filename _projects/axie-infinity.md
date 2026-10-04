@@ -9,6 +9,7 @@ tags: [Unity, C#, Web3, Turn-based, Mobile]
 genre: Turn-based
 role: Developer
 blurb: "Web3 turn-based Axie battler."
+tasks: [Gameplay, Web3, UI/UX]
 year: "2023 – 2024"
 status: Complete
 type: Work

@@ -9,6 +9,7 @@ tags: [Unity, C#, Web3, Idle]
 genre: Idle
 role: Developer
 blurb: "Web3 idle game with Pudgy Penguins."
+tasks: [Gameplay, WebGL, Web3]
 year: "2025"
 status: Complete
 type: Work

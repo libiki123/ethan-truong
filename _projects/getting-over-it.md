@@ -11,6 +11,7 @@ highlights:
 genre: Platformer
 role: Lead Developer
 blurb: "A shotgun-recoil platformer."
+tasks: [Design, Development, Art]
 year: "2021"
 status: Complete
 type: Game Jam

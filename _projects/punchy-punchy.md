@@ -11,6 +11,7 @@ highlights:
 genre: Hyper-casual
 role: Lead Developer
 blurb: "A fast tap-timing game."
+tasks: [Gameplay, Power-ups, Animation]
 year: "2023"
 status: Complete
 type: Work

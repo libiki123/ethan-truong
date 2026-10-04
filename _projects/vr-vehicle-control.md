@@ -11,6 +11,7 @@ highlights:
 genre: VR driving
 role: Lead Developer
 blurb: "Drivable, flyable VR vehicles."
+tasks: [Vehicles, Cockpit]
 year: "2021"
 status: Complete
 type: Individual

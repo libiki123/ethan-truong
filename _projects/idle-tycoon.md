@@ -12,6 +12,7 @@ highlights:
 genre: Idle tycoon
 role: Lead Developer
 blurb: "A cute idle town tycoon."
+tasks: [Customer AI, Economy, Data]
 year: "2023"
 status: Unfinished
 type: Work

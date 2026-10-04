@@ -12,6 +12,7 @@ highlights:
 genre: Hyper-casual
 role: Lead Developer
 blurb: "A 3D dodge game that gets harder."
+tasks: [Controls, Difficulty, Monetization]
 year: "2023"
 status: Complete
 type: Work

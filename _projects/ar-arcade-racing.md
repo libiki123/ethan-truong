@@ -11,6 +11,7 @@ highlights:
 genre: Arcade racing
 role: Lead Developer
 blurb: "An AR arcade racer on your floor."
+tasks: [Racing Gameplay, AR Setup]
 year: "2021"
 status: Complete
 type: Individual
