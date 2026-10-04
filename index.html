@@ -897,14 +897,17 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         text-decoration-color: transparent;
         transition: text-decoration-color 150ms;
       }
-      .b-link:hover {
-        text-decoration-color: currentColor;
+      .b-link:hover,
+      .p-card .b-link,
+      .d-tile .b-link {
+        text-decoration-color: currentColor; /* the card links keep their underline, not only on hover */
       }
       .b-link .icon {
         transition: transform 150ms var(--ease);
       }
       .b-link:hover .icon,
-      .p-card:hover .b-link .icon {
+      .p-card:hover .b-link .icon,
+      .d-tile:hover .b-link .icon {
         transform: translateX(3px);
       }
 
@@ -1130,12 +1133,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         padding: 20px 24px 24px;
       }
       .d-tile__genre {
-        margin: 0;
-        color: var(--accent-ink);
-        font-size: var(--step--1);
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        margin: -6px 0 0; /* tucks under the title */
+        color: #d08a4e; /* a soft orange, lighter than the accent label colour */
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
       }
       .d-tile__title {
         margin: 0;
@@ -1157,6 +1159,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .d-tile__meta {
         width: 100%;
         margin-top: auto;
+        padding-top: 14px; /* same footer as the Dev cards: a divider, the year on the left, the action on the right */
+        border-top: 1px solid var(--border);
+        font-size: var(--step--1);
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -1165,7 +1170,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       .d-tile__period {
         color: var(--ink-muted);
-        font-size: var(--step--1);
+      }
+      .d-tile[data-shots] {
+        cursor: pointer;
       }
       .d-tile__stores {
         display: flex;
@@ -1363,19 +1370,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           width: 15px;
           height: 15px;
         }
-        .p-card .p-card__blurb {
-          font-size: 0.8125rem;
-          line-height: 1.4;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
         .p-card .p-card__title {
           font-size: 1.125rem;
           line-height: 1.2;
         }
-        .p-card .p-card__foot {
+        .p-card .p-card__foot,
+        .d-tile .d-tile__meta {
           padding-top: 9px;
           font-size: 0.8125rem;
         }
@@ -1628,10 +1628,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         color: var(--ink-muted);
         font-size: var(--step--1);
       }
-      .p-card__blurb {
-        margin: 0;
-        color: var(--ink-muted);
-        font-size: var(--step--1);
+      .p-card__genre {
+        margin: -6px 0 0; /* tucks under the title, like the Design tiles */
+        color: #d08a4e;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
       }
       .p-card__year {
         color: var(--ink-muted);
@@ -2553,20 +2555,22 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           </header>
           <div class="pager" id="designPager"><div class="pager__track"><div class="bento">
             {%- for item in designs %}
-            <article class="d-tile rv{% if forloop.first %} d-tile--lead{% endif %}" style="--i: {{ forloop.index0 }}">
+            <article class="d-tile rv{% if forloop.first %} d-tile--lead{% endif %}"{% if item.shots %} data-shots="{% for im in item.shots %}{{ art | append: 'design-samples/' | append: im }}{% unless forloop.last %}|{% endunless %}{% endfor %}"{% endif %} style="--i: {{ forloop.index0 }}">
               <div class="d-tile__media">
                 <img src="{{ art }}design-samples/{{ item.image }}" alt="{{ item.title }} key art" loading="lazy" />
               </div>
               <div class="d-tile__body">
-                <p class="d-tile__genre">{{ item.genre }}</p>
                 <h3 class="d-tile__title">{{ item.title }}</h3>
+                <p class="d-tile__genre">{{ item.genre }}</p>
                 <p class="d-tile__role">{% include icon.html name="briefcase" %}{{ item.role }}</p>
                 <ul class="chips">
                   {%- for f in item.focus %}<li class="chip" data-tag="{{ f | slugify }}">{{ f }}</li>{% endfor %}
                 </ul>
                 <div class="d-tile__meta">
                   <span class="d-tile__period">{{ item.period }}</span>
-                  {%- if item.google_play or item.app_store %}
+                  {%- if item.shots %}
+                  <span class="b-link">View project {% include icon.html name="arrow-right" %}</span>
+                  {%- elsif item.google_play or item.app_store %}
                   <div class="d-tile__stores">
                     {%- if item.google_play %}<a class="b-link" href="{{ item.google_play }}" target="_blank" rel="noopener">Google Play {% include icon.html name="arrow-up-right" %}</a>{% endif %}
                     {%- if item.app_store %}<a class="b-link" href="{{ item.app_store }}" target="_blank" rel="noopener">App Store {% include icon.html name="arrow-up-right" %}</a>{% endif %}
@@ -2574,6 +2578,29 @@ assign art = '/assets/images/Redesign/' | relative_url %}
                   {%- endif %}
                 </div>
               </div>
+              {%- if item.shots %}
+              <template class="p-detail">
+                <div class="proj-side">
+                  <p class="proj-eyebrow">Game Design · Work · {{ item.period }}</p>
+                  <h2 class="proj-title">{{ item.title }}</h2>
+                  <ul class="chips">
+                    {%- for f in item.focus %}<li class="chip" data-tag="{{ f | slugify }}">{{ f }}</li>{% endfor %}
+                  </ul>
+                  <div class="proj-links">
+                    {%- if item.google_play %}<a href="{{ item.google_play }}" target="_blank" rel="noopener"><img class="proj-badge" width="164" height="52" src="{{ '/assets/images/badge-google-play.png' | relative_url }}" alt="Get it on Google Play" /></a>{% endif %}
+                    {%- if item.app_store %}<a href="{{ item.app_store }}" target="_blank" rel="noopener"><img class="proj-badge" width="164" height="52" src="{{ '/assets/images/badge-app-store.png' | relative_url }}" alt="Download on the App Store" /></a>{% endif %}
+                  </div>
+                </div>
+                <div class="proj-main">
+                  <h2>About</h2>
+                  <p>{{ item.about | markdownify | remove: '<p>' | remove: '</p>' }}</p>
+                  <h2>What I worked on</h2>
+                  {%- for w in item.work %}
+                  <p><strong>{{ w.title }}</strong> — {{ w.text }}</p>
+                  {%- endfor %}
+                </div>
+              </template>
+              {%- endif %}
             </article>
             {%- endfor %}
           </div></div></div>
@@ -2606,12 +2633,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               </div>
               <div class="p-card__body">
                 <h3 class="p-card__title"><button class="p-card__link" type="button" aria-haspopup="dialog">{{ p.title }}</button></h3>
-                <ul class="chips">
-                  <li class="chip" data-tag="{{ p.type | slugify }}">{{ p.type }}</li>
-                  <li class="chip" data-tag="{{ p.genre | slugify }}">{{ p.genre }}</li>
-                </ul>
+                <p class="p-card__genre">{{ p.genre }}</p>
                 <p class="p-card__role">{% include icon.html name="briefcase" %}{{ p.role }}</p>
-                <p class="p-card__blurb">{{ p.blurb }}</p>
+                <ul class="chips">
+                  {%- for t in p.tasks %}<li class="chip" data-tag="{{ t | slugify }}">{{ t }}</li>{% endfor %}
+                </ul>
                 <div class="p-card__foot">
                   <span class="p-card__year">{{ p.year }}</span>
                   <span class="b-link">View project {% include icon.html name="arrow-right" %}</span>
@@ -3350,8 +3376,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           pp.classList.add("is-paused");
           pp.setAttribute("aria-label", "Play video");
         });
-        document.querySelectorAll(".p-card").forEach((card) => {
-          const open = () => {
+        document.querySelectorAll(".p-card, .d-tile[data-shots]").forEach((card) => {
+          const open = (e) => {
+            if (e?.target.closest("a")) return; // a store link inside a Design tile goes to the store, not the popup
             body.replaceChildren(card.querySelector(".p-detail").content.cloneNode(true));
             body.querySelectorAll(".chip[data-tag]").forEach(hue);
             const shots = card.dataset.shots ? card.dataset.shots.split("|") : null;
