@@ -1,69 +1,2999 @@
 ---
-layout: default
-particles: true
+layout: null
+permalink: /
+redirect_from: /redesign/
 ---
-<section class="hero">
-  <div id="particles-js" class="hero__particles" aria-hidden="true"></div>
-  <div class="container hero__content">
-    <p class="eyebrow">Game Developer · Unity &amp; Unreal</p>
-    <h1>Hi! I'm Ethan Truong</h1>
-    <p class="hero__lead">
-      A dedicated Game Developer who enjoys creating engaging gaming experiences. I combine technical skills with
-      creative problem-solving to build games that players want to play.
-    </p>
-    {% include social.html %}
-    <a class="btn" href="#projects">See my work <i class="fas fa-arrow-down"></i></a>
-  </div>
-</section>
 
-<section class="section" id="experience">
-  <div class="container">
-    <header class="section__header">
-      <h2><i class="fas fa-briefcase"></i> Experience</h2>
-    </header>
-    {% for job in site.data.experience %}
-    <article class="job reveal">
-      <a class="job__logo" href="{{ job.url }}" target="_blank" rel="noopener">
-        <img src="{{ '/assets/images/' | append: job.logo | relative_url }}" alt="{{ job.company }} logo" width="{{ job.logo_size[0] }}" height="{{ job.logo_size[1] }}" loading="lazy" />
+{% comment %} ponytail: temp sandbox for the fox redesign; self-contained so the
+live site is untouched. Delete once index.html is migrated. {% endcomment %} {%
+assign art = '/assets/images/Redesign/' | relative_url %}
+<!doctype html>
+<html lang="{{ site.lang }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Redesign sandbox | {{ site.title }}</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ '/assets/images/favicon.png' | relative_url }}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..800,0..100&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <script>document.documentElement.classList.add("js");</script>
+    <style>
+      :root {
+        --paper: #fcf0db; /* = intro-bg.webp wall colour and the solid bottom of Home_L3_7 */
+        --paper-2: #f6e3c8;
+        --ink: #3b2414; /* dark-brown outline colour */
+        --ink-soft: #7a5a42;
+        --accent: #e8741c; /* fox orange */
+        --line: #d9bf9c;
+        --radius: 14px;
+        --max: 1140px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          400 16px/1.7 "Work Sans",
+          system-ui,
+          sans-serif;
+      }
+      img,
+      video {
+        display: block;
+        max-width: 100%;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", Georgia, serif;
+        line-height: 1.15;
+        margin: 0 0 0.4em;
+      }
+      .container {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+
+      /* Nav: two paper pills (icon left, links right) floating over the painting */
+      .nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 28px;
+        pointer-events: none; /* only the stickers catch clicks, so the map stays clickable under the bar */
+      }
+      .nav__brand,
+      .nav__links {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        background: var(--paper);
+        border: 1px solid var(--ink);
+        border-radius: 999px;
+        box-shadow: 0 2px 0 rgba(59, 36, 20, 0.35);
+      }
+      .nav__brand {
+        padding: 4px;
+      }
+      /* ponytail: name hidden until hover/focus, then the pill grows to the right to reveal it */
+      .nav__name {
+        max-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        opacity: 0;
+        transition:
+          max-width 0.35s ease,
+          opacity 0.25s ease,
+          margin 0.35s ease;
+      }
+      .nav__brand:hover .nav__name,
+      .nav__brand:focus-visible .nav__name {
+        max-width: 10em;
+        margin: 0 12px 0 8px;
+        opacity: 1;
+      }
+      .nav__brand img {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+      }
+      .nav__links {
+        gap: 2px;
+        padding: 4px;
+      }
+      /* ponytail: links collapse into a 3-bar button and grow out to the left on hover/focus/tap. Collapsing waits 0.7s (the name on the left waits 0s), so the menu lingers. */
+      .nav__items {
+        display: flex;
+        gap: 2px;
+        max-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        opacity: 0;
+        transition:
+          max-width 0.4s ease 0.7s,
+          opacity 0.25s ease 0.7s;
+      }
+      .nav__links:hover .nav__items,
+      .nav__links:focus-within .nav__items,
+      .nav__links.is-open .nav__items {
+        max-width: 24em;
+        opacity: 1;
+        transition-delay: 0s;
+      }
+      /* ponytail: set by the burger/Esc/outside click so an explicit close beats :hover and :focus-within until the pointer re-enters */
+      .nav__links.is-closed:hover .nav__items,
+      .nav__links.is-closed:focus-within .nav__items {
+        max-width: 0;
+        opacity: 0;
+        transition-delay: 0s;
+      }
+      .nav__burger,
+      .nav__mode {
+        flex: none;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+      }
+      .nav__burger:hover,
+      .nav__links:hover .nav__burger,
+      .nav__mode:hover {
+        background: rgba(59, 36, 20, 0.08);
+      }
+      .nav__burger svg,
+      .nav__mode svg {
+        width: 18px;
+        height: 18px;
+      }
+      /* ponytail: placeholder for plans/261003-night-mode-hero/plan.md. Only swaps the icon; no art changes yet. */
+      .nav__mode .i-moon,
+      html[data-mode="night"] .nav__mode .i-sun {
+        display: none;
+      }
+      html[data-mode="night"] .nav__mode .i-moon {
+        display: block;
+      }
+      .nav__links a {
+        padding: 6px 16px;
+        border-radius: 999px;
+        font-family: "Fraunces", serif;
+        font-weight: 600;
+        letter-spacing: 0.08em; /* caps need more air than 0.04em; the brand name keeps its own tracking */
+        color: var(--ink);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .nav__links a:hover {
+        background: var(--accent);
+        color: var(--paper);
+      }
+      /* The current section is marked with an orange underline, not a fill. Home never shows it: it is the default. */
+      .nav__links a[aria-current] {
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 3px;
+        text-underline-offset: 6px;
+      }
+      .nav__links a[aria-current]:hover {
+        text-decoration-color: var(--paper);
+      }
+      .sec h2[tabindex="-1"]:focus {
+        outline: 0; /* the heading takes focus on arrival from the map, without a ring */
+      }
+
+      /* Hero: plate + fox sprite positioned in plate-relative % so they scale together */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        clip-path: inset(0);
+      } /* clip-path also clips the fixed scene below */
+      /* Back layers + fox live in a fixed scene moved only by the eased scroll value, so native wheel steps never jolt them. L3 + text scroll natively. */
+      .hero__scene {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        aspect-ratio: 1672 / 941;
+        container-type: size;
+      }
+      .hero__stage {
+        position: relative;
+        aspect-ratio: 1672 / 941;
+      }
+      .hero__layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: left center;
+        will-change: transform;
+      }
+      /* Parallax: layers lag the scroll by (1 - rate). L1 sky/valley 0.25, L2 hill + fox 0.55, L3 rocks/paper 1.0 (static). */
+      /* Debug views for the sky cut: ?debug=l1 shows only the map layer over black, ?debug=l0 only the sky layer. L2, the fox and L3 are hidden. Harmless when the param is absent. */
+      html[data-debug] .hero__scene {
+        background: #000 !important;
+      }
+      html[data-debug] .hero__hill,
+      html[data-debug] .hero__l3 {
+        display: none !important;
+      }
+      html[data-debug="l1"] .hero__l0,
+      html[data-debug="l0"] .hero__l1 {
+        display: none !important;
+      }
+      .hero__l0 {
+        transform: translateY(calc(var(--p, 0px) * -0.1));
+      } /* sky plate: slowest layer. Pair it with L1's box below; it is 1635/1335 as tall (300px of extra sky on top) so it can drift behind L1 without exposing an edge */
+      .hero__l1 {
+        transform: translateY(calc(var(--p, 0px) * -0.25));
+      }
+      /* L2, the fox and the zzz share one box, so on phone the hill can be resized without remapping the fox. */
+      .hero__hill {
+        position: absolute;
+        inset: 0;
+        transform: translateY(calc(var(--p, 0px) * -0.55));
+        scale: 0.62;
+        translate: 0 -14%;
+        transform-origin: left bottom;
+        will-change: transform;
+      }
+      .hero__l2 {
+        inset: auto 0 0 0;
+        height: auto;
+        aspect-ratio: 1672 / 1317;
+      } /* Home_L2_5_new is 1672x1317: bottom-anchored, the extra canopy overflows above the 16:9 box (not clipped, so .hero__hill can scale) */
+
+      .hero__l3 {
+        inset: auto auto 0 0;
+        width: 125%;
+        max-width: none;
+        height: 125%;
+        scale: 0.8;
+        transform-origin: left bottom;
+        translate: 0 -7.6%;
+        box-shadow: 0 30vh 0 var(--paper);
+      } /* the shadow refills the strip the lift uncovers; 6cqh = 6% of the scene-tall box on desktop */
+      .hero__l2,
+      .hero__l3 {
+        pointer-events: none;
+      }
+      .hero__l3 {
+        z-index: 6;
+      } /* L3 belongs to section 1: it sits above the dandelion canvas (z 5), so seeds drift behind the foreground bush and paper edge */
+
+      .hero__fox {
+        position: absolute;
+        left: 9.5%;
+        top: 40.5%;
+        width: 15.91%;
+        aspect-ratio: 277 / 311;
+        filter: drop-shadow(0 10px 6px rgba(59, 36, 20, 0.28));
+      }
+      .seeds {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 5;
+        display: none;
+      }
+      @media (hover: hover) and (pointer: fine) and (min-width: 641px) and (prefers-reduced-motion: no-preference) {
+        .seeds {
+          display: block;
+        }
+      } /* dandelion trail: desktop pointers only; the script also bails out on phones */
+      .hero__scene {
+        background: linear-gradient(#0992fc 0%, #6fb4f0 20%, #1ea8f8 75%);
+      }
+      /* ponytail: one wide painting (16:9) serves desktop and phone. Desktop: fills the scene exactly. Phone: right-anchored crop (see media query). */
+      .hero__l1 {
+        inset: auto;
+        top: 0;
+        left: auto;
+        right: 0;
+        width: auto;
+        max-width: none;
+        height: 88.5%;
+        aspect-ratio: 3200 / 1335;
+      }
+      .hero__l0 {
+        inset: auto;
+        top: calc(-88.5% * 300 / 1335);
+        left: auto;
+        right: 0;
+        width: auto;
+        max-width: none;
+        height: calc(88.5% * 1635 / 1335);
+        aspect-ratio: 3200 / 1635;
+      }
+      /* fox-sprite.webp: all 12 frames of Home_Fox_Sheet_5 (sleep, wake, sit) cut out whole into 277x311 cells, each anchored on its front toe at the ground so the paws stay planted. JS sets --f. */
+      .hero__sprite {
+        display: block;
+        height: 100%;
+        background: url("{{ art }}fox-sprite.webp") 0 0 / 1200% 100% no-repeat;
+        background-position-x: calc(var(--f, 0) * 100% / 11);
+        animation: breathe 3.2s ease-in-out infinite;
+        transform-origin: 50% 100%;
+      }
+      @keyframes breathe {
+        50% {
+          transform: scale(1.015, 0.985);
+        }
+      }
+      /* Headline sits below the plate: the torn edge starts at 85-95% of the stage, so anything inside it covers the bushes. */
+      /* intro-bg.webp: book scene on the right, flat #fcedd5 wall at the top-left, so the torn edge above flows straight into it.
+       Text sits in flow; the image slides up under it by 14% of its width, just under the ~16% of empty wall, so nothing hits the brush cup. */
+      .hero__intro {
+        --drop: max(30px, calc(310px - 27vh)); /* pushes the text down; the art's margin cancels it, so the painting stays put and h1 clears the nav at page bottom */
+        position: relative;
+        margin-top: calc(-3px - 3.2vw);
+        padding-top: 6px;
+        background: var(--paper);
+        overflow-x: clip; /* the painting starts 48px to the right before it slides in; clipping here keeps that from widening the whole page */
+      } /* pulls the intro up into the empty paper under the painting: the art ends ~86.5% down the hero (56.25vw tall), and L3's fade into solid cream only finishes near its bottom edge, so overlapping more than ~3vw leaves a faint step where the two meet. The -3px hides the sub-pixel seam where the fixed scene peeks past L3 */
+      .hero__intro__text {
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
+        padding: var(--drop) 16px 0 4%;
+      }
+      .hero__intro__art {
+        display: block;
+        width: min(100%, calc((100vh - 110px) * 2.33));
+        margin: calc(-14% - var(--drop) + var(--push, 0px)) 0 0 auto;
+        mask-image:
+          linear-gradient(to right, transparent, #000 10%),
+          linear-gradient(to bottom, #000 91%, transparent);
+        mask-composite: intersect;
+      } /* the desk fades out at the bottom into the page colour, so it flows into the footer. ponytail: 110px = nav 66 + footer 43; on a short window the page bottom would otherwise leave the book's top under the fixed nav. Ceiling: a window under ~600px tall clips the desk's left edge */
+      .hero__intro h1 {
+        scroll-margin-top: 100px; /* the name link lands the heading just under the fixed nav */
+        font-size: clamp(1.8rem, 3.4vw, 3rem);
+        font-weight: 800;
+      }
+      .hero__intro p {
+        margin: 0;
+        color: var(--ink-soft);
+      }
+      .hero__intro .hero__lead {
+        margin: 0.8em 0 1.2em;
+        color: var(--ink);
+      }
+      .hero__intro .social {
+        justify-content: flex-start;
+        margin-bottom: 0;
+      }
+      /* Sparkles on the name (after Magic UI's Sparkles Text): small four-point stars appear at random spots on the words, spin and shrink away, and are replaced. Built by JS, capped at 5 at a time, off for reduced motion. */
+      .sparkle {
+        position: relative;
+        display: inline-block;
+      }
+      .sparkle__star {
+        position: absolute;
+        z-index: 2;
+        width: var(--sz);
+        height: var(--sz);
+        margin: calc(var(--sz) / -2) 0 0 calc(var(--sz) / -2);
+        background: var(--c);
+        clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+        pointer-events: none;
+        animation: sparkle-pop 1100ms ease-in-out forwards;
+      }
+      @keyframes sparkle-pop {
+        0% {
+          opacity: 0;
+          transform: scale(0) rotate(0deg);
+        }
+        40% {
+          opacity: 1;
+          transform: scale(1) rotate(80deg);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0) rotate(160deg);
+        }
+      }
+      /* Role tags under the name */
+      .hero__intro p.intro-roles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .intro-roles .chip {
+        padding: 5px 14px;
+        font-size: var(--step-0);
+        font-weight: 600;
+      }
+
+      .hero__intro .social a {
+        position: relative;
+        z-index: 1;
+        background: var(--paper);
+      } /* solid, so the mug art that rises behind them does not show through */
+      .zzz {
+        position: absolute;
+        left: 22%;
+        top: 47.5%;
+        font-family: "Fraunces", serif;
+        color: var(--ink);
+        opacity: 0.7;
+        font-size: clamp(1rem, 2vw, 1.6rem);
+        animation: zzz 3.2s ease-in-out infinite;
+      }
+      .is-awake .zzz {
+        visibility: hidden;
+      }
+      .is-awake .hero__sprite {
+        animation: none;
+      }
+      @keyframes zzz {
+        0% {
+          transform: translateY(6px);
+          opacity: 0;
+        }
+        40% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(-18px);
+          opacity: 0;
+        }
+      }
+
+      /* Map pins: clickable labels over the landmarks. The container reuses L1's box and parallax, so the pins stay on the painting; --x/--y are % of the 3200x1335 map. */
+      .hero__pins {
+        pointer-events: none;
+      }
+      .pin {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        display: grid;
+        justify-items: center;
+        --pad: max(2.2em, 30px);
+        padding: var(--pad); /* a big hover area around the dot */
+        transform: translate(-50%, calc(-100% + var(--pad))); /* keeps the dot on its map spot */
+        pointer-events: auto;
+        color: var(--ink);
+        font:
+          800 clamp(0.72rem, 1.3cqw, 1.15rem) / 1 "Fraunces",
+          serif;
+        letter-spacing: 0.03em;
+      }
+      /* The label stays hidden until hover/focus, or until the hint loop below shows it (one pin at a time) to say the dots are clickable. */
+      .pin__label {
+        position: absolute;
+        bottom: calc(100% - 0.35em);
+        left: 50%;
+        padding: 0.4em 0.9em 0.45em;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        background: var(--paper);
+        box-shadow: 0 3px 8px rgba(30, 15, 5, 0.35);
+        white-space: nowrap;
+        opacity: 0;
+        translate: -50% 8px;
+        scale: 0.85;
+        pointer-events: none;
+      }
+      .pin::after {
+        content: "";
+        width: 0.9em;
+        height: 0.9em;
+        margin-top: 0.35em;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 2px 5px rgba(30, 15, 5, 0.4);
+      }
+      .pin:hover .pin__label,
+      .pin:focus-visible .pin__label,
+      .pin.is-hint .pin__label {
+        opacity: 1;
+        translate: -50% 0;
+        scale: 1;
+      }
+      .pin:hover .pin__label,
+      .pin:focus-visible .pin__label {
+        background: var(--accent);
+        color: var(--paper);
+      }
+      .pin:hover::after,
+      .pin:focus-visible::after {
+        scale: 1.25;
+      }
+      .pin:focus-visible {
+        outline: 0;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .pin::after {
+          animation: ping 2.2s ease-out infinite;
+        }
+        @keyframes ping {
+          0% {
+            box-shadow: 0 0 0 0 rgba(232, 116, 28, 0.7);
+          }
+          70%,
+          100% {
+            box-shadow: 0 0 0 0.9em rgba(232, 116, 28, 0);
+          }
+        }
+      }
+      html[data-debug] .hero__pins {
+        display: none;
+      }
+
+      /* Map navigation: a click marks the chosen pin (it fills, grows and ripples, the others dim) while the page scrolls smoothly to the section; nothing on the painting moves. */
+      .pin::before {
+        content: "";
+        position: absolute;
+        bottom: var(--pad);
+        left: 50%;
+        width: 0.9em;
+        height: 0.9em;
+        margin-left: -0.45em;
+        border-radius: 50%;
+        background: var(--accent);
+        opacity: 0;
+        pointer-events: none;
+      }
+      @media (pointer: coarse) {
+        .pin {
+          --pad: max(2.6em, 38px);
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .pin {
+          transition: opacity 200ms ease;
+        }
+        .pin::after {
+          transition: scale 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .pin__label {
+          transition:
+            opacity 0.4s ease,
+            translate 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            scale 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            background 0.3s ease,
+            color 0.3s ease;
+        }
+        .hero__pins.is-going .pin:not(.is-going) {
+          opacity: 0.35;
+        }
+        .pin.is-going .pin__label {
+          background: var(--accent);
+          color: var(--paper);
+          opacity: 1;
+          translate: -50% 0;
+          scale: 1.12;
+        }
+        .pin.is-going::before {
+          animation: pin-ripple 500ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes pin-ripple {
+          from {
+            opacity: 0.7;
+            transform: scale(0);
+          }
+          to {
+            opacity: 0;
+            transform: scale(3.2);
+          }
+        }
+      }
+
+      .social {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .social a {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        border: 2px solid var(--ink);
+        color: var(--ink);
+        font-size: 1.15rem;
+      }
+      .social a:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      /* Below the hero: warm modern sections. New class names only (.b-btn, .sec, .d-tile, .p-card, .x-item, .site-foot) so the intro's .social stays untouched. */
+      :root {
+        --surface: #fff8ea;
+        --surface-sunk: #f6e6c8;
+        --border: #e3cfa8;
+        --border-strong: #c9ae82;
+        --ink-muted: #6b5240;
+        --fox: #e8741c; /* fills only, never text */
+        --accent-ink: #a8480a; /* orange text */
+        --leaf: #3f5a2e;
+        --leaf-tint: #e2e9cf;
+        --dusk: #2f5d6b;
+        --dusk-tint: #dbe7e6;
+        --fox-tint: #fbe0c4;
+        --night: #2a190d;
+        --fox-on-night: #f08a3a;
+        --step--1: clamp(0.8125rem, 0.78rem + 0.15vw, 0.9rem);
+        --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+        --step-1: clamp(1.25rem, 1.12rem + 0.6vw, 1.5rem);
+        --step-2: clamp(1.5rem, 1.25rem + 1.2vw, 2.125rem);
+        --step-3: clamp(1.875rem, 1.4rem + 2.2vw, 3rem);
+        --step-4: clamp(2.5rem, 1.6rem + 4vw, 4.5rem);
+        --r-sm: 8px;
+        --r-md: 14px;
+        --r-lg: 22px;
+        --shadow-1: 0 1px 2px rgb(59 36 20 / 0.08), 0 2px 8px rgb(59 36 20 / 0.06);
+        --shadow-2: 0 2px 4px rgb(59 36 20 / 0.08), 0 12px 28px rgb(59 36 20 / 0.12);
+        --ease: cubic-bezier(0.22, 0.8, 0.3, 1);
+        --section-pad: clamp(72px, 10vw, 128px);
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .icon {
+        flex: none;
+        width: 1.1em;
+        height: 1.1em;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding-inline: clamp(16px, 5vw, 48px);
+      }
+      .sec {
+        padding-block: max(96px, var(--section-pad)); /* top padding keeps the heading clear of the fixed nav when a link or pin lands here */
+        font-size: var(--step-0);
+        color: var(--ink);
+      }
+      .sec--paper {
+        background: var(--paper);
+      }
+      .sec--sunk {
+        background: var(--surface-sunk);
+      }
+      /* The bottom of each section fades into the colour of whatever follows (--next), like the intro's art fades into the page, so there is no hard edge. Sits in the bottom padding, so it never covers content. */
+      .sec {
+        position: relative;
+      }
+      .sec::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 96px;
+        background: linear-gradient(to bottom, transparent, var(--next));
+        pointer-events: none;
+      }
+      #design {
+        --next: var(--surface-sunk);
+        /* Market scene: flat cream on top, stall on the left, fountain on the right, cobbles along the bottom. The art is pinned to the section's bottom at full width (it is 1822x863, so its height follows the width); the bottom padding is sized to that height so the cards never sit on top of it. */
+        --art-h: calc(100vw * 863 / 1822);
+        background: var(--paper) url("{{ art }}bg-design.webp") center bottom / 100% auto no-repeat;
+        padding-bottom: calc(var(--art-h) * 0.62); /* phone: the stall sits right under the Show all button, so it stays low */
+      }
+      @media (min-width: 641px) {
+        #design {
+          padding-bottom: calc(var(--art-h) * 0.14 + 24px); /* measured: only the cobble strip (lowest 12.4% of the art) is painted under the centred Show all button, so the whole scene can rise to just under it */
+        }
+      }
+      #dev {
+        --next: var(--paper);
+        /* Castle scene: castle tall on the right, garden rotunda low on the left, cobbles along the bottom. Same method as #design: pinned to the bottom at full width, bottom padding sized from the art height so the cards and the Show all button stay clear of it. */
+        --art-h: calc(100vw * 863 / 1822);
+        background: var(--surface-sunk) url("{{ art }}bg-dev.webp") center bottom / 100% auto no-repeat;
+        padding-bottom: calc(var(--art-h) * 0.62); /* phone: art is small and low */
+      }
+      @media (min-width: 641px) {
+        #dev {
+          padding-bottom: calc(var(--art-h) * 0.3 + 24px); /* tablet: a bush near the centre rises to 73% of the art height, under the Show all button */
+        }
+      }
+      @media (min-width: 1024px) {
+        #dev {
+          padding-bottom: calc(var(--art-h) * 0.14 + 24px); /* measured: only the cobbles (lowest ~11%) are painted under the centred button */
+        }
+      }
+      #resume {
+        --next: var(--night); /* the water fades into the dark footer */
+      }
+      #resume {
+        /* Harbour scene: red-sailed ship tall on the left, lighthouse on the right, a shallow water strip along the bottom. The ship is wide (it reaches 38% of the width), so unlike the other two scenes it cannot sit beside the content: the padding below the timeline is sized so the ship starts under the last job (measured: highest paint over the content columns is 18% from the top of the art, so the art can rise until its ship tops sit just under the last job; the 0.24 below keeps 24px of air). */
+        --art-h: calc(100vw * 863 / 1822);
+        background: var(--paper) url("{{ art }}bg-exp.webp") center bottom / 100% auto no-repeat;
+        padding-bottom: calc(var(--art-h) * 0.82 + 24px);
+      }
+      @media (min-width: 641px) {
+        #resume {
+          padding-bottom: calc(var(--art-h) * 0.82 + 24px);
+        }
+      }
+      @media (min-width: 1024px) {
+        #resume {
+          padding-bottom: calc(var(--art-h) * 0.63 + 24px); /* desktop, measured against the real text boxes: below the last job's date the left column is empty, so the ship can rise beside the timeline; the limit is the timeline line (x of the ship's bowsprit) at 37-38% */
+        }
+      }
+      @media (min-width: 1440px) {
+        #resume {
+          padding-bottom: calc(var(--art-h) * 0.47 + 24px); /* wide: the line sits further right of the ship's bow, so the limit drops to 53-55% of the art height */
+        }
+      }
+      .sec :focus-visible,
+      .site-foot :focus-visible {
+        outline: 3px solid var(--dusk);
+        outline-offset: 3px;
+      }
+      .site-foot :focus-visible {
+        outline-color: var(--fox-on-night);
+      }
+
+      /* Shared section header */
+      .sec-head {
+        margin-bottom: clamp(32px, 5vw, 56px);
+      }
+      .sec-head--row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px 32px;
+      }
+      .sec-head__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .eyebrow {
+        margin: 0 0 0.7em;
+        color: var(--accent-ink);
+        font-size: var(--step--1);
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .sec-head h2 {
+        margin: 0 0 0.3em;
+        font-size: var(--step-3);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        font-variation-settings: "SOFT" 100;
+      }
+      .sec-head p {
+        max-width: 56ch;
+        margin: 0;
+        color: var(--ink-muted);
+      }
+      .sec-head .eyebrow {
+        color: var(--accent-ink);
+      }
+      .sec-head .sec-note {
+        margin-top: 0.5em;
+        font-size: var(--step--1);
+      }
+
+      /* Buttons: primary = fox sticker with a hard shadow, secondary = outline */
+      .b-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 10px 22px;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        background: var(--fox);
+        box-shadow: 3px 3px 0 var(--ink);
+        color: var(--ink);
+        font: 600 var(--step-0) / 1.2 "Work Sans", system-ui, sans-serif;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          transform 150ms var(--ease),
+          box-shadow 150ms var(--ease),
+          background 150ms;
+      }
+      .b-btn:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+      .b-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      .b-btn--ghost {
+        background: transparent;
+        box-shadow: none;
+      }
+      .b-btn--ghost:hover {
+        background: var(--ink);
+        color: var(--paper);
+        box-shadow: none;
+        transform: none;
+      }
+      .b-btn--ghost:active {
+        transform: translate(1px, 1px);
+        box-shadow: none;
+      }
+      .b-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--accent-ink);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+        text-decoration-color: transparent;
+        transition: text-decoration-color 150ms;
+      }
+      .b-link:hover {
+        text-decoration-color: currentColor;
+      }
+      .b-link .icon {
+        transition: transform 150ms var(--ease);
+      }
+      .b-link:hover .icon,
+      .p-card:hover .b-link .icon {
+        transform: translateX(3px);
+      }
+
+      /* Chips */
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--fox-tint);
+        color: var(--accent-ink);
+        font-size: var(--step--1);
+        font-weight: 600;
+        line-height: 1.2;
+      }
+      .chip .icon {
+        width: 0.95em;
+        height: 0.95em;
+      }
+      .chip--leaf {
+        background: var(--leaf-tint);
+        color: var(--leaf);
+      }
+      .chip--dusk {
+        background: var(--dusk-tint);
+        color: var(--dusk);
+      }
+      .chip--plain {
+        background: #d3e0e4; /* the date tag has its own fixed slate-blue, apart from the hashed tag hues */
+        color: #2b4a55;
+      }
+      /* Project tags: every distinct tag or type gets its own hue (--h). JS ("Tag colours") assigns it, so a new tag is coloured automatically. */
+      .chip[data-tag] {
+        background: hsl(var(--h, 25) 85% 88%);
+        color: hsl(var(--h, 25) 70% 22%);
+      }
+      /* Job type colours in the experience list: full-time green, contract orange; any other type keeps the blue default. */
+      .chip[data-type="full-time"] {
+        background: var(--leaf-tint);
+        color: var(--leaf);
+      }
+      .chip[data-type="contract"] {
+        background: var(--fox-tint);
+        color: var(--accent-ink);
+      }
+
+      /* Reveal: fades up once when scrolled into view. Uses the individual `translate` property so card hover (transform) stays independent. */
+      @media (prefers-reduced-motion: no-preference) {
+        html.js .rv {
+          --rv-d: calc(min(var(--i, 0), 5) * 60ms);
+          opacity: 0;
+          translate: 0 16px;
+          transition:
+            opacity 600ms var(--ease) var(--rv-d),
+            translate 600ms var(--ease) var(--rv-d),
+            transform 280ms var(--ease),
+            box-shadow 280ms var(--ease);
+        }
+        html.js .rv.is-in {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+
+      /* Section reveals: each area has its own entrance, all from the single .is-in class the observer adds. Design: each tile floats up while its picture slowly settles from a slight zoom. Dev: cards are dealt, landing tilted with a small bounce. Experience: the line draws down and each dot pops in as its job arrives. Footer: the line rises word by word. Phones keep the plain fade-up above, and reduced motion gets none of this. */
+      @media (min-width: 641px) and (prefers-reduced-motion: no-preference) {
+        html.js .d-tile.rv {
+          --rv-d: calc(min(var(--i, 0), 5) * 90ms);
+          translate: 0 28px;
+          scale: 0.96;
+          transition:
+            opacity 700ms var(--ease) var(--rv-d),
+            translate 700ms var(--ease) var(--rv-d),
+            scale 700ms var(--ease) var(--rv-d),
+            transform 280ms var(--ease),
+            box-shadow 280ms var(--ease);
+        }
+        html.js .d-tile.rv.is-in {
+          translate: 0 0;
+          scale: 1;
+        }
+        html.js .d-tile.rv .d-tile__media img {
+          scale: 1.18;
+          transition:
+            scale 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--rv-d),
+            transform 280ms var(--ease);
+        }
+        html.js .d-tile.rv.is-in .d-tile__media img {
+          scale: 1;
+        }
+
+        html.js .p-card.rv {
+          --rv-d: calc(var(--i, 0) * 80ms);
+          translate: none;
+          scale: 0.92;
+          rotate: -2deg;
+          transition:
+            opacity 400ms var(--ease) var(--rv-d),
+            scale 560ms cubic-bezier(0.34, 1.4, 0.64, 1) var(--rv-d),
+            rotate 560ms cubic-bezier(0.34, 1.4, 0.64, 1) var(--rv-d),
+            transform 280ms var(--ease),
+            box-shadow 280ms var(--ease);
+        }
+        html.js .p-card.rv:nth-child(even) {
+          rotate: 2deg;
+        }
+        html.js .p-card.rv.is-in {
+          scale: 1;
+          rotate: 0deg;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        html.js .x-list::before {
+          scale: 1 0;
+          transform-origin: top;
+          transition: scale 900ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        html.js .x-list.is-in::before {
+          scale: 1 1;
+        }
+        html.js .x-item.rv {
+          opacity: 1;
+          translate: none;
+          transition: none;
+        }
+        html.js .x-item.rv::before {
+          scale: 0;
+          transition: scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms;
+        }
+        html.js .x-item.rv.is-in::before {
+          scale: 1;
+        }
+        html.js .x-item.rv .x-when,
+        html.js .x-item.rv .x-main {
+          opacity: 0;
+          translate: -8px 0;
+          transition:
+            opacity 500ms var(--ease),
+            translate 500ms var(--ease);
+        }
+        html.js .x-item.rv .x-main {
+          transition-delay: 90ms;
+        }
+        html.js .x-item.rv.is-in .x-when,
+        html.js .x-item.rv.is-in .x-main {
+          opacity: 1;
+          translate: 0 0;
+        }
+
+        html.js .site-foot__cta .w {
+          display: inline-block;
+          opacity: 0;
+          translate: 0 0.6em;
+          transition:
+            opacity 500ms var(--ease) calc(var(--w) * 80ms),
+            translate 500ms var(--ease) calc(var(--w) * 80ms);
+        }
+        html.js .site-foot__cta.is-in .w {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+
+      /* Intro entrance: the text lines rise in order (the generic .rv above), and on desktop the open-book painting slides in from the right as they finish. Phones keep the plain fade-up. */
+      @media (min-width: 641px) and (prefers-reduced-motion: no-preference) {
+        html.js .hero__intro__art.rv {
+          translate: 48px 0;
+          transition: opacity 900ms var(--ease) 200ms, translate 1100ms cubic-bezier(0.16, 1, 0.3, 1) 200ms;
+        }
+        html.js .hero__intro__art.rv.is-in {
+          translate: 0 0;
+        }
+      }
+
+      /* 01 Design: bento of case-study tiles */
+      .bento {
+        display: grid;
+        gap: 24px; /* same as .p-grid, so the small tiles match the Dev cards */
+        grid-template-columns: 1fr;
+      }
+      .d-tile {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid #d9c093; /* darker than --border: the tile sits on page-coloured paper, so the edge has to carry it */
+        border-radius: var(--r-lg);
+        box-shadow:
+          0 1px 0 rgb(59 36 20 / 0.05),
+          0 10px 28px -12px rgb(59 36 20 / 0.28);
+        transition:
+          transform 280ms var(--ease),
+          box-shadow 280ms var(--ease);
+      }
+      .d-tile__media {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: var(--surface-sunk);
+      }
+      .d-tile__media img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 280ms var(--ease);
+      }
+      .d-tile__body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 20px 24px 24px;
+      }
+      .d-tile__genre {
+        margin: 0;
+        color: var(--accent-ink);
+        font-size: var(--step--1);
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .d-tile__title {
+        margin: 0;
+        font-size: var(--step-1);
+        font-weight: 700;
+        font-variation-settings: "SOFT" 100;
+      }
+      .d-tile--lead .d-tile__title {
+        font-size: var(--step-2);
+      }
+      .d-tile__role {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        color: var(--ink-muted);
+        font-size: var(--step--1);
+      }
+      .d-tile__meta {
+        width: 100%;
+        margin-top: auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px 16px;
+      }
+      .d-tile__period {
+        color: var(--ink-muted);
+        font-size: var(--step--1);
+      }
+      .d-tile__stores {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+      }
+      .d-tile__stores .b-link {
+        font-size: var(--step--1);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .d-tile:hover {
+          transform: translateY(-4px);
+          box-shadow: var(--shadow-2);
+        }
+        .d-tile:hover .d-tile__media img {
+          transform: scale(1.04);
+        }
+      }
+      @media (min-width: 641px) {
+        .bento {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .d-tile--lead {
+          grid-column: span 2;
+        }
+      }
+      @media (min-width: 1024px) {
+        .bento {
+          grid-template-columns: repeat(12, 1fr);
+        }
+        .d-tile {
+          grid-column: span 4;
+        }
+        .d-tile:nth-child(1) {
+          grid-column: span 7;
+          grid-row: span 2;
+        }
+        .d-tile:nth-child(2),
+        .d-tile:nth-child(3) {
+          grid-column: span 5;
+        }
+        .d-tile--lead .d-tile__body {
+          flex: none; /* the cover takes the spare height, so no empty gap opens above the footer row */
+        }
+        .d-tile--lead .d-tile__media {
+          flex: 1;
+          aspect-ratio: auto; /* fills whatever height the two stacked tiles beside it set */
+          min-height: 280px;
+        }
+      }
+
+      /* 02 Dev: filter + project cards */
+      .filters {
+        display: flex;
+        gap: 8px;
+        margin: 0 -8px 20px;
+        padding: 8px;
+        overflow-x: auto;
+      }
+      .filter {
+        flex: none;
+        min-height: 44px;
+        padding: 0 18px;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--ink);
+        font: 600 var(--step-0) / 1 "Work Sans", system-ui, sans-serif;
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+          background 150ms,
+          color 150ms,
+          border-color 150ms;
+      }
+      .filter:hover {
+        border-color: var(--ink);
+      }
+      .filter[aria-pressed="true"] {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--paper);
+      }
+      .filter__n {
+        margin-left: 6px;
+        font-weight: 500;
+        opacity: 0.7;
+      }
+      .p-grid {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 641px) {
+        .p-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 1024px) {
+        .p-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .p-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        box-shadow: var(--shadow-1);
+        transition:
+          transform 280ms var(--ease),
+          box-shadow 280ms var(--ease);
+      }
+      /* Border beam (after Magic UI): a glowing square rides the card border via offset-path, and the mask cuts it down to the 2px ring. It only runs while the card is hovered (one animation at a time, nothing when idle) and never under reduced motion. */
+      .beam {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border: 2px solid transparent;
+        border-radius: inherit;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms;
+        -webkit-mask:
+          linear-gradient(transparent, transparent) padding-box,
+          linear-gradient(#000, #000) border-box;
+        -webkit-mask-composite: source-in;
+        mask:
+          linear-gradient(transparent, transparent) padding-box,
+          linear-gradient(#000, #000) border-box;
+        mask-composite: intersect;
+      }
+      .beam i {
+        position: absolute;
+        width: 90px;
+        aspect-ratio: 1;
+        background: linear-gradient(to left, var(--fox), #f5b84a 55%, transparent);
+        offset-path: rect(0 auto auto 0 round 22px);
+        offset-distance: 0%;
+      }
+      @keyframes beam {
+        to {
+          offset-distance: 100%;
+        }
+      }
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        .p-card:hover .beam,
+        .d-tile:hover .beam {
+          opacity: 1;
+        }
+        .p-card:hover .beam i,
+        .d-tile:hover .beam i {
+          animation: beam 4.5s linear infinite;
+        }
+      }
+      .p-card[hidden],
+      .d-tile[hidden] {
+        display: none;
+      }
+      .show-more {
+        display: flex;
+        justify-content: center;
+        margin: 36px 0 0;
+      }
+      .show-more[hidden] {
+        display: none;
+      }
+      .p-card:has(.p-card__link:focus-visible) {
+        outline: 3px solid var(--dusk);
+        outline-offset: 3px;
+      }
+      .p-card__media {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: var(--surface-sunk);
+      }
+      .p-card__media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 280ms var(--ease);
+      }
+      .p-card__engine {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 10px 3px 3px;
+        border-radius: 999px;
+        background: rgb(42 25 13 / 0.82);
+        color: var(--paper);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        box-shadow: var(--shadow-1);
+        font-size: var(--step--1);
+        font-weight: 600;
+        line-height: 1;
+      }
+      .p-card__engine img {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+      }
+      .p-card__body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px 24px 20px;
+      }
+      .p-card__title {
+        margin: 0;
+        font-size: var(--step-1);
+        font-weight: 700;
+        font-variation-settings: "SOFT" 100;
+      }
+      .p-card__link {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--ink);
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+      .p-card__link::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+      }
+      .p-card__link:focus-visible {
+        outline: 0;
+      }
+      .p-card__hl {
+        display: grid;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--ink-muted);
+        font-size: var(--step--1);
+      }
+      .p-card__hl li {
+        position: relative;
+        padding-left: 16px;
+      }
+      .p-card__hl li::before {
+        content: "";
+        position: absolute;
+        top: 0.55em;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--fox);
+      }
+      .p-card__foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+        font-size: var(--step--1);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .p-card:hover {
+          transform: translateY(-4px);
+          box-shadow: var(--shadow-2);
+        }
+        .p-card:hover .p-card__media video {
+          transform: scale(1.03);
+        }
+      }
+
+      /* 03 Experience: timeline. Shows the latest 3 jobs; JS (see "Experience scroll") sets .x-scroll's height to exactly three jobs when there are more, and the rest scrolls inside. */
+      .x-scroll {
+        max-width: 920px;
+      }
+      .x-scroll.is-scroll {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-bottom: 8px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-strong) transparent;
+        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent);
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); /* soft fade at the bottom edge hints there is more to scroll to */
+      }
+      .x-scroll.is-scroll.is-end {
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+      .x-scroll:focus-visible {
+        outline: 3px solid var(--dusk);
+        outline-offset: 6px;
+      }
+      .x-list {
+        position: relative;
+        max-width: 920px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .x-list::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        bottom: 8px;
+        left: 6px;
+        width: 2px;
+        background: var(--border-strong);
+      }
+      .x-item {
+        position: relative;
+        padding: 0 0 clamp(36px, 5vw, 56px) 36px;
+      }
+      .x-item:last-child {
+        padding-bottom: 0;
+      }
+      .x-item::before {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 0;
+        width: 14px;
+        height: 14px;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        background: var(--fox);
+      }
+      .x-when {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 10px;
+        margin-bottom: 12px;
+        color: var(--ink-muted);
+        font-size: var(--step--1);
+        font-weight: 500;
+      }
+      .x-logo {
+        display: block;
+        box-sizing: content-box;
+        width: auto;
+        max-width: 140px;
+        height: 36px;
+        margin-bottom: 12px;
+        padding: 6px 10px;
+        object-fit: contain;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--r-sm);
+      }
+      .x-role {
+        margin: 0;
+        font-size: var(--step-2);
+        font-weight: 700;
+        font-variation-settings: "SOFT" 100;
+      }
+      .x-co {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin: 4px 0 14px;
+        color: var(--accent-ink);
+        font-weight: 600;
+      }
+      .x-co:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      .x-hl {
+        display: grid;
+        gap: 8px;
+        max-width: 68ch;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--ink-muted);
+        font-size: var(--step--1);
+      }
+      .x-hl li {
+        position: relative;
+        padding-left: 16px;
+      }
+      .x-hl li::before {
+        content: "";
+        position: absolute;
+        top: 0.6em;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--fox);
+      }
+      @media (min-width: 768px) {
+        .x-list::before {
+          left: 224px;
+        }
+        .x-item {
+          display: grid;
+          grid-template-columns: 200px 1fr;
+          column-gap: 48px;
+          padding-left: 0;
+        }
+        .x-item::before {
+          left: 218px;
+        }
+        .x-when {
+          flex-direction: column;
+          align-items: flex-end;
+          margin: 4px 0 0;
+          text-align: right;
+        }
+      }
+
+      /* PDF viewer: a native <dialog>; the page behind is blurred and dimmed through ::backdrop, and the close button sits top-left. */
+      .pdf-dialog {
+        width: min(960px, 100% - 24px);
+        height: min(92vh, 1100px);
+        max-width: none;
+        max-height: none;
+        padding: 0;
+        border: 0;
+        border-radius: var(--r-lg);
+        background: var(--surface);
+        color: var(--ink);
+        box-shadow: 0 24px 80px -20px rgb(0 0 0 / 0.5);
+        overflow: hidden;
+      }
+      .pdf-dialog[open] {
+        display: flex;
+        flex-direction: column;
+      }
+      .pdf-dialog::backdrop {
+        background: rgb(42 25 13 / 0.45);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      html:has(.pdf-dialog[open]) {
+        overflow: hidden; /* the page behind must not scroll while the viewer is open */
+      }
+      .pdf-dialog__bar {
+        display: flex;
+        align-items: center;
+        gap: 12px 16px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .pdf-dialog__close {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 40px;
+        padding: 6px 14px 6px 10px;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--ink);
+        font: 600 var(--step--1) / 1 "Work Sans", system-ui, sans-serif;
+        cursor: pointer;
+      }
+      .pdf-dialog__close:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .pdf-dialog__title {
+        margin: 0;
+        white-space: nowrap;
+        font: 700 var(--step-1) / 1.2 "Fraunces", Georgia, serif;
+        font-variation-settings: "SOFT" 100;
+      }
+      .pdf-dialog__open {
+        display: grid;
+        place-items: center;
+        flex: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: var(--accent-ink);
+      }
+      .pdf-dialog__open:hover {
+        background: var(--surface-sunk);
+      }
+      .pdf-dialog__close {
+        margin-left: auto; /* pushes Close to the right edge */
+      }
+      .pdf-dialog__frame {
+        flex: 1;
+        width: 100%;
+        border: 0;
+        background: #fff;
+      }
+      .pdf-dialog :focus-visible {
+        outline: 3px solid var(--dusk);
+        outline-offset: 3px;
+      }
+
+      /* Project popup: same native <dialog> + blurred backdrop as the PDF viewer, but a reading layout. Desktop: the clip on top, then two columns (title, tags and links on the left, the write-up on the right). Phone: a full-screen sheet. */
+      .proj-dialog {
+        width: min(980px, 100% - 24px);
+        max-width: none;
+        max-height: min(92vh, 1000px);
+        padding: 0;
+        border: 0;
+        border-radius: 24px;
+        background: var(--surface);
+        color: var(--ink);
+        box-shadow: 0 24px 80px -20px rgb(0 0 0 / 0.5);
+        overflow: hidden;
+      }
+      .proj-dialog[open] {
+        display: flex;
+      }
+      .proj-dialog::backdrop {
+        background: rgb(42 25 13 / 0.45);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      html:has(.proj-dialog[open]) {
+        overflow: hidden;
+      }
+      .proj-dialog :focus-visible {
+        outline: 3px solid var(--dusk);
+        outline-offset: 3px;
+      }
+      .proj-dialog__close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: rgb(42 25 13 / 0.6);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        color: #fff;
+        cursor: pointer;
+        transition: background 150ms;
+      }
+      .proj-dialog__close:hover {
+        background: var(--fox);
+        color: var(--ink);
+      }
+      .proj-dialog__scroll {
+        flex: 1;
+        min-width: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin; /* a slim, quiet scrollbar: faint thumb, no track */
+        scrollbar-color: rgb(59 36 20 / 0.22) transparent;
+      }
+      .proj-dialog__scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .proj-dialog__scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .proj-dialog__scroll::-webkit-scrollbar-thumb {
+        background: rgb(59 36 20 / 0.22);
+        border-radius: 3px;
+      }
+      .proj-dialog__scroll::-webkit-scrollbar-thumb:hover {
+        background: rgb(59 36 20 / 0.4);
+      }
+      .proj-dialog__media {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        max-height: 56vh;
+        width: 100%;
+        background: #2a190d;
+      }
+      .proj-dialog__media video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        cursor: pointer;
+      }
+      .proj-dialog__pp {
+        position: absolute;
+        bottom: 14px;
+        left: 14px;
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: rgb(42 25 13 / 0.6);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        color: #fff;
+        cursor: pointer;
+      }
+      .proj-dialog__pp:hover {
+        background: var(--fox);
+        color: var(--ink);
+      }
+      .proj-dialog__pp .i-play,
+      .proj-dialog__pp.is-paused .i-pause {
+        display: none;
+      }
+      .proj-dialog__pp.is-paused .i-play {
+        display: block;
+      }
+      .proj-dialog__body {
+        display: grid;
+        gap: 28px;
+        padding: clamp(24px, 4vw, 40px);
+      }
+      .proj-side {
+        display: grid;
+        align-content: start;
+        gap: 14px;
+      }
+      .proj-eyebrow {
+        margin: 0;
+        color: var(--accent-ink);
+        font-size: var(--step--1);
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .proj-title {
+        margin: 0;
+        font-size: var(--step-3);
+        line-height: 1.1;
+        font-weight: 700;
+        font-variation-settings: "SOFT" 100;
+      }
+      .proj-dialog .chip[data-tag] {
+        background: hsl(var(--h, 25) 55% 90%); /* calmer than the card tags: the same hue, less saturation */
+        color: hsl(var(--h, 25) 55% 24%);
+      }
+      .proj-main {
+        max-width: 62ch;
+        line-height: 1.65;
+      }
+      .proj-main h2 {
+        margin: 1.6em 0 0.4em;
+        font-size: var(--step-1);
+        font-variation-settings: "SOFT" 100;
+      }
+      .proj-main h2:first-child {
+        margin-top: 0;
+      }
+      .proj-main p {
+        margin: 0 0 1em;
+      }
+      .proj-links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .proj-links:empty {
+        display: none;
+      }
+      .proj-badge {
+        height: 44px;
+        width: auto;
+      }
+      .proj-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--ink-muted);
+        font-size: var(--step--1);
+      }
+      .proj-note .icon {
+        width: 1em;
+        height: 1em;
+      }
+      @media (min-width: 900px) {
+        .proj-dialog__body {
+          grid-template-columns: 300px 1fr;
+          gap: clamp(32px, 5vw, 56px);
+        }
+        .proj-side {
+          position: sticky;
+          top: 0;
+          align-self: start;
+        }
+      }
+      @media (max-width: 640px) {
+        .proj-dialog {
+          width: 100%;
+          height: 100dvh;
+          max-height: none;
+          border-radius: 0;
+        }
+        .proj-dialog__media {
+          max-height: 40vh;
+        }
+        .proj-dialog__body {
+          padding: 20px 20px calc(28px + env(safe-area-inset-bottom));
+        }
+        .proj-title {
+          font-size: 1.9rem;
+        }
+      }
+
+      /* Footer */
+      .site-foot {
+        padding: clamp(32px, 4vw, 48px) 0 16px;
+        background: var(--night);
+        color: var(--paper);
+        font-size: var(--step-0);
+      }
+      .site-foot__cta {
+        margin: 0 0 6px;
+        font: 700 var(--step-2) / 1.1 "Fraunces", Georgia, serif;
+        letter-spacing: -0.01em;
+        font-variation-settings: "SOFT" 100;
+      }
+      .site-foot__cta em {
+        color: var(--fox-on-night);
+        font-style: normal;
+      }
+      .site-foot__sub {
+        margin: 0;
+        color: var(--paper);
+        opacity: 0.8;
+      }
+      .site-foot__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px 24px;
+        margin-top: 20px;
+        padding-top: 12px;
+        border-top: 1px solid rgb(252 240 219 / 0.2);
+        color: rgb(252 240 219 / 0.7);
+        font-size: var(--step--1);
+      }
+      .site-foot__nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 20px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .site-foot__nav a {
+        display: inline-block;
+        padding: 6px 0;
+        color: var(--paper);
+      }
+      .site-foot__nav a:hover {
+        color: var(--fox-on-night);
+      }
+      .site-foot p {
+        margin: 0;
+      }
+      .site-foot__top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px 32px;
+      }
+      /* Icon cloud (after Magic UI's Icon Cloud): the tool logos sit on cream circles spread over a slowly turning sphere. JS places them (see "Icon cloud"); without JS they stay in a plain wrapped row. */
+      .icon-cloud {
+        position: relative;
+        flex: none;
+        width: 150px;
+        height: 150px;
+      }
+      .icon-cloud img {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 28px;
+        height: 28px;
+        margin: -14px 0 0 -14px;
+        padding: 5px;
+        border-radius: 50%;
+        background: var(--paper);
+        box-shadow: 0 2px 6px rgb(0 0 0 / 0.35);
+        will-change: transform;
+      }
+      @media (max-width: 640px) {
+        .icon-cloud {
+          width: 135px;
+          height: 135px;
+        }
+      }
+      .site-foot p.site-foot__cta {
+        margin-bottom: 6px;
+      }
+
+      /* Desktop: --lower (% of the hero height) drops the torn paper, the hill, the map and the sky together so less paper shows. The intro stays just under the lowest dip of the torn edge (its cream would hide the edge if it rose further). Raise --lower for less paper, 0 for the old layout. */
+      @media (min-width: 641px) {
+        :root {
+          --lower: 7;
+          --hill-up: 6.5%;
+          --l1-up: 4; /* lifts the map and sky (L1 + L0) in % of the hero height; crops the top sky. Its bottom must stay under the paper edge. */
+          --l3-up: 5.6; /* extra lift of the torn paper, in % of the hero height; covers the bottom edge of the hill */ /* lifts the hill so the canopy runs off the top of the screen (no flat cut). Lower it to move the hill down. */
+        }
+        .hero__hill {
+          translate: 0 calc(-14% + var(--lower) * 1% - var(--hill-up, 0%));
+        }
+        .hero__l3 {
+          translate: 0 calc(-7.6% + (var(--lower) - var(--l3-up)) * 0.8%);
+        } /* L3 is 125% of the hero tall, so 0.8% of it = 1% of the hero */
+        .hero__l1 {
+          top: calc((var(--lower) - var(--l1-up)) * 1%);
+        }
+        .hero__l0 {
+          top: calc((var(--lower) - var(--l1-up)) * 1% - 88.5% * 300 / 1335);
+        }
+        .hero__intro {
+          margin-top: calc(-3px - 2.6vw - var(--l3-up) * 0.5625vw);
+          /* On mid-width windows the paragraph runs across the open book, so the painting is pushed down. Measured: the paragraph's bottom minus the book's top is about drop + 10vw - 43px; 20px of air is added. The push fades to 0 by 1500px, where the book sits clear of the text on its own. */
+          --push: clamp(0px, calc((1500px - 100vw) * 2.2), calc(10vw + var(--drop) - 23px));
+        }
+      }
+
+      /* Phone: taller crop keeping the tree + fox (left side); castle falls off */
+      @media (max-width: 640px) {
+        .nav {
+          padding: 10px 12px;
+        }
+        .nav__brand img {
+          width: 30px;
+          height: 30px;
+        }
+        .nav__links a {
+          padding: 5px 7px;
+          font-size: 0.78rem;
+          letter-spacing: 0.02em;
+        }
+        .nav__burger,
+        .nav__mode {
+          width: 30px;
+          height: 30px;
+        }
+        .hero__stage {
+          aspect-ratio: 9 / 8.7;
+        }
+        .hero__scene {
+          aspect-ratio: 9 / 9.5;
+        }
+        .hero__scene {
+          background: linear-gradient(#0492fc 0, #4cc5fd 9%, #7ac8fb 30%, #1ea8f8 75%); /* 9% = where the map starts; its sky row is #4cc5fd */
+        }
+        /* ponytail: phone shows the right 53% of the wide painting, same crop as the old portrait art. */
+        .hero__l1 {
+          inset: auto;
+          top: 9%;
+          left: auto;
+          right: -31%;
+          width: auto;
+          max-width: none;
+          height: 76.8%;
+          aspect-ratio: 3200 / 1335;
+        }
+        .hero__l0 {
+          top: calc(9% - 76.8% * 300 / 1335);
+          right: -31%;
+          height: calc(76.8% * 1635 / 1335);
+        }
+        /* Hill and L3 shrink into one bottom-anchored box so the sky above is free for the map. Tune --hill-w / --hill-x. */
+        .hero__stage {
+          --hill-w: 135%;
+          --hill-x: -5%;
+        }
+        .hero__hill {
+          scale: 0.88;
+          translate: 0 -12%;
+        }
+        .hero__hill,
+        .hero__l3 {
+          inset: auto auto 0 var(--hill-x);
+          width: var(--hill-w);
+          height: auto;
+          aspect-ratio: 1672 / 1317;
+        }
+        .hero__l3 {
+          box-shadow: 0 30vh 0 var(--paper);
+          aspect-ratio: 1672 / 941;
+          transform: none;
+          max-width: none;
+          scale: 0.92;
+        }
+        .hero__fox {
+          top: 57.4%;
+        } /* same spot on the art as desktop: (42% of 941 + 376px of canopy) / 1317 */
+        .zzz {
+          top: 61.8%;
+        }
+        .hero__intro {
+          --drop: 0px;
+          text-align: center;
+        }
+        .hero__intro__text {
+          padding: 0 16px;
+        }
+        .hero__intro .social,
+        .hero__intro p.intro-roles {
+          justify-content: center;
+        }
+        .hero__intro__art {
+          margin: 24px 0 0;
+          width: 100%;
+          mask-image: linear-gradient(to bottom, #000 91%, transparent);
+        } /* intro-bg-m.webp: just the book half of intro-bg, so it stays readable at phone width */
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .hero__sprite,
+        .zzz {
+          animation: none;
+        }
+        .hero__hill,
+        .hero__layer {
+          transform: none;
+        }
+        .hero__scene {
+          position: absolute;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <nav class="nav" id="nav">
+      <a class="nav__brand" href="#intro" aria-label="Ethan Truong, introduction">
+        <img src="{{ '/assets/images/fox-badge.png' | relative_url }}" alt="" />
+        <span class="nav__name">Ethan Truong</span>
       </a>
-      <div class="job__body">
-        <h3><a href="{{ job.url }}" target="_blank" rel="noopener">{{ job.company }}</a></h3>
-        <p class="job__role">{{ job.role }}</p>
-        <p class="muted">{{ job.period }} · {{ job.type }}</p>
-        <ul>
-          {% for h in job.highlights %}<li>{{ h }}</li>{% endfor %}
-        </ul>
+      <div class="nav__links" id="navLinks">
+        <div class="nav__items">
+          <a href="#home" aria-current="page">Home</a>
+          <a href="#design">Design</a>
+          <a href="#dev">Dev</a>
+          <a href="#resume">Exp</a>
+        </div>
+        <button class="nav__mode" id="modeToggle" type="button" aria-label="Night mode (planned, no visual change yet)" aria-pressed="false" title="Morning / night (planned)">
+          <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4" />
+          </svg>
+          <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+          </svg>
+        </button>
+        <button class="nav__burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
       </div>
-    </article>
-    {% endfor %}
-  </div>
-</section>
+    </nav>
 
-<section class="section section--alt" id="projects">
-  <div class="container">
-    <header class="section__header">
-      <h2><i class="fas fa-gamepad"></i> Projects</h2>
-      <p class="muted">Click a project to learn more about it.</p>
-    </header>
+    <main>
+      <section class="hero" id="home">
+        <canvas class="seeds" id="seeds" aria-hidden="true"></canvas>
+        <div class="hero__stage">
+          <div class="hero__scene">
+            <img
+              class="hero__layer hero__l0"
+              src="{{ art }}sky-l0-s.webp"
+              alt=""
+            />
+            <img
+              class="hero__layer hero__l1"
+              src="{{ art }}map-l1-nosky.webp"
+              alt="A painted storybook valley with a village, castle and waterfall"
+            />
+            <div class="hero__hill">
+              <img
+                class="hero__layer hero__l2"
+                src="{{ art }}Home_L2_5_new.png"
+                alt=""
+              />
+              <div
+                class="hero__fox"
+                id="heroFox"
+                role="img"
+                aria-label="A little fox asleep on the hill"
+              >
+                <i class="hero__sprite"></i>
+              </div>
+              <span class="zzz" aria-hidden="true">z</span>
+            </div>
+            <nav class="hero__layer hero__l1 hero__pins" aria-label="Map">
+              <a class="pin" href="#dev" data-go="dev" style="--x: 75.2%; --y: 20%"><span class="pin__label">Dev</span></a>
+              <a class="pin" href="#design" data-go="design" style="--x: 70.7%; --y: 59%"><span class="pin__label">Design</span></a>
+              <a class="pin" href="#resume" data-go="resume" style="--x: 51.4%; --y: 57%"><span class="pin__label">Exp</span></a>
+            </nav>
+          </div>
+          <img
+            class="hero__layer hero__l3"
+            src="{{ art }}Home_L3_8.png"
+            alt=""
+          />
+        </div>
+      </section>
+      <div class="hero__intro">
+        <div class="hero__intro__text">
+          <h1 id="intro" class="rv" style="--i: 0">Hi! I'm <span class="sparkle" id="sparkleName">Ethan Truong</span></h1>
+          <p class="intro-roles rv" style="--i: 1"><span class="chip">Designer</span><span class="chip chip--leaf">Developer</span></p>
+          <p class="hero__lead rv" style="--i: 2">
+            I've spent almost five years making games, and my favourite part is
+            the moment an idea becomes playable. Working in both design and
+            code taught me how to carry it all the way to a finished game,
+            polished for wherever it lands, from iOS and Android to TikTok.
+          </p>
+          <div class="rv" style="--i: 3">{% include social.html %}</div>
+        </div>
+        <picture
+          ><source
+            media="(max-width: 640px)"
+            srcset="{{ art }}intro-bg-m.webp" />
+          <img
+            class="hero__intro__art rv" style="--i: 2"
+            src="{{ art }}intro-bg.webp"
+            alt="The fox in an open storybook: planning at a chart whiteboard on one page, coding on a laptop on the other"
+        /></picture>
+      </div>
 
-    {% assign engines = "unity,unreal" | split: "," %}
-    {% for engine in engines %}
-    <h3 class="engine-heading">
-      <img src="{{ '/assets/images/' | append: engine | append: '-icon.png' | relative_url }}" alt="" width="36" height="36" />
-      {{ engine | capitalize }}
-    </h3>
-    <div class="grid">
-      {% assign projects = site.projects | where: "engine", engine | sort: "order" %}
-      {% for p in projects %}{% include project-card.html project=p %}{% endfor %}
-    </div>
-    {% endfor %}
-  </div>
-</section>
+      {%- assign designs = site.data["design-samples"] -%}
+      {%- assign unity = site.projects | where: "engine", "unity" | sort: "order" -%}
+      {%- assign unreal = site.projects | where: "engine", "unreal" | sort: "order" -%}
+      {%- assign projs = unity | concat: unreal -%}
 
-<section class="section" id="contact">
-  <div class="container section__header">
-    <h2><i class="fas fa-address-book"></i> Contact</h2>
-    <p class="muted">Feel free to send me a message, I'll try to respond as quickly as I can!</p>
-    {% include social.html %}
-  </div>
-</section>
+      <section class="sec sec--paper" id="design" aria-labelledby="designTitle">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <p class="eyebrow">01 · Design</p>
+            <h2 id="designTitle">Designing the fun</h2>
+            <p>Levels, systems and features I've designed.</p>
+            <p class="sec-note">Sample work, real case studies coming soon.</p>
+          </header>
+          <div class="bento">
+            {%- for item in designs %}
+            <article class="d-tile rv{% if forloop.first %} d-tile--lead{% endif %}" style="--i: {{ forloop.index0 }}">
+              <span class="beam" aria-hidden="true"><i></i></span>
+              <div class="d-tile__media">
+                <img src="{{ art }}design-samples/{{ item.image }}" alt="{{ item.title }} key art" loading="lazy" />
+              </div>
+              <div class="d-tile__body">
+                <p class="d-tile__genre">{{ item.genre }}</p>
+                <h3 class="d-tile__title">{{ item.title }}</h3>
+                <p class="d-tile__role">{% include icon.html name="briefcase" %}{{ item.role }}</p>
+                <ul class="chips">
+                  {%- for f in item.focus %}<li class="chip" data-tag="{{ f | slugify }}">{{ f }}</li>{% endfor %}
+                </ul>
+                <div class="d-tile__meta">
+                  <span class="d-tile__period">{{ item.period }}</span>
+                  {%- if item.google_play or item.app_store %}
+                  <div class="d-tile__stores">
+                    {%- if item.google_play %}<a class="b-link" href="{{ item.google_play }}" target="_blank" rel="noopener">Google Play {% include icon.html name="arrow-up-right" %}</a>{% endif %}
+                    {%- if item.app_store %}<a class="b-link" href="{{ item.app_store }}" target="_blank" rel="noopener">App Store {% include icon.html name="arrow-up-right" %}</a>{% endif %}
+                  </div>
+                  {%- endif %}
+                </div>
+              </div>
+            </article>
+            {%- endfor %}
+          </div>
+          <p class="show-more" id="designMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false"></button></p>
+        </div>
+      </section>
+
+      <section class="sec sec--sunk" id="dev" aria-labelledby="devTitle">
+        <div class="wrap">
+          <header class="sec-head rv">
+            <p class="eyebrow">02 · Dev</p>
+            <h2 id="devTitle">Things I've built</h2>
+            <p>Games, prototypes and tools I've built.</p>
+          </header>
+          <div class="filters rv" role="group" aria-label="Filter projects by engine">
+            <button class="filter" type="button" data-filter="all" aria-pressed="true">All<span class="filter__n">{{ projs.size }}</span></button>
+            <button class="filter" type="button" data-filter="unity" aria-pressed="false">Unity<span class="filter__n">{{ unity.size }}</span></button>
+            <button class="filter" type="button" data-filter="unreal" aria-pressed="false">Unreal<span class="filter__n">{{ unreal.size }}</span></button>
+          </div>
+          <p class="sr-only" id="filterLive" aria-live="polite">Showing {{ projs.size }} projects</p>
+          <div class="p-grid">
+            {%- for p in projs %}
+            <article class="p-card rv" data-engine="{{ p.engine }}" data-poster="{{ '/assets/media/' | append: p.media | append: '-poster.webp' | relative_url }}" data-full="{{ '/assets/media/' | append: p.media | append: '.mp4' | relative_url }}" style="--i: {{ forloop.index0 | modulo: 3 }}">
+              <span class="beam" aria-hidden="true"><i></i></span>
+              <div class="p-card__media">
+                <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" poster="{{ '/assets/media/' | append: p.media | append: '-poster.webp' | relative_url }}" data-src="{{ '/assets/media/' | append: p.media | append: '-preview.mp4' | relative_url }}"></video>
+                <span class="p-card__engine"><img src="{{ '/assets/images/' | append: p.engine | append: '-icon.png' | relative_url }}" alt="" width="22" height="22" />{{ p.engine | capitalize }}</span>
+              </div>
+              <div class="p-card__body">
+                <h3 class="p-card__title"><button class="p-card__link" type="button" aria-haspopup="dialog">{{ p.title }}</button></h3>
+                <ul class="chips">
+                  <li class="chip" data-tag="{{ p.type | slugify }}">{{ p.type }}</li>
+                  <li class="chip chip--plain">{% include icon.html name="calendar" %}{{ p.duration }}</li>
+                </ul>
+                <ul class="p-card__hl">
+                  {%- for h in p.highlights limit: 3 %}<li>{{ h }}</li>{% endfor %}
+                </ul>
+                <div class="p-card__foot">
+                  <span class="b-link">View project {% include icon.html name="arrow-right" %}</span>
+                </div>
+              </div>
+              <template class="p-detail">
+                <div class="proj-side">
+                  <p class="proj-eyebrow">{{ p.engine | capitalize }} · {{ p.type }} · {{ p.duration }}</p>
+                  <h2 class="proj-title">{{ p.title }}</h2>
+                  <ul class="chips">
+                    {%- for t in p.tags %}<li class="chip" data-tag="{{ t | slugify }}">{{ t }}</li>{% endfor %}
+                  </ul>
+                  <div class="proj-links">
+                    {%- for l in p.links %}{% case l.icon %}{% when "fas fa-eye" %}{% assign lic = "eye" %}{% when "fas fa-code" %}{% assign lic = "code" %}{% else %}{% assign lic = "link" %}{% endcase %}
+                    <a class="b-btn{% unless forloop.first %} b-btn--ghost{% endunless %}" href="{{ l.url }}" target="_blank" rel="noopener">{% include icon.html name=lic %}{{ l.label }}</a>{% endfor %}
+                    {%- if p.stores %}
+                    <a href="{{ p.stores.google_play }}" target="_blank" rel="noopener"><img class="proj-badge" width="164" height="52" src="{{ '/assets/images/badge-google-play.png' | relative_url }}" alt="Get it on Google Play" /></a>
+                    <a href="{{ p.stores.app_store }}" target="_blank" rel="noopener"><img class="proj-badge" width="164" height="52" src="{{ '/assets/images/badge-app-store.png' | relative_url }}" alt="Download on the App Store" /></a>
+                    {%- endif %}
+                    {%- if p.private %}<span class="proj-note">{% include icon.html name="lock" %}Source code is private</span>{% endif %}
+                  </div>
+                </div>
+                <div class="proj-main">{{ p.content }}</div>
+              </template>
+            </article>
+            {%- endfor %}
+          </div>
+          <p class="show-more" id="devMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false"></button></p>
+        </div>
+      </section>
+
+      <section class="sec sec--paper" id="resume" aria-labelledby="resumeTitle">
+        <div class="wrap">
+          <header class="sec-head sec-head--row rv">
+            <div>
+              <p class="eyebrow">03 · Experience</p>
+              <h2 id="resumeTitle">Where I've worked</h2>
+              <p>Studios and teams I've worked with.</p>
+            </div>
+            <div class="sec-head__actions">
+              <button class="b-btn b-btn--ghost" type="button" data-pdf="{{ '/assets/docs/ethan-truong-resume.pdf' | relative_url }}" data-title="Full Resume">{% include icon.html name="file-text" %}Full resume</button>
+              <button class="b-btn b-btn--ghost" type="button" data-pdf="{{ '/assets/docs/ethan-truong-transcript.pdf' | relative_url }}" data-title="Transcript">{% include icon.html name="graduation-cap" %}Transcript</button>
+            </div>
+          </header>
+          <div class="x-scroll" id="xScroll" role="region" aria-label="Work experience" tabindex="0">
+          <ol class="x-list">
+            {%- for j in site.data.experience %}
+            <li class="x-item rv">
+              <div class="x-when">
+                <span>{{ j.period }}</span>
+                <span class="chip chip--dusk" data-type="{{ j.type | slugify }}">{{ j.type }}</span>
+              </div>
+              <div class="x-main">
+                <img class="x-logo" src="{{ '/assets/images/' | append: j.logo | relative_url }}" alt="{{ j.company }}" width="{{ j.logo_size[0] }}" height="{{ j.logo_size[1] }}" loading="lazy" />
+                <h3 class="x-role">{{ j.role }}</h3>
+                <a class="x-co" href="{{ j.url }}" target="_blank" rel="noopener">{{ j.company }} {% include icon.html name="arrow-up-right" %}</a>
+                <ul class="x-hl">
+                  {%- for h in j.highlights limit: 3 %}<li>{{ h }}</li>{% endfor %}
+                </ul>
+              </div>
+            </li>
+            {%- endfor %}
+          </ol>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="pdf-dialog" id="pdfDialog" aria-labelledby="pdfTitle">
+      <div class="pdf-dialog__bar">
+        <h2 class="pdf-dialog__title" id="pdfTitle"></h2>
+        <a class="pdf-dialog__open" id="pdfOpen" href="#" target="_blank" rel="noopener" aria-label="Open in new tab" title="Open in new tab">{% include icon.html name="arrow-up-right" %}</a>
+        <button class="pdf-dialog__close" type="button" aria-label="Close">{% include icon.html name="x" %}Close</button>
+      </div>
+      <iframe class="pdf-dialog__frame" id="pdfFrame" title="PDF viewer"></iframe>
+    </dialog>
+
+    <dialog class="proj-dialog" id="projDialog">
+      <button class="proj-dialog__close" type="button" aria-label="Close">{% include icon.html name="x" %}</button>
+      <div class="proj-dialog__scroll">
+        <div class="proj-dialog__media"><video muted loop playsinline></video><button class="proj-dialog__pp" type="button" aria-label="Pause video"><span class="i-pause">{% include icon.html name="pause" %}</span><span class="i-play">{% include icon.html name="play" %}</span></button></div>
+        <div class="proj-dialog__body"></div>
+      </div>
+    </dialog>
+
+    <footer class="site-foot" id="contact">
+      <div class="wrap">
+        <div class="site-foot__top">
+          <div class="site-foot__text">
+            <p class="site-foot__cta">Let's make something <em>playful.</em></p>
+            <p class="site-foot__sub">Open to game design and Unity dev roles.</p>
+          </div>
+          {%- assign tools = "claude,github,gitlab,svn,chatgpt,unity,unreal,figma,notion,googledocs,googlesheets,git,android,ios,googleplay,appstore,csharp,javascript,python" | split: "," %}
+          <div class="icon-cloud" id="iconCloud" role="img" aria-label="Tools I use: Claude, GitHub, GitLab, SVN, ChatGPT, Unity, Unreal, Figma, Notion, Google Docs, Google Sheets, Git, Android, iOS, Google Play, App Store, C#, JavaScript and Python">
+            {%- for t in tools %}<img src="{{ '/assets/images/icons/' | append: t | append: '.svg' | relative_url }}" alt="" width="28" height="28" loading="lazy" />{% endfor %}
+          </div>
+        </div>
+        <div class="site-foot__bar">
+          <ul class="site-foot__nav">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#design">Design</a></li>
+            <li><a href="#dev">Dev</a></li>
+            <li><a href="#resume">Experience</a></li>
+          </ul>
+          <p class="site-foot__copy"><span>© {{ site.time | date: "%Y" }} Ethan Truong · Built by hand with Jekyll</span></p>
+        </div>
+      </div>
+    </footer>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+    <script>
+      {
+        const d = new URLSearchParams(location.search).get("debug");
+        if (d) document.documentElement.dataset.debug = d;
+      }
+      const fox = document.getElementById("heroFox");
+      const hero = document.getElementById("home");
+      const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Scene eases toward the real scroll position each frame, so wheel steps glide instead of jump.
+      let y = scrollY,
+        raf = 0;
+      // Wake plays on a timer (20 fps) once scrolling starts, so every frame shows; back at the top it plays in reverse.
+      let f = 0,
+        target = 0,
+        timer = 0;
+      const step = () => {
+        f += Math.sign(target - f);
+        fox.style.setProperty("--f", f);
+        hero.classList.toggle("is-awake", f > 0);
+        if (f === target) {
+          clearInterval(timer);
+          timer = 0;
+        }
+      };
+      const render = () => {
+        y += (scrollY - y) * 0.12;
+        if (Math.abs(scrollY - y) < 0.5) y = scrollY;
+        y = Math.min(y, scrollY / 0.55); // scrolling up fast, the lagging L2 would rise above L3's torn edge and open a gap; cap the lag so it never passes its rest spot
+        const h = hero.offsetHeight;
+        hero.style.setProperty("--p", `${Math.min(y, h)}px`);
+        target = y / h > 0.03 ? 11 : 0;
+        if (f !== target && !timer) timer = setInterval(step, 1000 / 20);
+        raf = y === scrollY ? 0 : requestAnimationFrame(render);
+      };
+      const onScroll = () => {
+        if (!still && !raf) raf = requestAnimationFrame(render);
+      };
+      addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+
+      // Dandelion trail: seeds are blown backwards off the cursor path, drift, spin and fade. Capped, and idle when the cursor is still.
+      (() => {
+        const cv = document.getElementById("seeds");
+        if (
+          !cv ||
+          !matchMedia(
+            "(hover: hover) and (pointer: fine) and (min-width: 641px) and (prefers-reduced-motion: no-preference)",
+          ).matches
+        )
+          return;
+        const ctx = cv.getContext("2d");
+        const atlas = new Image();
+        atlas.src = "{{ art }}dandelion-seeds.webp"; // one row of square cells; the cell count is read from the image
+        const MAX = 90, // particle cap
+          GAP = 14, // px of cursor travel per spawn
+          SIZE = [10, 34], // on-screen px, weighted towards small
+          LIFE = [500, 1100], // ms, most seeds are short-lived
+          LONG = [2600, 4200], // ms, the occasional drifter
+          RISE = 90, // px/s2 of upward lift once a seed has been blown out. Old behaviour: 6
+          SHORT_KEEP = 0.3; // share of short-lived spawns kept; lower = fewer. 1 = old amount
+        const seeds = [];
+        let last = null,
+          lastT = 0,
+          dirX = 0,
+          dirY = 0,
+          speed = 0,
+          travelled = 0,
+          loop = 0,
+          t0 = 0,
+          dpr = 1;
+        const size = () => {
+          dpr = Math.min(devicePixelRatio || 1, 2);
+          cv.width = innerWidth * dpr;
+          cv.height = innerHeight * dpr;
+        };
+        size();
+        addEventListener("resize", size);
+        const rnd = (a, b) => a + Math.random() * (b - a);
+        const spawn = (x, y) => {
+          const long = Math.random() < 0.1;
+          if (!long && Math.random() > SHORT_KEEP) return;
+          if (seeds.length >= MAX) seeds.shift();
+          const m = Math.hypot(dirX, dirY) || 1,
+            ang = Math.atan2(-dirY / m, -dirX / m) + rnd(-0.9, 0.9), // straight back from the cursor, fanned left and right
+            big = Math.pow(Math.random(), 2.2),
+            kick = (40 + Math.min(speed, 2000) * 0.07) * rnd(0.55, 1.35) * (1.15 - 0.45 * big);
+          seeds.push({
+            x: x + rnd(-6, 6),
+            y: y + rnd(-6, 6),
+            vx: Math.cos(ang) * kick,
+            vy: Math.sin(ang) * kick,
+            a: rnd(0, 6.28),
+            w: rnd(0.25, 1) * (Math.random() < 0.5 ? -1 : 1), // rad/s: slow, lazy spin
+            sw: rnd(0, 6.28),
+            sf: rnd(1.2, 2.6),
+            s: SIZE[0] + (SIZE[1] - SIZE[0]) * big,
+            f: Math.random(),
+            born: performance.now(),
+            life: long ? rnd(LONG[0], LONG[1]) : rnd(LIFE[0], LIFE[1]),
+          });
+        };
+        const frame = (now) => {
+          const dt = Math.min((now - t0) / 1000, 0.05),
+            C = atlas.naturalHeight,
+            cells = Math.max(1, Math.round(atlas.naturalWidth / C));
+          t0 = now;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          ctx.beginPath();
+          ctx.rect(0, 0, innerWidth, Math.max(0, hero.getBoundingClientRect().bottom));
+          ctx.clip(); // seeds never leave the home background
+          ctx.shadowColor = "rgba(20, 70, 130, 0.5)";
+          ctx.shadowBlur = 5;
+          const drag = Math.exp(-1.3 * dt);
+          for (let i = seeds.length - 1; i >= 0; i--) {
+            const p = seeds[i],
+              age = (now - p.born) / p.life;
+            if (age >= 1) {
+              seeds.splice(i, 1);
+              continue;
+            }
+            p.sw += dt * p.sf;
+            p.vx = p.vx * drag + Math.sin(p.sw) * 26 * dt; // breeze: sideways sway
+            p.vy = p.vy * drag + Math.cos(p.sw * 0.8) * 20 * dt - (6 + (RISE - 6) * Math.min(age / 0.25, 1)) * dt; // and lift, easing in after the initial blow
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.a += p.w * dt;
+            ctx.globalAlpha = Math.min(age / 0.05, 1) * Math.min(1, (1 - age) / 0.3); // full opacity until 70% of life, then fade
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.a);
+            ctx.drawImage(atlas, Math.floor(p.f * cells) * C, 0, C, C, -p.s / 2, -p.s / 2, p.s, p.s);
+            ctx.restore();
+          }
+          loop = seeds.length ? requestAnimationFrame(frame) : 0;
+          if (!loop) ctx.clearRect(0, 0, innerWidth, innerHeight);
+        };
+        const reset = () => {
+          last = null;
+          dirX = dirY = speed = travelled = 0;
+        };
+        addEventListener(
+          "pointermove",
+          (e) => {
+            if (e.pointerType !== "mouse" || e.clientY > hero.getBoundingClientRect().bottom) return reset();
+            if (last) {
+              const dx = e.clientX - last.x,
+                dy = e.clientY - last.y,
+                d = Math.hypot(dx, dy);
+              if (d > 0.5) {
+                speed += (d / (Math.max(e.timeStamp - lastT, 8) / 1000) - speed) * 0.3;
+                dirX += (dx / d - dirX) * 0.35; // smoothed heading of the cursor
+                dirY += (dy / d - dirY) * 0.35;
+                travelled += d;
+              }
+            }
+            last = { x: e.clientX, y: e.clientY };
+            lastT = e.timeStamp;
+            if (travelled < GAP || Math.hypot(dirX, dirY) < 0.2) return;
+            travelled = 0;
+            spawn(e.clientX, e.clientY);
+            if (Math.random() < 0.3) spawn(e.clientX, e.clientY); // occasional extra
+            if (!loop && atlas.complete) {
+              t0 = performance.now();
+              loop = requestAnimationFrame(frame);
+            }
+          },
+          { passive: true },
+        );
+        document.addEventListener("mouseleave", reset);
+      })();
+
+      // Nav menu: hover/focus opens it on desktop; the button also toggles it for touch. Click outside closes.
+      const navLinks = document.getElementById("navLinks");
+      const burger = navLinks.querySelector(".nav__burger");
+      const setOpen = (open) => {
+        navLinks.classList.toggle("is-open", open);
+        navLinks.classList.toggle("is-closed", !open);
+        burger.setAttribute("aria-expanded", open);
+        if (!open && navLinks.contains(document.activeElement)) document.activeElement.blur();
+      };
+      navLinks.addEventListener("mouseenter", () => navLinks.classList.remove("is-closed"));
+      navLinks.addEventListener("focusin", () => navLinks.classList.remove("is-closed")); // keyboard Tab still opens it
+      burger.addEventListener("click", () => setOpen(!navLinks.classList.contains("is-open")));
+      document.addEventListener("click", (e) => {
+        if (!navLinks.contains(e.target)) setOpen(false);
+      });
+      addEventListener("keydown", (e) => e.key === "Escape" && setOpen(false));
+
+      // Map pins: the clicked pin marks the choice (ripple, the others dim), then the page scrolls smoothly to the section and focus moves to its heading. Top bar links are plain anchors and scroll the same way, without the pin effect.
+      const pinBox = document.querySelector(".hero__pins");
+      const arrive = (section) => {
+        const h = document.getElementById(section.getAttribute("aria-labelledby"));
+        if (!h) return;
+        h.tabIndex = -1;
+        h.focus({ preventScroll: true });
+      };
+      // Hint loop: every few seconds one label pops up over its dot (one at a time) so people see the dots are clickable. Idle while the map is off screen, the tab is hidden, a pin is hovered/focused or a click is scrolling.
+      {
+        const pins = [...document.querySelectorAll(".pin")];
+        let on = 0, shown = null, timer = 0, seen = true;
+        const clear = () => shown && (shown.classList.remove("is-hint"), (shown = null));
+        const busy = () => !seen || document.hidden || pinBox.classList.contains("is-going") || pins.some((p) => p.matches(":hover, :focus-visible"));
+        const tick = () => {
+          clear();
+          if (busy()) return void (timer = setTimeout(tick, 1200));
+          shown = pins[on++ % pins.length];
+          shown.classList.add("is-hint");
+          timer = setTimeout(() => {
+            clear();
+            timer = setTimeout(tick, 1600);
+          }, 1900);
+        };
+        new IntersectionObserver(([e]) => (seen = e.isIntersecting), { threshold: 0.4 }).observe(pinBox);
+        if (!still) timer = setTimeout(tick, 2600);
+      }
+      document.querySelectorAll(".pin").forEach((pin) =>
+        pin.addEventListener("click", (e) => {
+          const target = document.getElementById(pin.dataset.go);
+          if (!target) return;
+          e.preventDefault();
+          history.pushState(null, "", "#" + target.id);
+          const top = target.getBoundingClientRect().top + scrollY;
+          if (still) {
+            scrollTo({ top, behavior: "auto" });
+            arrive(target);
+            return;
+          }
+          pinBox.classList.add("is-going");
+          pin.classList.add("is-going");
+          const finish = () => {
+            clearTimeout(fallback);
+            removeEventListener("scrollend", onEnd);
+            pinBox.classList.remove("is-going");
+            pin.classList.remove("is-going");
+            arrive(target);
+          };
+          const onEnd = () => setTimeout(finish, 300); // lets the ripple finish even on a short scroll
+          const fallback = setTimeout(finish, 2200); // browsers without scrollend
+          setTimeout(() => {
+            addEventListener("scrollend", onEnd, { once: true });
+            scrollTo({ top, behavior: "smooth" });
+          }, 120);
+        }),
+      );
+
+      // Sparkles on the name: a new star every ~350ms at a random spot on the words, 5 alive at most. Pauses while the tab is hidden and when the name is off screen; never runs under reduced motion.
+      {
+        const host = document.getElementById("sparkleName");
+        if (host && !still) {
+          const colors = ["#ff6b1a", "#ffb800", "#ff3d71", "#00c2a8", "#3d8bff", "#a855f7"]; // same brights as the footer confetti
+          let timer = 0;
+          const add = () => {
+            if (host.querySelectorAll(".sparkle__star").length >= 5) return;
+            const star = document.createElement("i");
+            star.className = "sparkle__star";
+            star.style.cssText = `left:${Math.random() * 100}%;top:${10 + Math.random() * 80}%;--sz:${10 + Math.random() * 12}px;--c:${colors[(Math.random() * colors.length) | 0]}`;
+            star.addEventListener("animationend", () => star.remove());
+            host.append(star);
+          };
+          const start = () => (timer ||= setInterval(add, 350));
+          const stop = () => {
+            clearInterval(timer);
+            timer = 0;
+          };
+          new IntersectionObserver((e) => (e[0].isIntersecting && !document.hidden ? start() : stop())).observe(host);
+          document.addEventListener("visibilitychange", () => (document.hidden ? stop() : host.getBoundingClientRect().bottom > 0 && start()));
+        }
+      }
+
+      // Where-am-I indicator: a thin band across the middle of the screen decides which section you are in. That section's link in the top bar gets aria-current, which draws its underline when the menu opens. The intro counts as Home.
+      {
+        const items = [...document.querySelectorAll(".nav__items a")];
+        const zones = new Map([
+          [document.getElementById("home"), "home"],
+          [document.querySelector(".hero__intro"), "home"],
+          [document.getElementById("design"), "design"],
+          [document.getElementById("dev"), "dev"],
+          [document.getElementById("resume"), "resume"],
+        ]);
+        const mark = (id) => {
+          for (const a of items) {
+            if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
+            else a.removeAttribute("aria-current");
+          }
+        };
+        if ("IntersectionObserver" in window) {
+          const spy = new IntersectionObserver(
+            (entries) => {
+              for (const e of entries) if (e.isIntersecting) mark(zones.get(e.target));
+            },
+            { rootMargin: "-45% 0px -54% 0px", threshold: 0 },
+          );
+          zones.forEach((_, el) => el && spy.observe(el));
+        }
+      }
+
+      // ponytail: night-mode placeholder (plans/261003-night-mode-hero/plan.md). Flips html[data-mode] and the button state only.
+      const modeBtn = document.getElementById("modeToggle");
+      modeBtn.addEventListener("click", () => {
+        const night = document.documentElement.dataset.mode !== "night";
+        document.documentElement.dataset.mode = night ? "night" : "morning";
+        modeBtn.setAttribute("aria-pressed", night);
+        modeBtn.blur(); // ponytail: a focused button keeps .nav__links:focus-within open, so the tab would never collapse
+      });
+
+      // Footer line: split into words so each can rise in turn (see "Section reveals" CSS). The <em> keeps its colour because its word is wrapped inside it.
+      if (!still) {
+        let n = 0;
+        const split = (node) => {
+          for (const c of [...node.childNodes]) {
+            if (c.nodeType !== 3) {
+              split(c);
+              continue;
+            }
+            const frag = document.createDocumentFragment();
+            for (const t of c.textContent.split(/(\s+)/)) {
+              if (!t) continue;
+              if (/^\s+$/.test(t)) frag.append(t);
+              else {
+                const w = document.createElement("span");
+                w.className = "w";
+                w.style.setProperty("--w", n++);
+                w.textContent = t;
+                frag.append(w);
+              }
+            }
+            c.replaceWith(frag);
+          }
+        };
+        split(document.querySelector(".site-foot__cta"));
+      }
+
+      // Reveal: .rv elements, the timeline line and the footer line get .is-in once when scrolled into view; the CSS decides how each one enters. Without IntersectionObserver everything shows at once.
+      const reveal =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(
+              (entries) => {
+                for (const e of entries)
+                  if (e.isIntersecting) {
+                    e.target.classList.add("is-in");
+                    reveal.unobserve(e.target);
+                  }
+              },
+              { threshold: 0.1, rootMargin: "0px 0px -6% 0px" },
+            )
+          : { observe: (el) => el.classList.add("is-in") };
+      document.querySelectorAll(".rv, .x-list, .site-foot__cta").forEach((el) => reveal.observe(el));
+
+      // Design and Dev show their first `limit` items (3 when the grid is one column, 6 otherwise), with a "Show all" button for the rest. The Dev engine filter picks the set; the limit then applies to that set. Hidden cards pause their video.
+      {
+        const narrow = matchMedia("(max-width: 640px)"); // the breakpoint where .bento and .p-grid drop to one column
+        let limit = narrow.matches ? 3 : 6;
+        let ready = false;
+        let engine = "all";
+        const live = document.getElementById("filterLive");
+        const groups = [
+          { items: [...document.querySelectorAll(".d-tile")], more: document.getElementById("designMore"), noun: "case studies", open: false, match: () => true },
+          { items: [...document.querySelectorAll(".p-card")], more: document.getElementById("devMore"), noun: "projects", open: false, match: (c) => engine === "all" || c.dataset.engine === engine },
+        ];
+        const render = (g) => {
+          const hit = g.items.filter(g.match);
+          let shown = 0;
+          for (const c of g.items) {
+            const show = hit.includes(c) && (g.open || shown < limit);
+            if (ready && show && c.hidden) c.classList.add("is-in"); // revealed by Show all or a filter: no entrance replay
+            c.hidden = !show;
+            if (show) shown++;
+            else c.querySelector("video")?.pause();
+          }
+          const btn = g.more.firstElementChild;
+          g.more.hidden = hit.length <= limit;
+          btn.textContent = g.open ? "Show less" : `Show all ${g.noun}`;
+          btn.setAttribute("aria-expanded", g.open);
+          return { shown, total: hit.length };
+        };
+        narrow.addEventListener("change", () => {
+          limit = narrow.matches ? 3 : 6;
+          groups.forEach(render);
+        });
+        groups.forEach((g) => {
+          render(g);
+          g.more.firstElementChild.addEventListener("click", () => {
+            g.open = !g.open;
+            render(g);
+            if (!g.open) g.more.closest(".sec").scrollIntoView({ block: "start" }); // collapsing shortens the page, so bring the section top back
+          });
+        });
+        ready = true;
+        document.querySelectorAll(".filter").forEach((b, _, all) =>
+          b.addEventListener("click", () => {
+            engine = b.dataset.filter;
+            all.forEach((x) => x.setAttribute("aria-pressed", x === b));
+            const { shown, total } = render(groups[1]);
+            live.textContent = `Showing ${shown} of ${total} project${total === 1 ? "" : "s"}`;
+          }),
+        );
+      }
+
+      // Experience scroll: with more than 3 jobs, the box is cut at the top of the 4th job so exactly the latest 3 show, and the rest scrolls inside. Re-measured on resize and when fonts load, because job heights change with the width.
+      {
+        const box = document.getElementById("xScroll");
+        const jobs = box.querySelectorAll(".x-item");
+        const fit = () => {
+          box.style.height = "";
+          box.classList.remove("is-scroll", "is-end");
+          if (jobs.length <= 3) return;
+          box.style.height = jobs[3].offsetTop + "px";
+          box.classList.add("is-scroll");
+          onScroll();
+        };
+        const onScroll = () => box.classList.toggle("is-end", box.scrollTop + box.clientHeight >= box.scrollHeight - 4);
+        box.addEventListener("scroll", onScroll, { passive: true });
+        addEventListener("resize", fit);
+        document.fonts?.ready.then(fit);
+        fit();
+      }
+
+      // Icon cloud: the logos are spread evenly over a sphere (Fibonacci spiral) that turns slowly around Y and tilts toward the pointer while it is over the cloud. Each frame the points are rotated and projected to 2D; nearer logos are bigger and brighter, farther ones smaller and dimmer. The loop only runs while the cloud is on screen; reduced motion draws it once and leaves it still.
+      {
+        const box = document.getElementById("iconCloud");
+        const imgs = box ? [...box.querySelectorAll("img")] : [];
+        if (imgs.length) {
+          const n = imgs.length;
+          const pts = imgs.map((_, i) => {
+            const y = 1 - (2 * (i + 0.5)) / n,
+              r = Math.sqrt(1 - y * y),
+              t = i * Math.PI * (3 - Math.sqrt(5)); // golden angle
+            return [Math.cos(t) * r, y, Math.sin(t) * r];
+          });
+          let ay = 0, ax = 0.25, vy = 0.005, vx = 0, raf = 0, hover = null;
+          const draw = () => {
+            const R = box.clientWidth / 2 - 16,
+              sy = Math.sin(ay), cy = Math.cos(ay), sx = Math.sin(ax), cx = Math.cos(ax);
+            pts.forEach(([x, y, z], i) => {
+              const x1 = x * cy + z * sy, z1 = -x * sy + z * cy; // spin
+              const y2 = y * cx - z1 * sx, z2 = y * sx + z1 * cx; // tilt
+              const k = (z2 + 1) / 2; // 0 far .. 1 near
+              const el = imgs[i];
+              el.style.transform = `translate(${x1 * R}px, ${y2 * R}px) scale(${0.55 + 0.45 * k})`;
+              el.style.opacity = 0.35 + 0.65 * k;
+              el.style.zIndex = Math.round(k * 100);
+            });
+          };
+          const tick = () => {
+            const tvx = hover ? -hover.y * 0.02 : 0,
+              tvy = hover ? hover.x * 0.025 : 0.005;
+            vx += (tvx - vx) * 0.08;
+            vy += (tvy - vy) * 0.08;
+            ax = Math.max(-1.1, Math.min(1.1, ax + vx));
+            ay += vy;
+            draw();
+            raf = requestAnimationFrame(tick);
+          };
+          draw();
+          if (!still) {
+            box.addEventListener("pointermove", (e) => {
+              const r = box.getBoundingClientRect();
+              hover = { x: ((e.clientX - r.left) / r.width - 0.5) * 2, y: ((e.clientY - r.top) / r.height - 0.5) * 2 };
+            });
+            box.addEventListener("pointerleave", () => (hover = null));
+            const run = (on) => {
+              if (on && !raf) raf = requestAnimationFrame(tick);
+              else if (!on) {
+                cancelAnimationFrame(raf);
+                raf = 0;
+              }
+            };
+            new IntersectionObserver((e) => run(e[0].isIntersecting && !document.hidden)).observe(box);
+            document.addEventListener("visibilitychange", () => run(!document.hidden && box.getBoundingClientRect().top < innerHeight));
+          }
+        }
+      }
+
+      // Confetti: once per page load, when the word "playful" in the footer is fully on screen. Bursts shoot up from the bottom middle of the screen. canvas-confetti (6 KB, defer) skips itself under reduced motion.
+      {
+        const word = document.querySelector(".site-foot__cta em");
+        const fire = () => {
+          if (!window.confetti || still) return;
+          const origin = { x: 0.5, y: 1 };
+          const colors = ["#ff6b1a", "#ffb800", "#ff3d71", "#00c2a8", "#3d8bff", "#a855f7"];
+          const shot = (o) => confetti({ origin, colors, disableForReducedMotion: true, zIndex: 20, ticks: 260, ...o });
+          shot({ particleCount: 70, spread: 60, startVelocity: 58, angle: 75 });
+          shot({ particleCount: 70, spread: 60, startVelocity: 58, angle: 105 });
+          setTimeout(() => shot({ particleCount: 60, spread: 90, startVelocity: 46, scalar: 0.9 }), 200);
+        };
+        const seen = new IntersectionObserver(
+          (entries) => {
+            if (entries.some((e) => e.isIntersecting)) {
+              seen.disconnect();
+              setTimeout(fire, 650); // lets the last word of the footer line land first
+            }
+          },
+          { threshold: 1 },
+        );
+        seen.observe(word);
+      }
+
+      // PDF viewer: the iframe src is set on open (nothing downloads until then) and cleared on close. Backdrop click and Esc close it too.
+      {
+        const dlg = document.getElementById("pdfDialog");
+        const frame = document.getElementById("pdfFrame");
+        document.querySelectorAll("[data-pdf]").forEach((b) =>
+          b.addEventListener("click", () => {
+            frame.src = b.dataset.pdf;
+            document.getElementById("pdfTitle").textContent = b.dataset.title;
+            document.getElementById("pdfOpen").href = b.dataset.pdf;
+            dlg.showModal();
+          }),
+        );
+        dlg.querySelector(".pdf-dialog__close").addEventListener("click", () => dlg.close());
+        dlg.addEventListener("click", (e) => e.target === dlg && dlg.close()); // a click on the backdrop lands on the dialog element itself
+        dlg.addEventListener("close", () => frame.removeAttribute("src"));
+      }
+
+      // Tag colours: each distinct tag gets the next hue around the colour wheel (golden angle), in order of first appearance, so no two tags look alike and the same tag is the same colour in every section and in the popup.
+      const hues = new Map();
+      const hue = (c) => {
+        if (!hues.has(c.dataset.tag)) hues.set(c.dataset.tag, (hues.size * 137.5) % 360);
+        c.style.setProperty("--h", hues.get(c.dataset.tag));
+      };
+      document.querySelectorAll(".chip[data-tag]").forEach(hue);
+
+      // Project popup: the card's <template> holds the details (built from the project file), so nothing is fetched. The full video loads on open and is cleared on close.
+      {
+        const dlg = document.getElementById("projDialog");
+        const vid = dlg.querySelector("video");
+        const body = dlg.querySelector(".proj-dialog__body");
+        const pp = dlg.querySelector(".proj-dialog__pp");
+        const toggle = () => {
+          vid.paused ? vid.play().catch(() => {}) : vid.pause();
+        };
+        vid.addEventListener("click", toggle);
+        pp.addEventListener("click", toggle);
+        vid.addEventListener("play", () => {
+          pp.classList.remove("is-paused");
+          pp.setAttribute("aria-label", "Pause video");
+        });
+        vid.addEventListener("pause", () => {
+          pp.classList.add("is-paused");
+          pp.setAttribute("aria-label", "Play video");
+        });
+        document.querySelectorAll(".p-card").forEach((card) => {
+          const open = () => {
+            body.replaceChildren(card.querySelector(".p-detail").content.cloneNode(true));
+            body.querySelectorAll(".chip[data-tag]").forEach(hue);
+            vid.poster = card.dataset.poster;
+            vid.src = card.dataset.full;
+            pp.classList.toggle("is-paused", still);
+            pp.setAttribute("aria-label", still ? "Play video" : "Pause video");
+            dlg.querySelector(".proj-dialog__scroll").scrollTop = 0;
+            dlg.showModal();
+            if (!still) vid.play().catch(() => {});
+          };
+          card.addEventListener("click", open); // the whole card opens it; the title is a real button, so keyboard users get it too
+        });
+        dlg.querySelector(".proj-dialog__close").addEventListener("click", () => dlg.close());
+        dlg.addEventListener("click", (e) => e.target === dlg && dlg.close());
+        dlg.addEventListener("close", () => {
+          vid.pause();
+          vid.removeAttribute("src");
+          vid.load();
+        });
+      }
+
+      // Card previews: the src loads when a card nears the viewport (the poster shows until then). Fine pointers play on hover/focus, touch plays while mostly visible, reduced motion never plays.
+      {
+        const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+        const load = (v) => {
+          if (v.getAttribute("src")) return;
+          v.preload = "metadata";
+          v.src = v.dataset.src;
+        };
+        const play = (v) => {
+          load(v);
+          v.play().catch(() => {});
+        };
+        const stop = (v) => {
+          v.pause();
+          if (v.readyState) v.currentTime = 0.1;
+        };
+        const near = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries)
+              if (e.isIntersecting) {
+                load(e.target);
+                near.unobserve(e.target);
+              }
+          },
+          { rootMargin: "200px" },
+        );
+        const vis = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) e.isIntersecting ? play(e.target) : e.target.pause();
+          },
+          { threshold: 0.6 },
+        );
+        document.querySelectorAll(".p-card").forEach((card) => {
+          const v = card.querySelector("video");
+          near.observe(v);
+          if (still) return;
+          if (fine) {
+            for (const ev of ["mouseenter", "focusin"]) card.addEventListener(ev, () => play(v));
+            for (const ev of ["mouseleave", "focusout"]) card.addEventListener(ev, () => stop(v));
+          } else vis.observe(v);
+        });
+      }
+    </script>
+  </body>
+</html>
