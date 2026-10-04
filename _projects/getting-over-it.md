@@ -10,7 +10,7 @@ highlights:
   - Shotgun recoil as main movement mechanic
 genre: Platformer
 role: Lead Developer
-blurb: "A shotgun-recoil platformer made for the 2021 CGX Grad Jam."
+blurb: "A shotgun-recoil platformer."
 year: "2021"
 status: Complete
 type: Game Jam

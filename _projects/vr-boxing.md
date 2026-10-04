@@ -11,7 +11,7 @@ highlights:
   - AI behaviour tree / utility AI
 genre: VR boxing
 role: Lead Developer
-blurb: "A VR boxing prototype with a damage system and enemy AI."
+blurb: "A VR boxing game with enemy AI."
 year: "2021"
 status: Complete
 type: Individual

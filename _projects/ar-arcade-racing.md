@@ -10,7 +10,7 @@ highlights:
   - Playing with Unity AR Foundation
 genre: Arcade racing
 role: Lead Developer
-blurb: "An AR arcade racer you place on your floor and drive by touch."
+blurb: "An AR arcade racer on your floor."
 year: "2021"
 status: Complete
 type: Individual

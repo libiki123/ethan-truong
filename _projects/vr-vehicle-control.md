@@ -10,7 +10,7 @@ highlights:
   - Vehicle control state switch
 genre: VR driving
 role: Lead Developer
-blurb: "Drivable and flyable vehicles in first-person VR."
+blurb: "Drivable, flyable VR vehicles."
 year: "2021"
 status: Complete
 type: Individual

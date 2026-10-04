@@ -11,7 +11,7 @@ highlights:
   - Using excel for database
 genre: Idle tycoon
 role: Lead Developer
-blurb: "A cute idle tycoon about running and upgrading a busy town."
+blurb: "A cute idle town tycoon."
 year: "2021"
 status: Unfinished
 type: Work

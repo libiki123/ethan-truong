@@ -11,7 +11,7 @@ highlights:
   - Incremental difficulty by level
 genre: FPS shooter
 role: Developer
-blurb: "A first-person zombie shooter fired from a helicopter."
+blurb: "Zombie shooter from a helicopter."
 year: "2023"
 status: Complete
 type: Indie

@@ -10,7 +10,7 @@ highlights:
   - Push force vs position each frame
 genre: Flight prototype
 role: Lead Developer
-blurb: "A flying helicopter prototype built in Unreal."
+blurb: "A flying helicopter in Unreal."
 year: "2021"
 status: Ongoing
 type: Individual

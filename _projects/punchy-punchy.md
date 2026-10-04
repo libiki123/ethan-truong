@@ -10,7 +10,7 @@ highlights:
   - Random special power up like shield and frenzy
 genre: Hyper-casual
 role: Lead Developer
-blurb: "A fast timing game: tap the right bricks before the clock runs out."
+blurb: "A fast tap-timing game."
 year: "2023"
 status: Complete
 type: Work

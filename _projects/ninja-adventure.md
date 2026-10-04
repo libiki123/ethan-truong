@@ -11,7 +11,7 @@ highlights:
   - Swipe and Tap control
 genre: Hyper-casual
 role: Lead Developer
-blurb: "A 3D dodge game that gets harder as you collect coins and scrolls."
+blurb: "A 3D dodge game that gets harder."
 year: "2023"
 status: Complete
 type: Work

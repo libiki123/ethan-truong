@@ -10,7 +10,7 @@ highlights:
   - Angry Birds, Fruit Ninja, Cut the Rope...
 genre: Casual
 role: Lead Developer
-blurb: "Recreations of favourite mobile hits, from Angry Birds to Cut the Rope."
+blurb: "Recreations of mobile classics."
 year: "2021"
 status: Complete
 type: Individual

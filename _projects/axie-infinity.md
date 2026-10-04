@@ -8,7 +8,7 @@ images:
 tags: [Unity, C#, Web3, Turn-based, Mobile]
 genre: Turn-based
 role: Developer
-blurb: "A web3 turn-based battler where you raise, team up and fight with Axie creatures."
+blurb: "Web3 turn-based Axie battler."
 year: "2023 – 2024"
 status: Complete
 type: Work
