@@ -105,7 +105,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         box-shadow: 0 2px 0 rgba(59, 36, 20, 0.35);
       }
       .nav__brand {
-        padding: 4px;
+        padding: 8px 6px; /* 56px circle at rest: face is 44px wide, 40px tall */
       }
       /* ponytail: name hidden until hover/focus, then the pill grows to the right to reveal it */
       .nav__name {
@@ -130,9 +130,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         opacity: 1;
       }
       .nav__brand img {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
+        width: auto;
+        height: 40px; /* the face fills the pill: the old badge image had its own ring and cream circle inside it, which made two circles */
       }
       .nav__links {
         gap: 2px;
@@ -389,7 +388,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .hero__intro__art {
         display: block;
         width: min(100%, calc((100vh - 110px) * 2.33));
-        margin: calc(-14% - var(--drop) + var(--push, 0px)) 0 0 auto;
+        margin: calc(var(--art-up, -14%) - var(--drop) + var(--push, 0px)) 0 0 auto;
         mask-image:
           linear-gradient(to right, transparent, #000 10%),
           linear-gradient(to bottom, #000 91%, transparent);
@@ -758,6 +757,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           padding-bottom: calc(var(--art-h) * 0.14 + 24px); /* measured: only the cobbles (lowest ~11%) are painted under the centred button */
         }
       }
+      @media (min-width: 1400px) {
+        #dev {
+          background-position: center calc(100% + 3vw); /* full screen: the castle tower reached up over the next-page arrow, so the art sits a little lower */
+        }
+      }
       #resume {
         --next: var(--night); /* the water fades into the dark footer */
       }
@@ -817,7 +821,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       .sec-head h2 {
         margin: 0 0 0.3em;
-        font-size: var(--step-3);
+        font-size: clamp(1.75rem, 1.5rem + 0.85vw, 2.5rem); /* 40px at 1900px, 28px on phone: a little under the label's weight so the two lines read as one lockup */
         font-weight: 700;
         letter-spacing: -0.01em;
         font-variation-settings: "SOFT" 100;
@@ -828,7 +832,10 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         color: var(--ink-muted);
       }
       .sec-head .eyebrow {
+        margin-bottom: 0.3em;
         color: var(--accent-ink);
+        font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem); /* the section name (Design, Dev, Experience) reads as a real label, not fine print */
+        letter-spacing: 0.1em;
       }
       .sec-head .sec-note {
         margin-top: 0.5em;
@@ -1092,8 +1099,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         flex-direction: column;
         min-width: 0;
         overflow: hidden;
-        background: var(--surface);
-        border: 1px solid #d9c093; /* darker than --border: the tile sits on page-coloured paper, so the edge has to carry it */
         border-radius: var(--r-lg);
         box-shadow:
           0 1px 0 rgb(59 36 20 / 0.05),
@@ -1202,6 +1207,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         .d-tile:nth-child(3) {
           grid-column: span 5;
         }
+        .bento--flat .d-tile,
+        .bento--flat .d-tile:nth-child(n) {
+          grid-column: span 6;
+          grid-row: auto;
+        }
         .d-tile--lead .d-tile__body {
           flex: none; /* the cover takes the spare height, so no empty gap opens above the footer row */
         }
@@ -1270,54 +1280,56 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         flex-direction: column;
         min-width: 0;
         overflow: hidden;
-        background: var(--surface);
-        border: 1px solid var(--border);
         border-radius: var(--r-lg);
         box-shadow: var(--shadow-1);
         transition:
           transform 280ms var(--ease),
           box-shadow 280ms var(--ease);
       }
-      /* Border beam (after Magic UI): a glowing square rides the card border via offset-path, and the mask cuts it down to the 2px ring. It only runs while the card is hovered (one animation at a time, nothing when idle) and never under reduced motion. */
-      .beam {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        border: 2px solid transparent;
-        border-radius: inherit;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 200ms;
-        -webkit-mask:
-          linear-gradient(transparent, transparent) padding-box,
-          linear-gradient(#000, #000) border-box;
-        -webkit-mask-composite: source-in;
-        mask:
-          linear-gradient(transparent, transparent) padding-box,
-          linear-gradient(#000, #000) border-box;
-        mask-composite: intersect;
+      /* Border beam: the card's own 2px border is a conic gradient (padding-box layer for the fill, border-box layer for the ring). On hover the angle rotates, so a short orange comet with a soft tail runs round the real border; it cannot be clipped and its radius always matches the card. At rest the ring is plain brown. */
+      @property --beam-a {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: 0deg;
       }
-      .beam i {
-        position: absolute;
-        width: 90px;
-        aspect-ratio: 1;
-        background: linear-gradient(to left, var(--fox), #f5b84a 55%, transparent);
-        offset-path: rect(0 auto auto 0 round 22px);
-        offset-distance: 0%;
+      @property --beam-c {
+        syntax: "<color>";
+        inherits: false;
+        initial-value: #a8794a;
+      }
+      @property --beam-t {
+        syntax: "<color>";
+        inherits: false;
+        initial-value: #a8794a;
+      }
+      .p-card,
+      .d-tile {
+        border: 2px solid transparent;
+        background:
+          linear-gradient(var(--surface), var(--surface)) padding-box,
+          conic-gradient(from var(--beam-a), #a8794a 0 72%, var(--beam-c) 94%, var(--beam-t) 98%, #a8794a) border-box;
+        transition:
+          transform 280ms var(--ease),
+          box-shadow 280ms var(--ease),
+          --beam-c 300ms,
+          --beam-t 300ms;
       }
       @keyframes beam {
         to {
-          offset-distance: 100%;
+          --beam-a: 360deg;
+        }
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .p-card:hover,
+        .d-tile:hover {
+          --beam-c: var(--fox);
+          --beam-t: #ffc77a;
         }
       }
       @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-        .p-card:hover .beam,
-        .d-tile:hover .beam {
-          opacity: 1;
-        }
-        .p-card:hover .beam i,
-        .d-tile:hover .beam i {
-          animation: beam 4.5s linear infinite;
+        .p-card:hover,
+        .d-tile:hover {
+          animation: beam 3.2s linear infinite;
         }
       }
       .p-card[hidden],
@@ -1329,35 +1341,47 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         .p-card__media,
         .d-tile__media {
           aspect-ratio: auto;
-          height: clamp(80px, calc((100vh - 70px - 62px - 40px - 24px) / 2 - 232px), 200px);
+          height: clamp(96px, calc((100vh - 70px - 62px - 40px - 24px) / 2 - 162px), 240px);
         }
-        .p-card__body,
-        .d-tile__body {
-          gap: 6px;
+        .d-tile__media {
+          height: clamp(96px, calc((100vh - 70px - 62px - 40px - 24px) / 2 - 170px), 240px); /* the Design text area is a little taller */
+        }
+        .p-card .p-card__body,
+        .d-tile .d-tile__body {
+          gap: 5px;
           padding: 12px 18px 12px;
         }
-        .p-card__body .chip {
-          padding-block: 2px;
+        .p-card .p-card__body .chip {
+          padding: 2px 9px;
+          font-size: 0.8125rem;
         }
-        .p-card__blurb {
+        .p-card .p-card__role {
+          gap: 6px;
+          font-size: 0.8125rem;
+        }
+        .p-card .p-card__role .icon {
+          width: 15px;
+          height: 15px;
+        }
+        .p-card .p-card__blurb {
           font-size: 0.8125rem;
           line-height: 1.4;
-        }
-        .p-card__title {
-          font-size: var(--step-0);
-        }
-        .p-card__blurb {
           display: -webkit-box;
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-        .p-card__foot {
-          padding-top: 10px;
+        .p-card .p-card__title {
+          font-size: 1.125rem;
+          line-height: 1.2;
         }
-        .d-tile__title,
+        .p-card .p-card__foot {
+          padding-top: 9px;
+          font-size: 0.8125rem;
+        }
+        .d-tile .d-tile__title,
         .d-tile--lead .d-tile__title {
-          font-size: var(--step-0);
+          font-size: 1.125rem;
         }
         .pager__nav {
           margin-top: 18px;
@@ -1367,6 +1391,16 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         .d-tile--lead .d-tile__media {
           height: auto;
           min-height: 160px;
+        }
+      }
+      /* Tilt: with a mouse, the hovered card turns toward the pointer like a fake 3D plate. JS ("Card tilt") sets --rx/--ry from where the pointer is on the card and adds .is-tilt; leaving removes it and the card eases back flat. */
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        html.js .p-card.is-tilt,
+        html.js .d-tile.is-tilt {
+          transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-4px);
+          transition:
+            transform 140ms ease-out,
+            box-shadow 280ms var(--ease);
         }
       }
       /* Design and Dev are paged: two rows per page on a horizontal snap track (swipe works natively), with arrows and dots under it. JS ("Pager") splits the cards into pages. Each page carries the padding that gives hover lift and shadows room, and the track's negative margin cancels it, so no page peeks in at the sides. */
@@ -1515,33 +1549,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         width: 26px;
         background: var(--accent);
       }
-      /* Experience shows 2.5 jobs with a Show more button; opened, the box scrolls inside and Show less closes it. */
-      .x-scroll.is-scroll {
-        overflow: hidden;
-      }
-      .x-scroll.is-scroll.is-open {
-        overflow-y: auto;
-        scrollbar-width: thin;
-        scrollbar-color: var(--border-strong) transparent;
-        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent);
-        mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); /* soft fade at the bottom edge hints there is more to scroll to */
-      }
-      .x-scroll.is-scroll:not(.is-open) {
-        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
-        mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent); /* closed, the half-shown 3rd job fades out */
-      }
-      .x-scroll.is-scroll.is-open.is-end {
-        -webkit-mask-image: none;
-        mask-image: none;
-      }
-      .show-more {
-        display: flex;
-        justify-content: center;
-        margin: 28px 0 0;
-      }
-      .show-more[hidden] {
-        display: none;
-      }
       .p-card:has(.p-card__link:focus-visible) {
         outline: 3px solid var(--dusk);
         outline-offset: 3px;
@@ -1650,23 +1657,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }
       }
 
-      /* 03 Experience: timeline. Shows the latest 3 jobs; JS (see "Experience scroll") sets .x-scroll's height to exactly three jobs when there are more, and the rest scrolls inside. */
-      .x-scroll {
-        max-width: 920px;
-      }
-      @media (min-width: 641px) {
-        .x-scroll.is-scroll.is-open {
-          max-width: 948px; /* 920px of list + the scrollbar gap */
-          padding-right: 28px; /* keeps the scrollbar away from the text */
-        }
-      }
-      .x-scroll.is-scroll.is-open {
-        padding-bottom: 8px;
-      }
-      .x-scroll:focus-visible {
-        outline: 3px solid var(--dusk);
-        outline-offset: 6px;
-      }
+      /* 03 Experience: timeline. The 2 latest jobs show in full; older ones fold down to their logo and company link and unfold on hover or tap (JS "Experience fold"), then fold back after 3 seconds unless the pointer is on them. */
       .x-list {
         position: relative;
         max-width: 920px;
@@ -1717,7 +1708,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         width: auto;
         max-width: 140px;
         height: 36px;
-        margin-bottom: 12px;
         padding: 6px 10px;
         object-fit: contain;
         background: #fff;
@@ -1725,7 +1715,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         border-radius: var(--r-sm);
       }
       .x-role {
-        margin: 0;
+        margin: 0 0 12px;
         font-size: var(--step-2);
         font-weight: 700;
         font-variation-settings: "SOFT" 100;
@@ -1734,9 +1724,88 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        margin: 4px 0 14px;
+        margin: 0;
         color: var(--accent-ink);
         font-weight: 600;
+      }
+      .x-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: fit-content; /* the hover zone is just the logo, the link and the chevron, not the whole row */
+        max-width: 100%;
+        margin-bottom: 14px;
+      }
+      .x-toggle {
+        display: block;
+        padding: 0;
+        background: none;
+        border: 0;
+        border-radius: var(--r-sm);
+        cursor: pointer;
+      }
+      .x-toggle:focus-visible {
+        outline: 3px solid var(--dusk);
+        outline-offset: 3px;
+      }
+      .x-item--fold .x-toggle:hover .x-logo {
+        border-color: var(--accent);
+      }
+      .x-chev {
+        width: 9px;
+        height: 9px;
+        margin-left: 2px;
+        border-right: 2px solid var(--accent-ink);
+        border-bottom: 2px solid var(--accent-ink);
+        rotate: 45deg;
+        translate: 0 -2px;
+        transition:
+          rotate 300ms var(--ease),
+          translate 300ms var(--ease);
+      }
+      .x-item--fold.is-open .x-chev {
+        rotate: 225deg;
+        translate: 0 2px;
+      }
+      .x-item--fold {
+        padding-bottom: clamp(24px, 3.5vw, 36px);
+      }
+      .x-item--fold:last-child {
+        padding-bottom: 0;
+      }
+      /* Folded jobs: the body collapses to zero height (grid 0fr to 1fr animates smoothly) and is hidden from tab order and screen readers until open. */
+      .x-body {
+        display: grid;
+        grid-template-rows: 1fr;
+      }
+      .x-body > div {
+        min-height: 0;
+        overflow: hidden;
+      }
+      .x-item--fold .x-body {
+        transition: grid-template-rows 450ms var(--ease);
+      }
+      .x-item--fold:not(.is-open) .x-body {
+        grid-template-rows: 0fr;
+      }
+      .x-item--fold .x-body > div {
+        width: fit-content; /* hovering the open text keeps it open; empty space beside it does not */
+        max-width: 100%;
+        transition: visibility 0s;
+      }
+      .x-item--fold:not(.is-open) .x-body > div {
+        visibility: hidden;
+        transition-delay: 450ms;
+      }
+      .x-item--fold:not(.is-open) .x-head {
+        margin-bottom: 0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .x-item--fold .x-body,
+        .x-item--fold .x-body > div,
+        .x-chev {
+          transition: none;
+        }
       }
       .x-co:hover {
         text-decoration: underline;
@@ -1765,6 +1834,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         height: 6px;
         border-radius: 50%;
         background: var(--fox);
+      }
+      @media (min-width: 1240px) {
+        .x-list {
+          margin-left: clamp(0px, calc((100% - 873px) / 2), 120px); /* the timeline's text is about 873px wide and sat at the left of the 1084px column; this centres it on the page (the heading and buttons keep the column edges) */
+        }
       }
       @media (min-width: 768px) {
         .x-list::before {
@@ -1908,14 +1982,18 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         width: 40px;
         height: 40px;
         padding: 0;
-        border: 0;
         border-radius: 50%;
-        background: rgb(42 25 13 / 0.6);
-        -webkit-backdrop-filter: blur(6px);
-        backdrop-filter: blur(6px);
-        color: #fff;
+        background: var(--paper); /* solid cream with a brown edge, so it reads over dark and bright game art alike */
+        border: 2px solid var(--ink);
+        box-shadow: 0 2px 6px rgb(42 25 13 / 0.35);
+        color: var(--ink);
         cursor: pointer;
         transition: background 150ms;
+      }
+      .proj-dialog__close svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2.5;
       }
       .proj-dialog__close:hover {
         background: var(--fox);
@@ -2231,9 +2309,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       @media (min-width: 641px) {
         :root {
           --lower: 7;
-          --hill-up: 6.5%;
-          --l1-up: 4; /* lifts the map and sky (L1 + L0) in % of the hero height; crops the top sky. Its bottom must stay under the paper edge. */
-          --l3-up: 5.6; /* extra lift of the torn paper, in % of the hero height; covers the bottom edge of the hill */ /* lifts the hill so the canopy runs off the top of the screen (no flat cut). Lower it to move the hill down. */
+          --hill-up: 14.5%; /* the scene sits 8 points higher than the old layout so the intro heading shows on the first screen. Raise or lower the three --*-up values together. */
+          --l1-up: 12; /* lifts the map and sky (L1 + L0) in % of the hero height; crops the top sky. Its bottom must stay under the paper edge. */
+          --l3-up: 13.6; /* extra lift of the torn paper, in % of the hero height; covers the bottom edge of the hill */ /* lifts the hill so the canopy runs off the top of the screen (no flat cut). Lower it to move the hill down. */
         }
         .hero__hill {
           translate: 0 calc(-14% + var(--lower) * 1% - var(--hill-up, 0%));
@@ -2248,9 +2326,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           top: calc((var(--lower) - var(--l1-up)) * 1% - 88.5% * 300 / 1335);
         }
         .hero__intro {
+          --art-up: -16%; /* the book painting starts 6% of its width higher than the old layout */
+          --drop: 0px; /* no gap above the name: the heading starts right under the torn edge */
+          padding-top: 0;
           margin-top: calc(-3px - 2.6vw - var(--l3-up) * 0.5625vw);
           /* On mid-width windows the paragraph runs across the open book, so the painting is pushed down. Measured: the paragraph's bottom minus the book's top is about drop + 10vw - 43px; 20px of air is added. The push fades to 0 by 1500px, where the book sits clear of the text on its own. */
-          --push: clamp(0px, calc((1500px - 100vw) * 2.2), calc(10vw + var(--drop) - 23px));
+          --push: clamp(0px, calc((1500px - 100vw) * 2.2 + 2vw), calc(12vw + var(--drop) - 23px));
         }
       }
 
@@ -2260,8 +2341,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           padding: 10px 12px;
         }
         .nav__brand img {
-          width: 30px;
-          height: 30px;
+          height: 32px;
         }
         .nav__links a {
           padding: 5px 7px;
@@ -2366,7 +2446,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
   <body>
     <nav class="nav" id="nav">
       <a class="nav__brand" href="#intro" aria-label="Ethan Truong, introduction">
-        <img src="{{ '/assets/images/fox-badge.png' | relative_url }}" alt="" />
+        <img src="{{ '/assets/images/fox-face.png' | relative_url }}" alt="" width="168" height="153" />
         <span class="nav__name">Ethan Truong</span>
       </a>
       <div class="nav__links" id="navLinks">
@@ -2440,7 +2520,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       <div class="hero__intro">
         <div class="hero__intro__text">
           <h1 id="intro" class="rv" style="--i: 0">Hi! I'm <span class="sparkle" id="sparkleName">Ethan Truong</span></h1>
-          <p class="intro-roles rv" style="--i: 1"><span class="chip">Designer</span><span class="chip chip--leaf">Developer</span></p>
+          <p class="intro-roles rv" style="--i: 1"><span class="chip">Game Designer</span><span class="chip chip--leaf">Game Developer</span></p>
           <p class="hero__lead rv" style="--i: 2">
             I've spent almost five years making games, and my favourite part is
             the moment an idea becomes playable. Working in both design and
@@ -2468,15 +2548,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       <section class="sec sec--paper" id="design" aria-labelledby="designTitle">
         <div class="wrap">
           <header class="sec-head rv">
-            <p class="eyebrow">01 · Design</p>
+            <p class="eyebrow">01 · Game Design</p>
             <h2 id="designTitle">Designing the fun</h2>
-            <p>Levels, systems and features I've designed.</p>
-            <p class="sec-note">Sample work, real case studies coming soon.</p>
           </header>
           <div class="pager" id="designPager"><div class="pager__track"><div class="bento">
             {%- for item in designs %}
             <article class="d-tile rv{% if forloop.first %} d-tile--lead{% endif %}" style="--i: {{ forloop.index0 }}">
-              <span class="beam" aria-hidden="true"><i></i></span>
               <div class="d-tile__media">
                 <img src="{{ art }}design-samples/{{ item.image }}" alt="{{ item.title }} key art" loading="lazy" />
               </div>
@@ -2506,9 +2583,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       <section class="sec sec--sunk" id="dev" aria-labelledby="devTitle">
         <div class="wrap">
           <header class="sec-head rv">
-            <p class="eyebrow">02 · Dev</p>
+            <p class="eyebrow">02 · Game Dev</p>
             <h2 id="devTitle">Things I've built</h2>
-            <p>Games, prototypes and tools I've built.</p>
           </header>
           <div class="filters rv" role="group" aria-label="Filter projects by engine">
             <button class="filter" type="button" data-filter="all" aria-pressed="true">All<span class="filter__n">{{ projs.size }}</span></button>
@@ -2520,7 +2596,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           <div class="pager" id="devPager"><div class="pager__track"><div class="p-grid">
             {%- for p in projs %}
             <article class="p-card rv" data-engine="{{ p.engine }}"{% if p.images %} data-shots="{% for im in p.images %}{{ shots_base | append: im.src }}{% unless forloop.last %}|{% endunless %}{% endfor %}"{% else %} data-poster="{{ '/assets/media/' | append: p.media | append: '-poster.webp' | relative_url }}" data-full="{{ '/assets/media/' | append: p.media | append: '.mp4' | relative_url }}"{% endif %} style="--i: {{ forloop.index0 | modulo: 3 }}">
-              <span class="beam" aria-hidden="true"><i></i></span>
               <div class="p-card__media">
                 {%- if p.images %}
                 <img src="{{ shots_base | append: p.card | default: p.images[0].src }}" alt="" loading="lazy" />
@@ -2571,36 +2646,41 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         <div class="wrap">
           <header class="sec-head sec-head--row rv">
             <div>
-              <p class="eyebrow">03 · Experience</p>
+              <p class="eyebrow">03 · Experiences</p>
               <h2 id="resumeTitle">Where I've worked</h2>
-              <p>Studios and teams I've worked with.</p>
             </div>
             <div class="sec-head__actions">
               <button class="b-btn b-btn--ghost" type="button" data-pdf="{{ '/assets/docs/ethan-truong-resume.pdf' | relative_url }}" data-title="Full Resume">{% include icon.html name="file-text" %}Full resume</button>
               <button class="b-btn b-btn--ghost" type="button" data-pdf="{{ '/assets/docs/ethan-truong-transcript.pdf' | relative_url }}" data-title="Transcript">{% include icon.html name="graduation-cap" %}Transcript</button>
             </div>
           </header>
-          <div class="x-scroll" id="xScroll" role="region" aria-label="Work experience" tabindex="0">
           <ol class="x-list">
             {%- for j in site.data.experience %}
-            <li class="x-item rv">
+            {%- assign fold = false %}{% if forloop.index > 2 %}{% assign fold = true %}{% endif %}
+            <li class="x-item rv{% if fold %} x-item--fold{% endif %}">
               <div class="x-when">
                 <span>{{ j.period }}</span>
                 <span class="chip chip--dusk" data-type="{{ j.type | slugify }}">{{ j.type }}</span>
               </div>
               <div class="x-main">
-                <img class="x-logo" src="{{ '/assets/images/' | append: j.logo | relative_url }}" alt="{{ j.company }}" width="{{ j.logo_size[0] }}" height="{{ j.logo_size[1] }}" loading="lazy" />
-                <h3 class="x-role">{{ j.role }}</h3>
-                <a class="x-co" href="{{ j.url }}" target="_blank" rel="noopener">{{ j.company }} {% include icon.html name="arrow-up-right" %}</a>
-                <ul class="x-hl">
-                  {%- for h in j.highlights limit: 3 %}<li>{{ h }}</li>{% endfor %}
-                </ul>
+                <div class="x-head">
+                  {%- capture logo %}<img class="x-logo" src="{{ '/assets/images/' | append: j.logo | relative_url }}" alt="{{ j.company }}" width="{{ j.logo_size[0] }}" height="{{ j.logo_size[1] }}" loading="lazy" />{% endcapture %}
+                  {%- if fold %}<button class="x-toggle" type="button" aria-expanded="false" aria-controls="job-{{ forloop.index }}" aria-label="Show details for {{ j.company }}">{{ logo }}</button>{% else %}{{ logo }}{% endif %}
+                  <a class="x-co" href="{{ j.url }}" target="_blank" rel="noopener">{{ j.company }} {% include icon.html name="arrow-up-right" %}</a>
+                  {%- if fold %}<span class="x-chev" aria-hidden="true"></span>{% endif %}
+                </div>
+                <div class="x-body"{% if fold %} id="job-{{ forloop.index }}"{% endif %}>
+                  <div>
+                    <h3 class="x-role">{{ j.role }}</h3>
+                    <ul class="x-hl">
+                      {%- for h in j.highlights limit: 4 %}<li>{{ h }}</li>{% endfor %}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </li>
             {%- endfor %}
           </ol>
-          </div>
-          <p class="show-more" id="expMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false" aria-controls="xScroll">Show more</button></p>
         </div>
       </section>
     </main>
@@ -2998,6 +3078,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             )
           : { observe: (el) => el.classList.add("is-in") };
       document.querySelectorAll(".rv, .x-list, .site-foot__cta").forEach((el) => reveal.observe(el));
+      // The intro plays its entrance as soon as the page loads, even when part of it is below the first screen (the book can sit just under the fold, and would otherwise stay hidden until you scroll). The --i stagger still orders the lines.
+      document.querySelectorAll(".hero__intro .rv").forEach((el) => {
+        reveal.unobserve?.(el);
+        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("is-in")));
+      });
 
       // Pager: Design and Dev show two rows per page on a horizontal snap track (native swipe), with arrows and dots under it. The cards are split into pages of `size()` and re-split when the size changes (resize) or the Dev filter changes the set. The first card of each Design page is its big lead tile.
       const chevron = (d) => `<svg viewBox="0 0 26 64" aria-hidden="true"><path d="${d}"/></svg>`; // a tall, bare chevron, no circle
@@ -3022,13 +3107,14 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         };
         const build = (keep) => {
           per = size();
+          const [firstN, restN] = [].concat(per, per); // size() gives one number, or [first page, later pages]
           track.replaceChildren();
           dots.replaceChildren();
-          for (let i = 0; i < list.length; i += per) {
+          for (let i = 0, n = firstN; i < list.length; i += n, n = restN) {
             const pg = document.createElement("div");
-            pg.className = gridClass;
-            list.slice(i, i + per).forEach((c, j) => {
-              c.classList.toggle("d-tile--lead", c.classList.contains("d-tile") && j === 0);
+            pg.className = gridClass + (i ? " bento--flat" : ""); // later Design pages have no lead tile: a plain 2x2
+            list.slice(i, i + n).forEach((c, j) => {
+              c.classList.toggle("d-tile--lead", c.classList.contains("d-tile") && !i && j === 0);
               pg.append(c);
             });
             track.append(pg);
@@ -3046,7 +3132,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         track.addEventListener("scroll", mark, { passive: true });
         prev.addEventListener("click", () => go(at - 1));
         next.addEventListener("click", () => go(at + 1));
-        addEventListener("resize", () => size() !== per && build(true));
+        addEventListener("resize", () => String(size()) !== String(per) && build(true));
         build();
         // the Dev filter swaps the set of cards
         return (set) => {
@@ -3059,7 +3145,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       {
         const narrow = matchMedia("(max-width: 640px)"), wide = matchMedia("(min-width: 1024px)");
         const live = document.getElementById("filterLive");
-        pager(document.getElementById("designPager"), () => (narrow.matches ? 2 : 3)); // lead tile + 2 beside it fill two rows
+        pager(document.getElementById("designPager"), () => (narrow.matches ? 2 : [3, 4])); // page 1: lead tile + 2 beside it; later pages: 2x2
         const dev = pager(document.getElementById("devPager"), () => (narrow.matches ? 2 : wide.matches ? 6 : 4)); // columns x 2 rows
         document.querySelectorAll(".filter").forEach((b, _, group) =>
           b.addEventListener("click", () => {
@@ -3071,45 +3157,70 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         );
       }
 
-      // Experience: the box is cut halfway down the 3rd job, so 2.5 jobs show and Show more makes sense. Open, the box scrolls inside and Show less closes it. At either end of the open box the wheel goes on to the page (Chrome does not always chain it by itself).
+      // Card tilt: on the Design and Dev cards, a mouse pointer turns the card up to 7 degrees toward where it is (top edge tips away, left edge tips away, and so on). The card's box is measured once when the pointer enters, then each move is applied once per frame. Touch and reduced motion never tilt.
       {
-        const box = document.getElementById("xScroll");
-        const more = document.getElementById("expMore");
-        const btn = more.firstElementChild;
-        const jobs = box.querySelectorAll(".x-item");
-        const setOpen = (open) => {
-          box.classList.toggle("is-open", open);
-          btn.setAttribute("aria-expanded", open);
-          btn.textContent = open ? "Show less" : "Show more";
-          if (!open) box.scrollTop = 0;
-        };
-        const fit = () => {
-          box.scrollTop = 0;
-          box.style.height = "";
-          box.classList.remove("is-scroll", "is-end");
-          more.hidden = jobs.length <= 3;
-          if (more.hidden) return setOpen(false);
-          box.style.height = Math.round(jobs[2].offsetTop + jobs[2].offsetHeight * 0.5) + "px";
-          box.classList.add("is-scroll");
-          box.dispatchEvent(new Event("scroll"));
-        };
-        box.addEventListener("scroll", () => box.classList.toggle("is-end", box.scrollTop + box.clientHeight >= box.scrollHeight - 4), { passive: true });
-        box.addEventListener(
-          "wheel",
-          (e) => {
-            if (!box.classList.contains("is-open") || e.ctrlKey || !e.deltaY) return;
-            const atEnd = e.deltaY > 0 && box.scrollTop + box.clientHeight >= box.scrollHeight - 1;
-            const atStart = e.deltaY < 0 && box.scrollTop <= 0;
-            if (!atEnd && !atStart) return;
-            e.preventDefault();
-            scrollBy({ top: e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1), behavior: "instant" });
-          },
-          { passive: false },
-        );
-        btn.addEventListener("click", () => setOpen(!box.classList.contains("is-open")));
-        addEventListener("resize", fit);
-        document.fonts?.ready.then(fit);
-        fit();
+        const ok = matchMedia("(hover: hover) and (pointer: fine)").matches && !still;
+        const MAX = 7;
+        if (ok)
+          document.querySelectorAll(".p-card, .d-tile").forEach((card) => {
+            let box = null, raf = 0, px = 0, py = 0;
+            const apply = () => {
+              raf = 0;
+              card.style.setProperty("--ry", `${(px - 0.5) * 2 * MAX}deg`);
+              card.style.setProperty("--rx", `${(0.5 - py) * 2 * MAX}deg`);
+            };
+            card.addEventListener("pointerenter", (e) => {
+              if (e.pointerType !== "mouse") return;
+              box = card.getBoundingClientRect();
+              card.classList.add("is-tilt");
+            });
+            card.addEventListener("pointermove", (e) => {
+              if (!box || e.pointerType !== "mouse") return;
+              px = Math.min(1, Math.max(0, (e.clientX - box.left) / box.width));
+              py = Math.min(1, Math.max(0, (e.clientY - box.top) / box.height));
+              raf || (raf = requestAnimationFrame(apply));
+            });
+            card.addEventListener("pointerleave", () => {
+              box = null;
+              cancelAnimationFrame(raf);
+              raf = 0;
+              card.classList.remove("is-tilt");
+              card.style.removeProperty("--rx");
+              card.style.removeProperty("--ry");
+            });
+          });
+      }
+
+      // Experience fold: jobs after the 2 latest show only their logo and company link. Hovering the logo, link and chevron (fine pointers) or tapping the logo (touch, keyboard) opens the details; they fold back 3 seconds after the pointer leaves that logo row and the opened text, or 3 seconds after a tap, unless a keyboard user is inside it.
+      {
+        const fine = matchMedia("(hover: hover) and (pointer: fine)");
+        document.querySelectorAll(".x-item--fold").forEach((item) => {
+          const head = item.querySelector(".x-head");
+          const body = item.querySelector(".x-body > div");
+          const btn = item.querySelector(".x-toggle");
+          let t = 0;
+          const set = (open) => {
+            item.classList.toggle("is-open", open);
+            btn.setAttribute("aria-expanded", open);
+          };
+          const arm = () => {
+            clearTimeout(t);
+            t = setTimeout(() => {
+              if (fine.matches && (head.matches(":hover") || body.matches(":hover") || item.querySelector(":focus-visible"))) return arm();
+              set(false);
+            }, 3000);
+          };
+          const open = () => {
+            set(true);
+            arm();
+          };
+          head.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && open());
+          for (const z of [head, body]) z.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && arm());
+          btn.addEventListener("click", (e) => {
+            if (fine.matches && e.detail) return open(); // a mouse click keeps what hover opened
+            item.classList.contains("is-open") ? set(false) : open();
+          });
+        });
       }
 
       // Icon cloud: the logos are spread evenly over a sphere (Fibonacci spiral) that turns slowly around Y and tilts toward the pointer while it is over the cloud. Each frame the points are rotated and projected to 2D; nearer logos are bigger and brighter, farther ones smaller and dimmer. The loop only runs while the cloud is on screen; reduced motion draws it once and leaves it still.
