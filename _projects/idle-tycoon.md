@@ -9,6 +9,10 @@ highlights:
   - Idle Tycoon with cute graphic
   - Upgrade and unlock buildings, decors
   - Using excel for database
+genre: Idle tycoon
+role: Lead Developer
+blurb: "A cute idle tycoon about running and upgrading a busy town."
+year: "2021"
 status: Unfinished
 type: Work
 duration: May – July, 2021

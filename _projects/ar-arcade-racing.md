@@ -8,6 +8,10 @@ tags: [Unity, C#, AR, Mobile, Racing]
 highlights:
   - An arcade racing game with touch control
   - Playing with Unity AR Foundation
+genre: Arcade racing
+role: Lead Developer
+blurb: "An AR arcade racer you place on your floor and drive by touch."
+year: "2021"
 status: Complete
 type: Individual
 duration: June, 2021

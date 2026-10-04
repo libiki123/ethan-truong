@@ -8,6 +8,10 @@ tags: [Unity, C#, Game Jam, Platformer]
 highlights:
   - A submission for the 2021 CGX Grad Jam
   - Shotgun recoil as main movement mechanic
+genre: Platformer
+role: Lead Developer
+blurb: "A shotgun-recoil platformer made for the 2021 CGX Grad Jam."
+year: "2021"
 status: Complete
 type: Game Jam
 duration_label: Jam Duration

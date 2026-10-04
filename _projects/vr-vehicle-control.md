@@ -8,6 +8,10 @@ tags: [Unreal, Blueprint, VR, Driving]
 highlights:
   - Driving/Flying in first person VR
   - Vehicle control state switch
+genre: VR driving
+role: Lead Developer
+blurb: "Drivable and flyable vehicles in first-person VR."
+year: "2021"
 status: Complete
 type: Individual
 duration: Sep – Nov, 2021

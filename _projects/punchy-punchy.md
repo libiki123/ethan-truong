@@ -8,6 +8,10 @@ tags: [Unity, C#, Mobile, Casual]
 highlights:
   - A timing and accuracy game
   - Random special power up like shield and frenzy
+genre: Hyper-casual
+role: Lead Developer
+blurb: "A fast timing game: tap the right bricks before the clock runs out."
+year: "2023"
 status: Complete
 type: Work
 duration: Mar – May, 2023

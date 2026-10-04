@@ -9,6 +9,10 @@ highlights:
   - A 2D RPG with some platformer
   - State movement design
   - Enemy AI using finite state machine
+genre: 2D RPG platformer
+role: Lead Developer
+blurb: "A 2D RPG platformer with state-machine movement and enemy AI."
+year: "2021 – present"
 status: Ongoing
 type: Individual
 duration: April – present

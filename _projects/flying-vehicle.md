@@ -8,6 +8,10 @@ tags: [Unreal, Blueprint, Flying]
 highlights:
   - Flying mechanics
   - Push force vs position each frame
+genre: Flight prototype
+role: Lead Developer
+blurb: "A flying helicopter prototype built in Unreal."
+year: "2021"
 status: Ongoing
 type: Individual
 duration: June, 2021

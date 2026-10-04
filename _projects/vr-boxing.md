@@ -9,6 +9,10 @@ highlights:
   - Simple VR boxing mechanic
   - Damage system
   - AI behaviour tree / utility AI
+genre: VR boxing
+role: Lead Developer
+blurb: "A VR boxing prototype with a damage system and enemy AI."
+year: "2021"
 status: Complete
 type: Individual
 duration: June – Aug, 2021

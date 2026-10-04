@@ -9,6 +9,10 @@ highlights:
   - First person zombie shooter from a helicopter
   - Different and upgradable weapons
   - Incremental difficulty by level
+genre: FPS shooter
+role: Developer
+blurb: "A first-person zombie shooter fired from a helicopter."
+year: "2023"
 status: Complete
 type: Indie
 duration: Feb – May, 2023

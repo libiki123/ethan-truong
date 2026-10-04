@@ -8,6 +8,10 @@ tags: [Unreal, Blueprint, VR, Simulator]
 highlights:
   - Screw/unscrew mechanic
   - Electric/normal screwdriver
+genre: VR simulation
+role: Lead Developer
+blurb: "VR hand tools: a twist screwdriver and a trigger-activated power drill."
+year: "2021"
 status: Complete
 type: Individual
 duration: June – July, 2021

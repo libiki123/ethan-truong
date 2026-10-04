@@ -8,6 +8,10 @@ tags: [Unity, C#, Casual]
 highlights:
   - Recreate some of my favorite mobile games
   - Angry Birds, Fruit Ninja, Cut the Rope...
+genre: Casual
+role: Lead Developer
+blurb: "Recreations of favourite mobile hits, from Angry Birds to Cut the Rope."
+year: "2021"
 status: Complete
 type: Individual
 duration: May, 2021
