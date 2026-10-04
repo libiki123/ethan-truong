@@ -1323,10 +1323,36 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .d-tile[hidden] {
         display: none;
       }
+      /* Design, Dev and Experience show 3 rows. With more, JS ("Cut to 3 rows") cuts the box just above the 4th row and shows a Show more button; opened, the box scrolls inside (slim bar, fade at the bottom) and Show less closes it. The card padding gives hover lift and shadow room; the negative margin cancels it. */
+      .c-scroll {
+        margin: -12px -12px 0;
+        padding: 12px 12px 0;
+      }
+      .c-scroll.is-scroll,
+      .x-scroll.is-scroll {
+        overflow: hidden;
+      }
+      .c-scroll.is-scroll.is-open,
+      .x-scroll.is-scroll.is-open {
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-strong) transparent;
+        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent);
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); /* soft fade at the bottom edge hints there is more to scroll to */
+      }
+      .x-scroll.is-scroll:not(.is-open) {
+        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent); /* closed, the half-shown 3rd job fades out */
+      }
+      .c-scroll.is-scroll.is-open.is-end,
+      .x-scroll.is-scroll.is-open.is-end {
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
       .show-more {
         display: flex;
         justify-content: center;
-        margin: 36px 0 0;
+        margin: 28px 0 0;
       }
       .show-more[hidden] {
         display: none;
@@ -1341,7 +1367,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         overflow: hidden;
         background: var(--surface-sunk);
       }
-      .p-card__media video {
+      .p-card__media video,
+      .p-card__media img {
+        display: block;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -1400,28 +1428,21 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .p-card__link:focus-visible {
         outline: 0;
       }
-      .p-card__hl {
-        display: grid;
-        gap: 6px;
+      .p-card__role {
+        display: flex;
+        align-items: center;
+        gap: 8px;
         margin: 0;
-        padding: 0;
-        list-style: none;
         color: var(--ink-muted);
         font-size: var(--step--1);
       }
-      .p-card__hl li {
-        position: relative;
-        padding-left: 16px;
+      .p-card__blurb {
+        margin: 0;
+        color: var(--ink-muted);
+        font-size: var(--step--1);
       }
-      .p-card__hl li::before {
-        content: "";
-        position: absolute;
-        top: 0.55em;
-        left: 0;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--fox);
+      .p-card__year {
+        color: var(--ink-muted);
       }
       .p-card__foot {
         display: flex;
@@ -1438,7 +1459,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           transform: translateY(-4px);
           box-shadow: var(--shadow-2);
         }
-        .p-card:hover .p-card__media video {
+        .p-card:hover .p-card__media video,
+        .p-card:hover .p-card__media img {
           transform: scale(1.03);
         }
       }
@@ -1447,18 +1469,14 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .x-scroll {
         max-width: 920px;
       }
-      .x-scroll.is-scroll {
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        padding-bottom: 8px;
-        scrollbar-width: thin;
-        scrollbar-color: var(--border-strong) transparent;
-        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent);
-        mask-image: linear-gradient(to bottom, #000 calc(100% - 48px), transparent); /* soft fade at the bottom edge hints there is more to scroll to */
+      @media (min-width: 641px) {
+        .x-scroll.is-scroll.is-open {
+          max-width: 948px; /* 920px of list + the scrollbar gap */
+          padding-right: 28px; /* keeps the scrollbar away from the text */
+        }
       }
-      .x-scroll.is-scroll.is-end {
-        -webkit-mask-image: none;
-        mask-image: none;
+      .x-scroll.is-scroll.is-open {
+        padding-bottom: 8px;
       }
       .x-scroll:focus-visible {
         outline: 3px solid var(--dusk);
@@ -1752,6 +1770,51 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         height: 100%;
         object-fit: contain;
         cursor: pointer;
+      }
+      /* Projects without video show screenshots instead: one big picture and a thumbnail strip. */
+      .proj-dialog__shots {
+        display: none;
+        position: absolute;
+        inset: 0;
+      }
+      .proj-dialog.is-shots video,
+      .proj-dialog.is-shots .proj-dialog__pp {
+        display: none;
+      }
+      .proj-dialog.is-shots .proj-dialog__shots {
+        display: block;
+      }
+      .proj-dialog__shots > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .proj-dialog__thumbs {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        display: flex;
+        gap: 8px;
+      }
+      .proj-dialog__thumbs button {
+        width: 64px;
+        height: 40px;
+        padding: 0;
+        overflow: hidden;
+        border: 2px solid rgb(255 255 255 / 0.5);
+        border-radius: 8px;
+        background: none;
+        cursor: pointer;
+      }
+      .proj-dialog__thumbs button[aria-current="true"] {
+        border-color: #fff;
+      }
+      .proj-dialog__thumbs img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
       .proj-dialog__pp {
         position: absolute;
@@ -2215,7 +2278,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             <p>Levels, systems and features I've designed.</p>
             <p class="sec-note">Sample work, real case studies coming soon.</p>
           </header>
-          <div class="bento">
+          <div class="c-scroll" id="designScroll"><div class="bento">
             {%- for item in designs %}
             <article class="d-tile rv{% if forloop.first %} d-tile--lead{% endif %}" style="--i: {{ forloop.index0 }}">
               <span class="beam" aria-hidden="true"><i></i></span>
@@ -2241,8 +2304,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               </div>
             </article>
             {%- endfor %}
-          </div>
-          <p class="show-more" id="designMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false"></button></p>
+          </div></div>
+          <p class="show-more" id="designMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false" aria-controls="designScroll">Show more</button></p>
         </div>
       </section>
 
@@ -2259,24 +2322,29 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             <button class="filter" type="button" data-filter="unreal" aria-pressed="false">Unreal<span class="filter__n">{{ unreal.size }}</span></button>
           </div>
           <p class="sr-only" id="filterLive" aria-live="polite">Showing {{ projs.size }} projects</p>
-          <div class="p-grid">
+          {%- assign shots_base = '/assets/images/' | relative_url -%}
+          <div class="c-scroll" id="devScroll"><div class="p-grid">
             {%- for p in projs %}
-            <article class="p-card rv" data-engine="{{ p.engine }}" data-poster="{{ '/assets/media/' | append: p.media | append: '-poster.webp' | relative_url }}" data-full="{{ '/assets/media/' | append: p.media | append: '.mp4' | relative_url }}" style="--i: {{ forloop.index0 | modulo: 3 }}">
+            <article class="p-card rv" data-engine="{{ p.engine }}"{% if p.images %} data-shots="{% for im in p.images %}{{ shots_base | append: im.src }}{% unless forloop.last %}|{% endunless %}{% endfor %}"{% else %} data-poster="{{ '/assets/media/' | append: p.media | append: '-poster.webp' | relative_url }}" data-full="{{ '/assets/media/' | append: p.media | append: '.mp4' | relative_url }}"{% endif %} style="--i: {{ forloop.index0 | modulo: 3 }}">
               <span class="beam" aria-hidden="true"><i></i></span>
               <div class="p-card__media">
+                {%- if p.images %}
+                <img src="{{ shots_base | append: p.card | default: p.images[0].src }}" alt="" loading="lazy" />
+                {%- else %}
                 <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" poster="{{ '/assets/media/' | append: p.media | append: '-poster.webp' | relative_url }}" data-src="{{ '/assets/media/' | append: p.media | append: '-preview.mp4' | relative_url }}"></video>
+                {%- endif %}
                 <span class="p-card__engine"><img src="{{ '/assets/images/' | append: p.engine | append: '-icon.png' | relative_url }}" alt="" width="22" height="22" />{{ p.engine | capitalize }}</span>
               </div>
               <div class="p-card__body">
                 <h3 class="p-card__title"><button class="p-card__link" type="button" aria-haspopup="dialog">{{ p.title }}</button></h3>
                 <ul class="chips">
                   <li class="chip" data-tag="{{ p.type | slugify }}">{{ p.type }}</li>
-                  <li class="chip chip--plain">{% include icon.html name="calendar" %}{{ p.duration }}</li>
+                  <li class="chip" data-tag="{{ p.genre | slugify }}">{{ p.genre }}</li>
                 </ul>
-                <ul class="p-card__hl">
-                  {%- for h in p.highlights limit: 3 %}<li>{{ h }}</li>{% endfor %}
-                </ul>
+                <p class="p-card__role">{% include icon.html name="briefcase" %}{{ p.role }}</p>
+                <p class="p-card__blurb">{{ p.blurb }}</p>
                 <div class="p-card__foot">
+                  <span class="p-card__year">{{ p.year }}</span>
                   <span class="b-link">View project {% include icon.html name="arrow-right" %}</span>
                 </div>
               </div>
@@ -2301,8 +2369,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               </template>
             </article>
             {%- endfor %}
-          </div>
-          <p class="show-more" id="devMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false"></button></p>
+          </div></div>
+          <p class="show-more" id="devMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false" aria-controls="devScroll">Show more</button></p>
         </div>
       </section>
 
@@ -2339,6 +2407,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             {%- endfor %}
           </ol>
           </div>
+          <p class="show-more" id="expMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false" aria-controls="xScroll">Show more</button></p>
         </div>
       </section>
     </main>
@@ -2355,7 +2424,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
     <dialog class="proj-dialog" id="projDialog">
       <button class="proj-dialog__close" type="button" aria-label="Close">{% include icon.html name="x" %}</button>
       <div class="proj-dialog__scroll">
-        <div class="proj-dialog__media"><video muted loop playsinline></video><button class="proj-dialog__pp" type="button" aria-label="Pause video"><span class="i-pause">{% include icon.html name="pause" %}</span><span class="i-play">{% include icon.html name="play" %}</span></button></div>
+        <div class="proj-dialog__media"><video muted loop playsinline></video><div class="proj-dialog__shots"><img alt="" /><div class="proj-dialog__thumbs"></div></div><button class="proj-dialog__pp" type="button" aria-label="Pause video"><span class="i-pause">{% include icon.html name="pause" %}</span><span class="i-play">{% include icon.html name="play" %}</span></button></div>
         <div class="proj-dialog__body"></div>
       </div>
     </dialog>
@@ -2736,73 +2805,79 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           : { observe: (el) => el.classList.add("is-in") };
       document.querySelectorAll(".rv, .x-list, .site-foot__cta").forEach((el) => reveal.observe(el));
 
-      // Design and Dev show their first `limit` items (3 when the grid is one column, 6 otherwise), with a "Show all" button for the rest. The Dev engine filter picks the set; the limit then applies to that set. Hidden cards pause their video.
+      // Cut to 3 rows: Design, Dev and Experience show 3 rows (cards) or 3 jobs. When there are more, the box is cut just above the next row and a Show more button appears; open, the box scrolls inside, and Show less closes it. Rows are counted from real positions, so any column count works. The Dev engine filter picks the set (closing the box). At either end of an open box the wheel goes on to the page (Chrome does not always chain it by itself).
+      const cutRows = (box, more, cut) => {
+        const btn = more.firstElementChild;
+        const setOpen = (open) => {
+          box.classList.toggle("is-open", open);
+          btn.setAttribute("aria-expanded", open);
+          btn.textContent = open ? "Show less" : "Show more";
+          if (!open) box.scrollTop = 0;
+        };
+        const fit = () => {
+          box.scrollTop = 0;
+          box.style.height = "";
+          box.classList.remove("is-scroll", "is-end");
+          const h = cut();
+          more.hidden = !h;
+          if (!h) return setOpen(false);
+          box.style.height = h + "px";
+          box.classList.add("is-scroll");
+          box.dispatchEvent(new Event("scroll"));
+        };
+        box.addEventListener("scroll", () => box.classList.toggle("is-end", box.scrollTop + box.clientHeight >= box.scrollHeight - 4), { passive: true });
+        box.addEventListener(
+          "wheel",
+          (e) => {
+            if (!box.classList.contains("is-open") || e.ctrlKey || !e.deltaY) return;
+            const atEnd = e.deltaY > 0 && box.scrollTop + box.clientHeight >= box.scrollHeight - 1;
+            const atStart = e.deltaY < 0 && box.scrollTop <= 0;
+            if (!atEnd && !atStart) return;
+            e.preventDefault();
+            scrollBy({ top: e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1), behavior: "instant" });
+          },
+          { passive: false },
+        );
+        btn.addEventListener("click", () => setOpen(!box.classList.contains("is-open")));
+        addEventListener("resize", fit);
+        document.fonts?.ready.then(fit);
+        fit();
+        return { fit, close: () => setOpen(false) };
+      };
       {
-        const narrow = matchMedia("(max-width: 640px)"); // the breakpoint where .bento and .p-grid drop to one column
-        let limit = narrow.matches ? 3 : 6;
-        let ready = false;
         let engine = "all";
         const live = document.getElementById("filterLive");
-        const groups = [
-          { items: [...document.querySelectorAll(".d-tile")], more: document.getElementById("designMore"), noun: "case studies", open: false, match: () => true },
-          { items: [...document.querySelectorAll(".p-card")], more: document.getElementById("devMore"), noun: "projects", open: false, match: (c) => engine === "all" || c.dataset.engine === engine },
-        ];
-        const render = (g) => {
-          const hit = g.items.filter(g.match);
-          let shown = 0;
-          for (const c of g.items) {
-            const show = hit.includes(c) && (g.open || shown < limit);
-            if (ready && show && c.hidden) c.classList.add("is-in"); // revealed by Show all or a filter: no entrance replay
-            c.hidden = !show;
-            if (show) shown++;
-            else c.querySelector("video")?.pause();
-          }
-          const btn = g.more.firstElementChild;
-          g.more.hidden = hit.length <= limit;
-          btn.textContent = g.open ? "Show less" : `Show all ${g.noun}`;
-          btn.setAttribute("aria-expanded", g.open);
-          return { shown, total: hit.length };
+        const rowCut = (box, items) => () => {
+          const tops = [...new Set(items.filter((c) => !c.hidden).map((c) => Math.round(c.getBoundingClientRect().top)))].sort((a, b) => a - b);
+          return tops.length > 3 ? tops[3] - box.getBoundingClientRect().top - 12 : 0; // 12px into the gap above the 4th row
         };
-        narrow.addEventListener("change", () => {
-          limit = narrow.matches ? 3 : 6;
-          groups.forEach(render);
-        });
-        groups.forEach((g) => {
-          render(g);
-          g.more.firstElementChild.addEventListener("click", () => {
-            g.open = !g.open;
-            render(g);
-            if (!g.open) g.more.closest(".sec").scrollIntoView({ block: "start" }); // collapsing shortens the page, so bring the section top back
-          });
-        });
-        ready = true;
+        const dBox = document.getElementById("designScroll"), pBox = document.getElementById("devScroll");
+        const dItems = [...document.querySelectorAll(".d-tile")], pItems = [...document.querySelectorAll(".p-card")];
+        cutRows(dBox, document.getElementById("designMore"), rowCut(dBox, dItems));
+        const dev = cutRows(pBox, document.getElementById("devMore"), rowCut(pBox, pItems));
         document.querySelectorAll(".filter").forEach((b, _, all) =>
           b.addEventListener("click", () => {
             engine = b.dataset.filter;
             all.forEach((x) => x.setAttribute("aria-pressed", x === b));
-            const { shown, total } = render(groups[1]);
-            live.textContent = `Showing ${shown} of ${total} project${total === 1 ? "" : "s"}`;
+            let total = 0;
+            for (const c of pItems) {
+              const show = engine === "all" || c.dataset.engine === engine;
+              c.hidden = !show;
+              if (show) total++;
+              else c.querySelector("video")?.pause();
+            }
+            dev.close();
+            dev.fit();
+            live.textContent = `Showing ${total} project${total === 1 ? "" : "s"}`;
           }),
         );
       }
 
-      // Experience scroll: with more than 3 jobs, the box is cut at the top of the 4th job so exactly the latest 3 show, and the rest scrolls inside. Re-measured on resize and when fonts load, because job heights change with the width.
+      // Experience: the box is cut halfway down the 3rd job, so 2.5 jobs show and Show more makes sense.
       {
         const box = document.getElementById("xScroll");
         const jobs = box.querySelectorAll(".x-item");
-        const fit = () => {
-          box.style.height = "";
-          box.classList.remove("is-scroll", "is-end");
-          if (jobs.length <= 3) return;
-          box.style.height = jobs[3].offsetTop + "px";
-          box.classList.add("is-scroll");
-          onScroll();
-        };
-        const onScroll = () => box.classList.toggle("is-end", box.scrollTop + box.clientHeight >= box.scrollHeight - 4);
-        box.addEventListener("scroll", onScroll, { passive: true });
-        addEventListener("resize", fit);
-        document.fonts?.ready.then(fit);
-        fit();
+        cutRows(box, document.getElementById("expMore"), () => (jobs.length > 3 ? Math.round(jobs[2].offsetTop + jobs[2].offsetHeight * 0.5) : 0));
       }
 
       // Icon cloud: the logos are spread evenly over a sphere (Fibonacci spiral) that turns slowly around Y and tilts toward the pointer while it is over the cloud. Each frame the points are rotated and projected to 2D; nearer logos are bigger and brighter, farther ones smaller and dimmer. The loop only runs while the cloud is on screen; reduced motion draws it once and leaves it still.
@@ -2916,6 +2991,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         const vid = dlg.querySelector("video");
         const body = dlg.querySelector(".proj-dialog__body");
         const pp = dlg.querySelector(".proj-dialog__pp");
+        const shot = dlg.querySelector(".proj-dialog__shots > img");
+        const thumbs = dlg.querySelector(".proj-dialog__thumbs");
         const toggle = () => {
           vid.paused ? vid.play().catch(() => {}) : vid.pause();
         };
@@ -2933,13 +3010,33 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           const open = () => {
             body.replaceChildren(card.querySelector(".p-detail").content.cloneNode(true));
             body.querySelectorAll(".chip[data-tag]").forEach(hue);
-            vid.poster = card.dataset.poster;
-            vid.src = card.dataset.full;
-            pp.classList.toggle("is-paused", still);
-            pp.setAttribute("aria-label", still ? "Play video" : "Pause video");
+            const shots = card.dataset.shots ? card.dataset.shots.split("|") : null;
+            dlg.classList.toggle("is-shots", !!shots);
+            thumbs.replaceChildren();
+            if (shots) {
+              const show = (i) => {
+                shot.src = shots[i];
+                [...thumbs.children].forEach((t, j) => t.setAttribute("aria-current", j === i));
+              };
+              shots.forEach((src, i) => {
+                const t = document.createElement("button");
+                t.type = "button";
+                t.setAttribute("aria-label", `Screenshot ${i + 1}`);
+                t.innerHTML = `<img src="${src}" alt="" />`;
+                t.addEventListener("click", () => show(i));
+                thumbs.append(t);
+              });
+              thumbs.hidden = shots.length < 2;
+              show(0);
+            } else {
+              vid.poster = card.dataset.poster;
+              vid.src = card.dataset.full;
+              pp.classList.toggle("is-paused", still);
+              pp.setAttribute("aria-label", still ? "Play video" : "Pause video");
+            }
             dlg.querySelector(".proj-dialog__scroll").scrollTop = 0;
             dlg.showModal();
-            if (!still) vid.play().catch(() => {});
+            if (!still && !shots) vid.play().catch(() => {});
           };
           card.addEventListener("click", open); // the whole card opens it; the title is a real button, so keyboard users get it too
         });
@@ -2986,6 +3083,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         );
         document.querySelectorAll(".p-card").forEach((card) => {
           const v = card.querySelector("video");
+          if (!v) return;
           near.observe(v);
           if (still) return;
           if (fine) {
