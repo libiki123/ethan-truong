@@ -1323,16 +1323,191 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .d-tile[hidden] {
         display: none;
       }
-      /* Design, Dev and Experience show 3 rows. With more, JS ("Cut to 3 rows") cuts the box just above the 4th row and shows a Show more button; opened, the box scrolls inside (slim bar, fade at the bottom) and Show less closes it. The card padding gives hover lift and shadow room; the negative margin cancels it. */
-      .c-scroll {
-        margin: -12px -12px 0;
-        padding: 12px 12px 0;
+      /* Paged cards shrink to the window: from tablet up, the picture height follows the window height (the formula leaves room for the filters above and the dots below), and the text area is tighter, so two rows and the page dots fit on one screen. Phones keep the full-size cards. */
+      @media (min-width: 641px) {
+        .p-card__media,
+        .d-tile__media {
+          aspect-ratio: auto;
+          height: clamp(80px, calc((100vh - 70px - 62px - 40px - 24px) / 2 - 232px), 200px);
+        }
+        .p-card__body,
+        .d-tile__body {
+          gap: 6px;
+          padding: 12px 18px 12px;
+        }
+        .p-card__body .chip {
+          padding-block: 2px;
+        }
+        .p-card__blurb {
+          font-size: 0.8125rem;
+          line-height: 1.4;
+        }
+        .p-card__title {
+          font-size: var(--step-0);
+        }
+        .p-card__blurb {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .p-card__foot {
+          padding-top: 10px;
+        }
+        .d-tile__title,
+        .d-tile--lead .d-tile__title {
+          font-size: var(--step-0);
+        }
+        .pager__nav {
+          margin-top: 18px;
+        }
       }
-      .c-scroll.is-scroll,
+      @media (min-width: 1024px) {
+        .d-tile--lead .d-tile__media {
+          height: auto;
+          min-height: 160px;
+        }
+      }
+      /* Design and Dev are paged: two rows per page on a horizontal snap track (swipe works natively), with arrows and dots under it. JS ("Pager") splits the cards into pages. Each page carries the padding that gives hover lift and shadows room, and the track's negative margin cancels it, so no page peeks in at the sides. */
+      .pager__track {
+        display: flex;
+        margin: -14px -12px -26px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+      .pager__track::-webkit-scrollbar {
+        display: none;
+      }
+      .pager__track > * {
+        align-content: start; /* a short last page keeps its single row instead of stretching the rows to the tallest page */
+        flex: 0 0 100%;
+        min-width: 0;
+        padding: 14px 12px 26px;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+      }
+      .pager__nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 28px;
+      }
+      .pager__nav[hidden] {
+        display: none;
+      }
+      .pager__arrow {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 72px;
+        padding: 0;
+        color: var(--ink);
+        background: none;
+        border: 0;
+        cursor: pointer;
+        transition:
+          color 0.2s ease,
+          opacity 0.2s ease,
+          translate 0.25s var(--ease);
+      }
+      .pager__arrow svg {
+        width: 26px;
+        height: 64px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        overflow: visible;
+        filter: drop-shadow(0 0 3px var(--paper)) drop-shadow(0 0 6px var(--paper)); /* a faint halo keeps the chevron readable over the scene art */
+      }
+      /* From tablet up the arrows sit on the left and right of the cards, centred on them (the dots stay underneath). Wide screens put them in the page margin; in between, the cards shrink to leave room. Phones keep them beside the dots. */
+      .pager {
+        position: relative;
+      }
+      @media (min-width: 641px) {
+        .pager {
+          padding-inline: 60px;
+        }
+        .pager__arrow {
+          position: absolute;
+          top: calc((100% - 62px) / 2); /* 62px = the dots row below the cards (18px gap + 44px) */
+          margin-top: -36px; /* half the arrow's own height */
+          z-index: 1;
+        }
+        .pager__prev:not(:disabled):hover {
+          translate: -4px 0;
+        }
+        .pager__next:not(:disabled):hover {
+          translate: 4px 0;
+        }
+        .pager__prev {
+          left: 0;
+        }
+        .pager__next {
+          right: 0;
+        }
+      }
+      @media (min-width: 1240px) {
+        .pager {
+          padding-inline: 0;
+        }
+        .pager__prev {
+          left: -64px;
+        }
+        .pager__next {
+          right: -64px;
+        }
+      }
+      .pager__arrow:disabled {
+        opacity: 0.25;
+        cursor: default;
+      }
+      .pager__arrow:not(:disabled):hover {
+        color: var(--accent);
+      }
+      .pager__arrow:focus-visible,
+      .pager__dot:focus-visible {
+        outline: 3px solid var(--dusk);
+        outline-offset: 3px;
+      }
+      .pager__dots {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .pager__dot {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+      .pager__dot::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: var(--border-strong);
+        border-radius: 999px;
+        transition:
+          width 0.25s var(--ease),
+          background 0.25s ease;
+      }
+      .pager__dot[aria-current="true"]::before {
+        width: 26px;
+        background: var(--accent);
+      }
+      /* Experience shows 2.5 jobs with a Show more button; opened, the box scrolls inside and Show less closes it. */
       .x-scroll.is-scroll {
         overflow: hidden;
       }
-      .c-scroll.is-scroll.is-open,
       .x-scroll.is-scroll.is-open {
         overflow-y: auto;
         scrollbar-width: thin;
@@ -1344,7 +1519,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent);
         mask-image: linear-gradient(to bottom, #000 calc(100% - 72px), transparent); /* closed, the half-shown 3rd job fades out */
       }
-      .c-scroll.is-scroll.is-open.is-end,
       .x-scroll.is-scroll.is-open.is-end {
         -webkit-mask-image: none;
         mask-image: none;
@@ -1943,7 +2117,17 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
 
       /* Footer */
+      /* The confetti canvas sits in the page, pinned to the footer's bottom edge and reaching up over the scene above, so the pieces scroll with the page instead of following the window. */
+      .site-foot__confetti {
+        position: absolute;
+        inset: auto 0 0;
+        width: 100%;
+        height: min(90vh, 900px);
+        pointer-events: none;
+        z-index: 20;
+      }
       .site-foot {
+        position: relative;
         padding: clamp(32px, 4vw, 48px) 0 16px;
         background: var(--night);
         color: var(--paper);
@@ -2278,7 +2462,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             <p>Levels, systems and features I've designed.</p>
             <p class="sec-note">Sample work, real case studies coming soon.</p>
           </header>
-          <div class="c-scroll" id="designScroll"><div class="bento">
+          <div class="pager" id="designPager"><div class="pager__track"><div class="bento">
             {%- for item in designs %}
             <article class="d-tile rv{% if forloop.first %} d-tile--lead{% endif %}" style="--i: {{ forloop.index0 }}">
               <span class="beam" aria-hidden="true"><i></i></span>
@@ -2304,8 +2488,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               </div>
             </article>
             {%- endfor %}
-          </div></div>
-          <p class="show-more" id="designMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false" aria-controls="designScroll">Show more</button></p>
+          </div></div></div>
         </div>
       </section>
 
@@ -2323,7 +2506,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           </div>
           <p class="sr-only" id="filterLive" aria-live="polite">Showing {{ projs.size }} projects</p>
           {%- assign shots_base = '/assets/images/' | relative_url -%}
-          <div class="c-scroll" id="devScroll"><div class="p-grid">
+          <div class="pager" id="devPager"><div class="pager__track"><div class="p-grid">
             {%- for p in projs %}
             <article class="p-card rv" data-engine="{{ p.engine }}"{% if p.images %} data-shots="{% for im in p.images %}{{ shots_base | append: im.src }}{% unless forloop.last %}|{% endunless %}{% endfor %}"{% else %} data-poster="{{ '/assets/media/' | append: p.media | append: '-poster.webp' | relative_url }}" data-full="{{ '/assets/media/' | append: p.media | append: '.mp4' | relative_url }}"{% endif %} style="--i: {{ forloop.index0 | modulo: 3 }}">
               <span class="beam" aria-hidden="true"><i></i></span>
@@ -2369,8 +2552,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               </template>
             </article>
             {%- endfor %}
-          </div></div>
-          <p class="show-more" id="devMore" hidden><button class="b-btn b-btn--ghost" type="button" aria-expanded="false" aria-controls="devScroll">Show more</button></p>
+          </div></div></div>
         </div>
       </section>
 
@@ -2430,6 +2612,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
     </dialog>
 
     <footer class="site-foot" id="contact">
+      <canvas class="site-foot__confetti" aria-hidden="true"></canvas>
       <div class="wrap">
         <div class="site-foot__top">
           <div class="site-foot__text">
@@ -2805,9 +2988,84 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           : { observe: (el) => el.classList.add("is-in") };
       document.querySelectorAll(".rv, .x-list, .site-foot__cta").forEach((el) => reveal.observe(el));
 
-      // Cut to 3 rows: Design, Dev and Experience show 3 rows (cards) or 3 jobs. When there are more, the box is cut just above the next row and a Show more button appears; open, the box scrolls inside, and Show less closes it. Rows are counted from real positions, so any column count works. The Dev engine filter picks the set (closing the box). At either end of an open box the wheel goes on to the page (Chrome does not always chain it by itself).
-      const cutRows = (box, more, cut) => {
+      // Pager: Design and Dev show two rows per page on a horizontal snap track (native swipe), with arrows and dots under it. The cards are split into pages of `size()` and re-split when the size changes (resize) or the Dev filter changes the set. The first card of each Design page is its big lead tile.
+      const chevron = (d) => `<svg viewBox="0 0 26 64" aria-hidden="true"><path d="${d}"/></svg>`; // a tall, bare chevron, no circle
+      const chevL = chevron("M22 4 4 32l18 28"), chevR = chevron("M4 4l18 28L4 60");
+      const pager = (root, size) => {
+        const track = root.querySelector(".pager__track");
+        const gridClass = track.firstElementChild.className;
+        const all = [...track.querySelectorAll(".d-tile, .p-card")];
+        let list = all, per = 0, at = 0;
+        const nav = document.createElement("div");
+        nav.className = "pager__nav";
+        nav.innerHTML = `<button class="pager__arrow pager__prev" type="button" aria-label="Previous page">${chevL}</button><div class="pager__dots"></div><button class="pager__arrow pager__next" type="button" aria-label="Next page">${chevR}</button>`;
+        root.append(nav);
+        const [prev, next] = nav.querySelectorAll(".pager__arrow");
+        const dots = nav.querySelector(".pager__dots");
+        const go = (i) => track.scrollTo({ left: i * track.clientWidth, behavior: still ? "auto" : "smooth" });
+        const mark = () => {
+          at = Math.round(track.scrollLeft / track.clientWidth) || 0;
+          [...dots.children].forEach((d, i) => d.setAttribute("aria-current", i === at));
+          prev.disabled = at <= 0;
+          next.disabled = at >= dots.children.length - 1;
+        };
+        const build = (keep) => {
+          per = size();
+          track.replaceChildren();
+          dots.replaceChildren();
+          for (let i = 0; i < list.length; i += per) {
+            const pg = document.createElement("div");
+            pg.className = gridClass;
+            list.slice(i, i + per).forEach((c, j) => {
+              c.classList.toggle("d-tile--lead", c.classList.contains("d-tile") && j === 0);
+              pg.append(c);
+            });
+            track.append(pg);
+            const d = document.createElement("button");
+            d.type = "button";
+            d.className = "pager__dot";
+            d.setAttribute("aria-label", `Page ${track.children.length}`);
+            d.addEventListener("click", () => go([...dots.children].indexOf(d)));
+            dots.append(d);
+          }
+          nav.hidden = dots.children.length < 2;
+          track.scrollLeft = keep ? Math.min(at, dots.children.length - 1) * track.clientWidth : 0;
+          mark();
+        };
+        track.addEventListener("scroll", mark, { passive: true });
+        prev.addEventListener("click", () => go(at - 1));
+        next.addEventListener("click", () => go(at + 1));
+        addEventListener("resize", () => size() !== per && build(true));
+        build();
+        // the Dev filter swaps the set of cards
+        return (set) => {
+          list = set ? all.filter(set) : all;
+          all.forEach((c) => !list.includes(c) && c.querySelector("video")?.pause());
+          build();
+          return list.length;
+        };
+      };
+      {
+        const narrow = matchMedia("(max-width: 640px)"), wide = matchMedia("(min-width: 1024px)");
+        const live = document.getElementById("filterLive");
+        pager(document.getElementById("designPager"), () => (narrow.matches ? 2 : 3)); // lead tile + 2 beside it fill two rows
+        const dev = pager(document.getElementById("devPager"), () => (narrow.matches ? 2 : wide.matches ? 6 : 4)); // columns x 2 rows
+        document.querySelectorAll(".filter").forEach((b, _, group) =>
+          b.addEventListener("click", () => {
+            const engine = b.dataset.filter;
+            group.forEach((x) => x.setAttribute("aria-pressed", x === b));
+            const total = dev(engine === "all" ? null : (c) => c.dataset.engine === engine);
+            live.textContent = `Showing ${total} project${total === 1 ? "" : "s"}`;
+          }),
+        );
+      }
+
+      // Experience: the box is cut halfway down the 3rd job, so 2.5 jobs show and Show more makes sense. Open, the box scrolls inside and Show less closes it. At either end of the open box the wheel goes on to the page (Chrome does not always chain it by itself).
+      {
+        const box = document.getElementById("xScroll");
+        const more = document.getElementById("expMore");
         const btn = more.firstElementChild;
+        const jobs = box.querySelectorAll(".x-item");
         const setOpen = (open) => {
           box.classList.toggle("is-open", open);
           btn.setAttribute("aria-expanded", open);
@@ -2818,10 +3076,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           box.scrollTop = 0;
           box.style.height = "";
           box.classList.remove("is-scroll", "is-end");
-          const h = cut();
-          more.hidden = !h;
-          if (!h) return setOpen(false);
-          box.style.height = h + "px";
+          more.hidden = jobs.length <= 3;
+          if (more.hidden) return setOpen(false);
+          box.style.height = Math.round(jobs[2].offsetTop + jobs[2].offsetHeight * 0.5) + "px";
           box.classList.add("is-scroll");
           box.dispatchEvent(new Event("scroll"));
         };
@@ -2842,42 +3099,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         addEventListener("resize", fit);
         document.fonts?.ready.then(fit);
         fit();
-        return { fit, close: () => setOpen(false) };
-      };
-      {
-        let engine = "all";
-        const live = document.getElementById("filterLive");
-        const rowCut = (box, items) => () => {
-          const tops = [...new Set(items.filter((c) => !c.hidden).map((c) => Math.round(c.getBoundingClientRect().top)))].sort((a, b) => a - b);
-          return tops.length > 3 ? tops[3] - box.getBoundingClientRect().top - 12 : 0; // 12px into the gap above the 4th row
-        };
-        const dBox = document.getElementById("designScroll"), pBox = document.getElementById("devScroll");
-        const dItems = [...document.querySelectorAll(".d-tile")], pItems = [...document.querySelectorAll(".p-card")];
-        cutRows(dBox, document.getElementById("designMore"), rowCut(dBox, dItems));
-        const dev = cutRows(pBox, document.getElementById("devMore"), rowCut(pBox, pItems));
-        document.querySelectorAll(".filter").forEach((b, _, all) =>
-          b.addEventListener("click", () => {
-            engine = b.dataset.filter;
-            all.forEach((x) => x.setAttribute("aria-pressed", x === b));
-            let total = 0;
-            for (const c of pItems) {
-              const show = engine === "all" || c.dataset.engine === engine;
-              c.hidden = !show;
-              if (show) total++;
-              else c.querySelector("video")?.pause();
-            }
-            dev.close();
-            dev.fit();
-            live.textContent = `Showing ${total} project${total === 1 ? "" : "s"}`;
-          }),
-        );
-      }
-
-      // Experience: the box is cut halfway down the 3rd job, so 2.5 jobs show and Show more makes sense.
-      {
-        const box = document.getElementById("xScroll");
-        const jobs = box.querySelectorAll(".x-item");
-        cutRows(box, document.getElementById("expMore"), () => (jobs.length > 3 ? Math.round(jobs[2].offsetTop + jobs[2].offsetHeight * 0.5) : 0));
       }
 
       // Icon cloud: the logos are spread evenly over a sphere (Fibonacci spiral) that turns slowly around Y and tilts toward the pointer while it is over the cloud. Each frame the points are rotated and projected to 2D; nearer logos are bigger and brighter, farther ones smaller and dimmer. The loop only runs while the cloud is on screen; reduced motion draws it once and leaves it still.
@@ -2936,14 +3157,15 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }
       }
 
-      // Confetti: once per page load, when the word "playful" in the footer is fully on screen. Bursts shoot up from the bottom middle of the screen. canvas-confetti (6 KB, defer) skips itself under reduced motion.
+      // Confetti: once per page load, when the word "playful" in the footer is fully on screen. Bursts shoot up from the bottom middle of the page. They are drawn on a canvas inside the footer (not a fixed overlay), so they scroll with the page. canvas-confetti (6 KB, defer) skips itself under reduced motion.
       {
         const word = document.querySelector(".site-foot__cta em");
         const fire = () => {
           if (!window.confetti || still) return;
           const origin = { x: 0.5, y: 1 };
           const colors = ["#ff6b1a", "#ffb800", "#ff3d71", "#00c2a8", "#3d8bff", "#a855f7"];
-          const shot = (o) => confetti({ origin, colors, disableForReducedMotion: true, zIndex: 20, ticks: 260, ...o });
+          const burst = confetti.create(document.querySelector(".site-foot__confetti"), { resize: true, disableForReducedMotion: true });
+          const shot = (o) => burst({ origin, colors, ticks: 260, ...o });
           shot({ particleCount: 70, spread: 60, startVelocity: 58, angle: 75 });
           shot({ particleCount: 70, spread: 60, startVelocity: 58, angle: 105 });
           setTimeout(() => shot({ particleCount: 60, spread: 90, startVelocity: 46, scalar: 0.9 }), 200);
