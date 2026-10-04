@@ -16,7 +16,7 @@
 - company: Carem Studio
   url: https://inspirelab.io/vn
   logo: inspire-logo.png
-  logo_size: [297, 170]
+  logo_size: [221, 66]
   role: Game Developer — Unity 3D
   period: April 2022 – July 2023
   type: Full-time
@@ -30,7 +30,7 @@
 - company: Marion Surgical
   url: https://www.marionsurgical.com/
   logo: marion-logo.png
-  logo_size: [500, 300]
+  logo_size: [458, 167]
   role: Game Developer — Unreal VR
   period: June 2021 – Dec 2021
   type: Full-time
@@ -42,3 +42,15 @@
     - Worked effectively within diverse teams to develop various aspects and features of VR games.
     - Utilized Blender for creating animations and resolving model issues to improve the overall VR experience.
     - Implemented advanced Oculus features like Passthrough and Hand Tracking to enhance VR project functionalities.
+
+- company: CaseWare International
+  url: https://www.caseware.com/
+  logo: caseware-logo.png
+  logo_size: [399, 235]
+  role: QA Automation Developer
+  period: 2019 – 2020
+  type: Co-op
+  highlights:
+    - Created automated tests in Java and C# and enhanced the testing SDK for cloud integration.
+    - Contributed to the UI design of a new multi-server cloud feature.
+    - Improved test efficiency by leveraging Jenkins and Agile methodologies.
