@@ -1369,9 +1369,19 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }
       }
       /* Design and Dev are paged: two rows per page on a horizontal snap track (swipe works natively), with arrows and dots under it. JS ("Pager") splits the cards into pages. Each page carries the padding that gives hover lift and shadows room, and the track's negative margin cancels it, so no page peeks in at the sides. */
+      .pager {
+        --edge: 12px; /* the soft fade at each side of the track; it sits in the gutter, so cards at rest are untouched */
+      }
+      @media (min-width: 641px) {
+        .pager {
+          --edge: 28px;
+        }
+      }
       .pager__track {
         display: flex;
-        margin: -14px -12px -26px;
+        margin: -14px calc(var(--edge) * -1) -26px;
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--edge), #000 calc(100% - var(--edge)), transparent);
+        mask-image: linear-gradient(to right, transparent, #000 var(--edge), #000 calc(100% - var(--edge)), transparent);
         overflow-x: auto;
         overflow-y: hidden;
         overscroll-behavior-x: contain;
@@ -1385,7 +1395,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         align-content: start; /* a short last page keeps its single row instead of stretching the rows to the tallest page */
         flex: 0 0 100%;
         min-width: 0;
-        padding: 14px 12px 26px;
+        padding: 14px var(--edge) 26px;
         scroll-snap-align: start;
         scroll-snap-stop: always;
       }
