@@ -1,3 +1,16 @@
+- company: Yield Guild Games
+  url: https://ygg.io/
+  logo: ygg-logo.png
+  logo_size: [600, 330]
+  role: Web Game Developer — Unity WebGL
+  period: Feb 2025 – Jul 2025
+  type: Freelance
+  highlights:
+    - Prototyped and developed a client application using the Unity WebGL pipeline.
+    - Designed responsive, cross-browser compatible UI for the web build.
+    - Collaborated closely with the team lead and client to deliver the best web-based experience.
+    - Optimized models, sound and images to avoid bugs and reduce load time.
+
 - company: Mavis X
   url: https://skymavis.com/
   logo: skymavis-logo.png
