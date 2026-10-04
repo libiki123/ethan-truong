@@ -1,7 +1,7 @@
 ---
 title: Ninja Adventure
 engine: unity
-order: 4
+order: 3
 media: na
 redirect_from: /unity-na.html
 tags: [Unity, C#, Mobile, Casual]
@@ -22,9 +22,13 @@ stores:
 ---
 
 ## About
-This is my first solo project at work, a hyper casual game. The gameplay is to dodge the obstacles and try to collect as many gold coins & scrolls as possible as the game gets harder.
+A hyper-casual 3D dodge game: avoid obstacles, collect gold coins and scrolls, and survive as it gets harder. It is on Google Play and the App Store. **My role:** lead developer, and my first solo project at work.
 
-## What I've learned
-**Unity** — Creating a matrix system to spawn the coin and obstacle and keep track of the player, making level difficulty adjustment database and adding ads, savegame.
+## What I worked on
+**Controls** — Built swipe and tap controls.
 
-**Game Design** — Create a balanced difficulty as the game progresses.
+**Spawning** — Built a grid system that spawns coins and obstacles around the player.
+
+**Difficulty** — Built the difficulty database and level progression, so the game gets harder as you go.
+
+**Monetization** — Added ads and save games.

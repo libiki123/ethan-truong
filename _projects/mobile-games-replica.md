@@ -23,12 +23,11 @@ links:
 ---
 
 ## About
-I spent my free time learning new tools and recreating some of my favorite mobile games from back when I got my first smartphone.
+Recreations of mobile games I loved, such as Angry Birds, Fruit Ninja, Cut the Rope and Line Rider. A solo project. **My role:** lead developer.
 
-## What I've learned
-**Unity** — I learned how to use trail renderer, particle system, joints, 2D materials, surface effector.
+## What I worked on
+**Core mechanics** — Rebuilt the core mechanics of each game in Unity.
 
-**Game Design** — I learned different mechanics from multiple mobile game genres.
+**Polish** — Added scores, UI and extra mechanics to get as close to the originals as possible.
 
-## What I've overcome
-After finishing the tutorial I spent more time adding details to the game to be as close to the original as possible, like scores, UI, extra mechanics.
+**Code** — The code for each replica is on GitHub.

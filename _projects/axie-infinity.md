@@ -17,9 +17,13 @@ private: true
 ---
 
 ## About
-Axie Infinity is a web3 turn-based game where players collect Axie creatures, build teams and battle each other. I worked on it as a Unity developer at Sky Mavis.
+A web3 turn-based game where players collect Axie creatures, build teams and battle other players. **My role:** developer.
 
 ## What I worked on
-**Gameplay** — Prototyped and built web3 gameplay features in Unity and C#, working closely with blockchain engineers so game features and smart contracts fit together.
+**Gameplay** — Prototyped and built web3 gameplay features in Unity and C#.
 
-**UI/UX** — Built interface screens for the blockchain-based game and helped create a Figma importer tool that brings designed layouts into Unity automatically.
+**Web3 integration** — Worked closely with blockchain engineers so game features and smart contracts fit together.
+
+**UI/UX** — Built interface screens for the game.
+
+**Tools** — Helped create a Figma importer tool that brings designed layouts into Unity automatically.

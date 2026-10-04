@@ -1,7 +1,7 @@
 ---
 title: ZHelicopter
 engine: unity
-order: 3
+order: 4
 media: zh
 redirect_from: /unity-zh.html
 tags: [Unity, C#, Mobile, Casual, FPS]
@@ -20,9 +20,11 @@ private: true
 ---
 
 ## About
-I mainly do design and manage this project, keep track of the progress as well as doing QC to report any bugs that occur during gameplay.
+A first-person zombie shooter fired from a helicopter, with upgradable weapons and difficulty that rises each level. An indie team project. **My role:** developer, plus design and QA.
 
-## What I've learned
-**Product Owner** — I learned how to manage and connect team members, divide and manage tasks based on individual strengths.
+## What I worked on
+**Design** — Designed the gameplay and the difficulty curve.
 
-**Game Design** — Design a fun, fair and balanced gameplay difficulty.
+**QA** — Tested the game and reported bugs.
+
+**Team** — Kept track of progress and managed tasks across the team.

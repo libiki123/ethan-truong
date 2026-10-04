@@ -20,10 +20,11 @@ links:
 ---
 
 ## About
-Trying out the AR building kit in Unity: a fun arcade racing game that can be placed on the floor and interacted with.
+An arcade racing game in augmented reality: you place the track on your floor and drive it by touch. A solo project. **My role:** lead developer.
 
-## What I've learned
-**Unity** — I learned AR Foundation using ARKit and ARCore to build a cross-platform AR app.
+## What I worked on
+**Racing gameplay** — Built the arcade racing game in Unity, including the touch controls for driving.
 
-## What I've overcome
-Android cameras don't support AR very well, so I had to make some workarounds, like adjusting the scale and the placement offset when instantiating the Arcade Racing prefab so that the player can observe the whole level.
+**AR setup** — Used AR Foundation with ARKit and ARCore so one project runs on both iOS and Android.
+
+**Android fix** — Adjusted the track's scale and placement so the whole track fits in view on Android.

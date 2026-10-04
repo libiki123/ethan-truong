@@ -21,10 +21,11 @@ links:
 ---
 
 ## About
-An ongoing project of mine, playing around with multiple platformer movement machines and designing enemy AI.
+A 2D RPG platformer, still in progress. A solo project in Unity. **My role:** lead developer.
 
-## What I've learned
-**Game Engineer** — I learned how to plan and design states for the movement system and a finite state machine for enemy AI.
+## What I worked on
+**Player movement** — Designed and built the player's movement as a set of states, one per kind of movement, so each action is handled on its own.
 
-## What I've overcome
-Engineer, design and plan the project. Doing extended testing and debugging.
+**Enemy AI** — Built enemy behaviour with a finite state machine, so each enemy switches between its own states.
+
+**Production** — Planned the project, built it, and did all the testing and debugging myself.

@@ -19,21 +19,11 @@ private: true
 ---
 
 ## About
-Making a helicopter in Unreal.
+A flying helicopter prototype in Unreal Engine. A solo project. **My role:** lead developer.
 
-## What I've learned & overcome
-**Unreal**
+## What I worked on
+**Flight** — Built the flying mechanic in Blueprints, including lift and rotation.
 
-- Handling multiple inputs from different types of control
-- Trying out Niagara particle system
-- Communicate between blueprint and animation blueprint
-- Possess another pawn
+**Limits and checks** — Added landing checks and input limits to keep the flight under control.
 
-**Flying Mechanic**
-
-- Experiment with different types of lift for the helicopter: add force, update location per frame and so on
-- Figure out how to add rotation to components in blueprint or animation blueprint
-- Find a workaround to apply lift force to a skeletal mesh
-- Update collision box to match skeletal mesh animations
-- Checking landing distance and limit input
-- Give vehicle health, spawn particles upon colliding and destroy vehicle when crashed
+**Vehicle** — Added health, collision and crash particles, and handled different types of controller input.

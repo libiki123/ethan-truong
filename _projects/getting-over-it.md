@@ -22,14 +22,13 @@ links:
 ---
 
 ## About
-Getting Over It - But Is It? is a project I made for the 2021 CGX Grad Jam. The whole project was done by myself. I used free Unity assets for the level design and online soundtracks; the rest was hand drawn by me.
+A solo platformer made for the 2021 CGX Grad Jam, where shotgun recoil is the main way to move. **My role:** I made the whole game.
 
-## What I've learned
-**Photoshop** — I learned many PS features like: create shape, layers, timeline, crop layer, color overlay and so on.
+## What I worked on
+**Design** — Designed the game and its levels, and wrote the story.
 
-**Unity** — I learned how to use new 2D animation, 2D IK, create cutscenes, scene transition animation.
+**Development** — Built the game in Unity, including the shotgun recoil movement.
 
-**Game Design** — I learned how to design level, story, draw out a plan, and improved my time management skill.
+**Art and animation** — Drew the art and animation by hand, and made the cutscenes. The level uses free Unity assets and online soundtracks.
 
-## What I've overcome
-From this jam I got to experience a fast-paced working environment. This was my first game jam and the theme was released late, so I was working under pressure. Even though the time wasn't strict I still managed to submit my game before the official deadline.
+**Delivery** — Finished and submitted it before the official deadline.

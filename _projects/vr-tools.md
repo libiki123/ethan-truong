@@ -19,26 +19,11 @@ private: true
 ---
 
 ## About
-Making different types of tools in VR:
+VR hand tools in Unreal Engine: a twist screwdriver and a trigger-activated power drill that work on screwed objects. A solo project. **My role:** lead developer.
 
-1. VR hand twist screwdriver & trigger-activated power drill mechanic
-2. Screwed object
+## What I worked on
+**Screw mechanic** — Built the screw and unscrew mechanic, driven by hand rotation or a fixed spin.
 
-## What I've learned & overcome
-**Unreal**
+**Limits** — Added limits on how far a screw turns.
 
-- I learned how to attach component/actor with smooth transition
-- Using component blend and find actors of class node
-
-**Screw/Unscrew Mechanic**
-
-- Figure out how to find the screw in the scene while holding the tools
-- How to attach the tool to the screw
-- How to use the hand rotation (screwdriver) or add fixed rotation (power drill) to the screw when attached
-- Loosen/tighten the screw depending on a fixed min & max rotation
-- Create an object that has a screw list and turn it into a condition for whether the object can interact or not
-
-**Screwed Object**
-
-- Figure out how to save the screw list and link conditions
-- Release/lock the screwed object
+**Objects** — Built objects that track their screws and lock or release depending on how many are in.

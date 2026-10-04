@@ -19,7 +19,11 @@ private: true
 ---
 
 ## About
-A captivating timing game that demands quick and accurate tapping skills. Hit the right bricks as the timer slowly counts down, challenging yourself to achieve the highest level of speed and precision.
+A fast timing game: tap the right bricks as the clock runs down, with power-ups such as shields and frenzy. **My role:** lead developer.
 
-## What I've learned
-**Unity** — I learned how to implement timeline in gameplay.
+## What I worked on
+**Gameplay** — Built the timing and accuracy gameplay in Unity.
+
+**Power-ups** — Built the random power-ups, such as shield and frenzy.
+
+**Animation** — Used Unity Timeline to drive the gameplay moments.

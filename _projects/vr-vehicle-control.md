@@ -19,17 +19,11 @@ private: true
 ---
 
 ## About
-Making drivable & flyable vehicles in VR:
+Drivable and flyable vehicles for first-person VR in Unreal Engine. A solo project. **My role:** lead developer.
 
-1. Driving vehicle mechanic
-2. Flying vehicle mechanic
+## What I worked on
+**Vehicles** — Built the driving and flying mechanics, a 4-wheel vehicle setup, and switching between driving and flying.
 
-## What I've learned & overcome
-**Driving & Flying Mechanic**
+**Feel** — Tuned collision and animation states for first-person VR.
 
-- Have different states for the vehicle animation BP
-- Modify physics asset to make the vehicle collision feel realistic
-- Learn how to set up a 4-wheel vehicle
-- Figure out first person vehicle control for VR
-- Switching between driving and flying
-- Making a realistic button
+**Cockpit** — Built the cockpit controls, including a realistic button.

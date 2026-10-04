@@ -20,16 +20,11 @@ private: true
 ---
 
 ## About
-VR Boxing with dynamic feedback and enemy AI.
+A VR boxing prototype in Unreal Engine with a damage system and enemy AI. A solo project. **My role:** lead developer.
 
-## What I've learned & overcome
-**Unreal**
+## What I worked on
+**Hit detection** — Built hit boxes on the enemy.
 
-- Implement animation blueprint, random animation node
-- Using dot product node
+**Hit reactions** — Measured hand speed and direction to pick the correct hit reaction.
 
-**Damage System**
-
-- Figure out how to set up hit boxes for the enemy
-- Calculate the motion controller / hand velocity
-- Using dot product to know the impact direction and hand velocity to give the correct animations
+**Enemy AI** — Built enemy behaviour with a behaviour tree, and animation blueprints that pick random animations.

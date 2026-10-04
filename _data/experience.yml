@@ -1,15 +1,27 @@
+- company: VGames
+  url: https://vgames.io/
+  logo: vgames-logo.png
+  logo_size: [447, 123]
+  role: Game Designer
+  period: Sep 2025 – Present
+  type: Full-time
+  highlights:
+    - Designing levels, systems and features for live mobile games.
+    - Balancing difficulty, economy and progression with data.
+    - Working with developers and artists to ship updates.
+
 - company: Yield Guild Games
   url: https://ygg.io/
   logo: ygg-logo.png
   logo_size: [600, 330]
-  role: Web Game Developer — Unity WebGL
+  role: Web3 Game Developer — Unity WebGL
   period: Feb 2025 – Jul 2025
-  type: Freelance
+  type: Contract
   highlights:
-    - Prototyped and developed a client application using the Unity WebGL pipeline.
-    - Designed responsive, cross-browser compatible UI for the web build.
-    - Collaborated closely with the team lead and client to deliver the best web-based experience.
-    - Optimized models, sound and images to avoid bugs and reduce load time.
+    - Built a client app on the Unity WebGL pipeline.
+    - Designed responsive, cross-browser UI for the web build.
+    - Worked with the team lead and client on the web experience.
+    - Optimized models, sound and images for faster load times.
 
 - company: Mavis X
   url: https://skymavis.com/
@@ -19,42 +31,23 @@
   period: Sep 2023 – Dec 2024
   type: Contract
   highlights:
-    - Prototyped and developed Web3 gameplay features using Unity and C# for decentralized gaming experiences.
-    - Integrated third-party tools and SDKs to rapidly prototype and experiment with decentralized game mechanics.
-    - Designed UI/UX elements tailored for blockchain-based game ecosystems.
-    - Developed a Unity Editor tool for automated UI layout imports, significantly improving development efficiency.
-    - Collaborated with blockchain engineers to ensure seamless integration of smart contracts and game features.
-    - Focused on iterative development and rapid prototyping to refine Web3 game concepts.
+    - Prototyped Web3 gameplay features in Unity and C#.
+    - Built UI/UX for blockchain-based game ecosystems.
+    - Made a Unity Editor tool that imports UI layouts automatically.
+    - Worked with blockchain engineers on smart-contract integration.
 
 - company: Carem Studio
   url: https://inspirelab.io/vn
   logo: inspire-logo.png
   logo_size: [221, 66]
   role: Game Developer — Unity 3D
-  period: April 2022 – July 2023
+  period: Apr 2021 – Jul 2023
   type: Full-time
   highlights:
-    - Developed engaging gameplay features using Unity and C#, including interactive elements, physics systems, AI behavior, and player controls.
-    - Designed and programmed intuitive UI elements, menus, and user input systems to deliver an immersive user experience.
-    - Managed the integration of various game assets like 3D models, textures, animations, and audio.
-    - Collaborated effectively with cross-functional teams (artists, designers) throughout the game development lifecycle, from concept to execution.
-    - Utilized Git for version control and integrated third-party SDKs for analytics, ads, and in-app purchases.
-
-- company: Marion Surgical
-  url: https://www.marionsurgical.com/
-  logo: marion-logo.png
-  logo_size: [458, 167]
-  role: Game Developer — Unreal VR
-  period: June 2021 – Dec 2021
-  type: Full-time
-  highlights:
-    - Collaborated with clients to transform their concepts into playable VR demos, ensuring their vision was realized.
-    - Developed clean, maintainable, and optimized code for immersive VR experiences.
-    - Created visually appealing VFX and shaders to enhance the immersive quality of VR prototypes.
-    - Independently solved technical challenges using documentation and community resources.
-    - Worked effectively within diverse teams to develop various aspects and features of VR games.
-    - Utilized Blender for creating animations and resolving model issues to improve the overall VR experience.
-    - Implemented advanced Oculus features like Passthrough and Hand Tracking to enhance VR project functionalities.
+    - Built gameplay, physics, AI and player controls in Unity and C#.
+    - Designed and coded UI, menus and input systems.
+    - Integrated 3D models, textures, animations and audio.
+    - Used Git and integrated analytics, ads and IAP SDKs.
 
 - company: CaseWare International
   url: https://www.caseware.com/
@@ -64,6 +57,6 @@
   period: 2019 – 2020
   type: Co-op
   highlights:
-    - Created automated tests in Java and C# and enhanced the testing SDK for cloud integration.
-    - Contributed to the UI design of a new multi-server cloud feature.
-    - Improved test efficiency by leveraging Jenkins and Agile methodologies.
+    - Wrote automated tests in Java and C# and extended the testing SDK.
+    - Contributed UI design for a multi-server cloud feature.
+    - Improved test efficiency with Jenkins and Agile.

@@ -12,15 +12,19 @@ highlights:
 genre: Idle tycoon
 role: Lead Developer
 blurb: "A cute idle town tycoon."
-year: "2021"
+year: "2023"
 status: Unfinished
 type: Work
-duration: May – July, 2021
+duration: May – July, 2023
 private: true
 ---
 
 ## About
-It's an Idle Tycoon: your objective is to oversee a bustling enterprise where AI-driven customers come and go, exchanging their currency for various goods and services, such as food and tickets. By strategically leveraging the revenue generated, you can invest in upgrading existing buildings and unlocking new structures.
+A cute idle tycoon where you run a busy town, spend your income on upgrades and unlock new buildings. **My role:** lead developer.
 
-## What I've learned
-**Unity** — I learned how to use trail renderer, particle system, joints, 2D materials, surface effector.
+## What I worked on
+**Customers** — Built the customer AI: customers come and go, and spend money on food and tickets.
+
+**Economy** — Built the economy and the upgrade and unlock systems for buildings and decorations in Unity.
+
+**Data** — Kept the game's data in spreadsheets, so numbers are easy to tweak.
