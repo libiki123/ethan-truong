@@ -48,7 +48,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       html {
         scroll-behavior: smooth;
-        overscroll-behavior-y: none; /* no rubber-band past the top or bottom of the page (also turns off pull-to-refresh on phones) */
+      }
+      @media (hover: hover) and (pointer: fine) {
+        html {
+          overscroll-behavior-y: none; /* mouse devices only: no rubber-band past the top or bottom. Phones keep their pull-to-refresh. */
+        }
       }
       body {
         margin: 0;
@@ -415,6 +419,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .sparkle {
         position: relative;
         display: inline-block;
+        text-decoration: underline;
+        text-decoration-color: #f07a1c; /* orange underline under the name */
+        text-decoration-thickness: 0.12em;
+        text-underline-offset: 0.14em;
+        text-decoration-skip-ink: auto; /* the line breaks around the descender of the g */
       }
       .sparkle__star {
         position: absolute;
@@ -897,10 +906,13 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         text-decoration-color: transparent;
         transition: text-decoration-color 150ms;
       }
-      .b-link:hover,
+      .b-link:hover {
+        text-decoration-color: currentColor;
+      }
       .p-card .b-link,
       .d-tile .b-link {
-        text-decoration-color: currentColor; /* the card links keep their underline, not only on hover */
+        position: relative;
+        z-index: 3; /* above the title's full-card click layer, so the link itself can be hovered; a click still reaches the card and opens the popup */
       }
       .b-link .icon {
         transition: transform 150ms var(--ease);
@@ -2864,6 +2876,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           t0 = now;
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
           ctx.clearRect(0, 0, innerWidth, innerHeight);
+          ctx.save(); // a clip stacks up from frame to frame, so it is undone at the end of every frame
           ctx.beginPath();
           ctx.rect(0, 0, innerWidth, Math.max(0, hero.getBoundingClientRect().bottom));
           ctx.clip(); // seeds never leave the home background
@@ -2890,6 +2903,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             ctx.drawImage(atlas, Math.floor(p.f * cells) * C, 0, C, C, -p.s / 2, -p.s / 2, p.s, p.s);
             ctx.restore();
           }
+          ctx.restore();
           loop = seeds.length ? requestAnimationFrame(frame) : 0;
           if (!loop) ctx.clearRect(0, 0, innerWidth, innerHeight);
         };
