@@ -85,6 +85,53 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         padding: 0 16px;
       }
 
+      /* Back to home: a round button with an up arrow. Appears once the reader reaches section 3 (Experiences), so on a long phone scroll there is a one-tap way back to the top. */
+      .to-top {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 10;
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+        background: var(--paper);
+        box-shadow: 0 2px 0 rgba(59, 36, 20, 0.35);
+        color: var(--ink);
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(12px);
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease,
+          background 0.15s;
+      }
+      .to-top.is-on {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+      .to-top:hover,
+      .to-top:focus-visible {
+        background: #fff5e0;
+      }
+      .to-top svg {
+        width: 24px;
+        height: 24px;
+        transition: transform 0.2s var(--ease);
+      }
+      .to-top:hover svg {
+        transform: translateY(-2px);
+      }
+
+      .site-foot__bar {
+        padding-right: 64px; /* keeps the footer line clear of the back-to-home button */
+      }
+
       /* Nav: two paper pills (icon left, links right) floating over the painting */
       .nav {
         position: fixed;
@@ -190,6 +237,19 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .nav__mode svg {
         width: 18px;
         height: 18px;
+      }
+      /* Clicked open: the three bars turn a quarter and go orange, so a click reads as a toggle and is different from the hover that also opens the menu. */
+      .nav__burger svg {
+        transition:
+          transform 0.3s var(--ease),
+          color 0.2s;
+      }
+      .nav__links.is-open .nav__burger {
+        color: var(--fox);
+        background: rgba(232, 116, 28, 0.14);
+      }
+      .nav__links.is-open .nav__burger svg {
+        transform: rotate(-90deg); /* turns left, the way the menu slides out */
       }
       /* ponytail: placeholder for plans/261003-night-mode-hero/plan.md. Only swaps the icon; no art changes yet. */
       .nav__mode .i-moon,
@@ -1766,9 +1826,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         border-color: var(--accent);
       }
       .x-chev {
+        position: relative;
         width: 9px;
         height: 9px;
         margin-left: 2px;
+        cursor: pointer;
         border-right: 2px solid var(--accent-ink);
         border-bottom: 2px solid var(--accent-ink);
         rotate: 45deg;
@@ -1776,6 +1838,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         transition:
           rotate 300ms var(--ease),
           translate 300ms var(--ease);
+      }
+      .x-chev::after {
+        content: ""; /* a bigger tap target than the 9px arrow */
+        position: absolute;
+        inset: -14px;
       }
       .x-item--fold.is-open .x-chev {
         rotate: 225deg;
@@ -2765,6 +2832,10 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       </div>
     </footer>
 
+    <button class="to-top" id="toTop" type="button" aria-label="Back to home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
+    </button>
+
     <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
     <script>
       {
@@ -2827,7 +2898,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           LIFE = [500, 1100], // ms, most seeds are short-lived
           LONG = [2600, 4200], // ms, the occasional drifter
           RISE = 90, // px/s2 of upward lift once a seed has been blown out. Old behaviour: 6
-          SHORT_KEEP = 0.3; // share of short-lived spawns kept; lower = fewer. 1 = old amount
+          SHORT_KEEP = 0.1; // share of short-lived spawns kept; lower = fewer. 1 = old amount
         const seeds = [];
         let last = null,
           lastT = 0,
@@ -3038,6 +3109,20 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           new IntersectionObserver((e) => (e[0].isIntersecting && !document.hidden ? start() : stop())).observe(host);
           document.addEventListener("visibilitychange", () => (document.hidden ? stop() : host.getBoundingClientRect().bottom > 0 && start()));
         }
+      }
+
+      // Back to home: shows once section 3 is reached (its top is above the middle of the screen), and takes the reader to the top of the page.
+      {
+        const btn = document.getElementById("toTop");
+        const sec = document.getElementById("resume");
+        const sync = () => btn.classList.toggle("is-on", sec.getBoundingClientRect().top < innerHeight * 0.5);
+        addEventListener("scroll", sync, { passive: true });
+        addEventListener("resize", sync);
+        sync();
+        btn.addEventListener("click", () => {
+          scrollTo({ top: 0, behavior: still ? "auto" : "smooth" });
+          history.replaceState(null, "", location.pathname + location.search);
+        });
       }
 
       // Where-am-I indicator: a thin band across the middle of the screen decides which section you are in. That section's link in the top bar gets aria-current, which draws its underline when the menu opens. The intro counts as Home.
@@ -3256,10 +3341,14 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           };
           head.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && open());
           for (const z of [head, body]) z.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && arm());
-          btn.addEventListener("click", (e) => {
-            if (fine.matches && e.detail) return open(); // a mouse click keeps what hover opened
-            item.classList.contains("is-open") ? set(false) : open();
-          });
+          const press = () => {
+            if (item.classList.contains("is-open")) {
+              clearTimeout(t); // closing by hand: the 3 second timer is not needed
+              set(false);
+            } else open();
+          };
+          btn.addEventListener("click", press);
+          item.querySelector(".x-chev").addEventListener("click", press); // the arrow works as a button too
         });
       }
 
