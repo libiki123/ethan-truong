@@ -3323,6 +3323,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           const head = item.querySelector(".x-head");
           const body = item.querySelector(".x-body > div");
           const btn = item.querySelector(".x-toggle");
+          const hot = [btn, item.querySelector(".x-co")];
           let t = 0;
           const set = (open) => {
             item.classList.toggle("is-open", open);
@@ -3331,7 +3332,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           const arm = () => {
             clearTimeout(t);
             t = setTimeout(() => {
-              if (fine.matches && (head.matches(":hover") || body.matches(":hover") || item.querySelector(":focus-visible"))) return arm();
+              if (fine.matches && (hot.some((z) => z.matches(":hover")) || body.matches(":hover") || item.querySelector(":focus-visible"))) return arm();
               set(false);
             }, 3000);
           };
@@ -3339,8 +3340,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             set(true);
             arm();
           };
-          head.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && open());
-          for (const z of [head, body]) z.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && arm());
+          for (const z of hot) z.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && open()); // hover opens from the logo and the name only; the arrow is click-only
+          for (const z of [...hot, body]) z.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && arm());
           const press = () => {
             if (item.classList.contains("is-open")) {
               clearTimeout(t); // closing by hand: the 3 second timer is not needed
@@ -3417,9 +3418,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           const colors = ["#ff6b1a", "#ffb800", "#ff3d71", "#00c2a8", "#3d8bff", "#a855f7"];
           const burst = confetti.create(document.querySelector(".site-foot__confetti"), { resize: true, disableForReducedMotion: true });
           const shot = (o) => burst({ origin, colors, ticks: 260, ...o });
-          shot({ particleCount: 70, spread: 60, startVelocity: 58, angle: 75 });
-          shot({ particleCount: 70, spread: 60, startVelocity: 58, angle: 105 });
-          setTimeout(() => shot({ particleCount: 60, spread: 90, startVelocity: 46, scalar: 0.9 }), 200);
+          shot({ particleCount: 200, spread: 90, startVelocity: 55, angle: 90 }); // one burst, the same 200 pieces as before; the delayed second shot is gone, it made the animation look laggy
         };
         const seen = new IntersectionObserver(
           (entries) => {
