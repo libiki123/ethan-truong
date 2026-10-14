@@ -6,9 +6,10 @@
   period: Sep 2025 – Present
   type: Full-time
   highlights:
-    - Designing levels, systems and features for live mobile games.
-    - Balancing difficulty, economy and progression with data.
-    - Working with developers and artists to ship updates.
+    - Design levels, systems and features for live mobile games, and write the GDDs and specs that developers and artists build from.
+    - Tune difficulty, economy and progression from player data (D1/D7 retention, ARPU), and playtest every update before release.
+    - Run A/B tests and LiveOps events, and work with developers and artists to ship each update.
+    - Design and refine the FTUE so new players learn the core loop quickly and stay past day one.
 
 - company: Yield Guild Games
   url: https://ygg.io/
@@ -18,10 +19,9 @@
   period: Feb 2025 – Jul 2025
   type: Contract
   highlights:
-    - Built a client app on the Unity WebGL pipeline.
-    - Designed responsive, cross-browser UI for the web build.
-    - Worked with the team lead and client on the web experience.
-    - Optimized models, sound and images for faster load times.
+    - Built gameplay features for a Web3 idle game in Unity and C# for the WebGL pipeline, shipped in the browser.
+    - Built a responsive, cross-browser UI/UX and cut load time by optimizing models, sound and images.
+    - Connected the game to its Web3 layer, working directly with the team lead and the client.
 
 - company: Mavis X
   url: https://skymavis.com/
@@ -31,10 +31,9 @@
   period: Sep 2023 – Dec 2024
   type: Contract
   highlights:
-    - Prototyped Web3 gameplay features in Unity and C#.
-    - Built UI/UX for blockchain-based game ecosystems.
-    - Made a Unity Editor tool that imports UI layouts automatically.
-    - Worked with blockchain engineers on smart-contract integration.
+    - Prototyped and built gameplay features for Axie Infinity, a Web3 turn-based game, in Unity and C#.
+    - Built the UI/UX screens and a Figma Importer Editor tool that imports Figma layouts into Unity automatically.
+    - Integrated gameplay with smart contracts together with the blockchain engineers.
 
 - company: Carem Studio
   url: https://inspirelab.io/vn
@@ -44,10 +43,9 @@
   period: Apr 2021 – Jul 2023
   type: Full-time
   highlights:
-    - Built gameplay, physics, AI and player controls in Unity and C#.
-    - Designed and coded UI, menus and input systems.
-    - Integrated 3D models, textures, animations and audio.
-    - Used Git and integrated analytics, ads and IAP SDKs.
+    - Built 3D mobile games for Android and iOS in Unity and C#: gameplay, physics, AI, player controls, UI, menus and input.
+    - Integrated 3D models, textures, animations and audio, and built a reusable framework for the team to build on.
+    - Shipped to Google Play and the App Store with analytics, ads and IAP SDKs integrated, using Git throughout.
 
 - company: CaseWare International
   url: https://www.caseware.com/
@@ -57,6 +55,6 @@
   period: 2019 – 2020
   type: Co-op
   highlights:
-    - Wrote automated tests in Java and C# and extended the testing SDK.
+    - Wrote automated tests in Java and C#, and extended the testing SDK for cloud integration.
+    - Ran the tests through Jenkins in an Agile team, which made testing more efficient.
     - Contributed UI design for a multi-server cloud feature.
-    - Improved test efficiency with Jenkins and Agile.
