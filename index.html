@@ -2845,7 +2845,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           <h1 id="intro" class="rv" style="--i: 0">Hi! I'm <span class="sparkle" id="sparkleName">Ethan Truong</span></h1>
           <p class="intro-roles rv" style="--i: 1"><span class="chip">Game Designer</span><span class="chip chip--leaf">Game Developer</span></p>
           <p class="hero__lead rv" style="--i: 2">
-            I've spent almost five years making games, and my favourite part is
+            I've spent more than <span id="yearsExp">five</span> years making games, and my favourite part is
             the moment an idea becomes playable. Working in both design and
             code taught me how to carry it all the way to a finished game,
             polished for wherever it lands, from iOS and Android to TikTok.
@@ -3134,13 +3134,13 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         const ctx = cv.getContext("2d");
         const atlas = new Image();
         atlas.src = "{{ art }}dandelion-seeds.webp"; // one row of square cells; the cell count is read from the image
-        const MAX = 90, // particle cap
-          GAP = 14, // px of cursor travel per spawn
+        const MAX = 32, // particle cap
+          GAP = 20, // px of cursor travel per spawn
           SIZE = [10, 34], // on-screen px, weighted towards small
           LIFE = [500, 1100], // ms, most seeds are short-lived
           LONG = [2600, 4200], // ms, the occasional drifter
           RISE = 90, // px/s2 of upward lift once a seed has been blown out. Old behaviour: 6
-          SHORT_KEEP = 0.1; // share of short-lived spawns kept; lower = fewer. 1 = old amount
+          SHORT_KEEP = 0.04; // share of short-lived spawns kept; lower = fewer. 1 = old amount
         const seeds = [];
         let last = null,
           lastT = 0,
@@ -3160,7 +3160,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         addEventListener("resize", size);
         const rnd = (a, b) => a + Math.random() * (b - a);
         const spawn = (x, y) => {
-          const long = Math.random() < 0.04;
+          const long = Math.random() < 0.015;
           if (!long && Math.random() > SHORT_KEEP) return;
           if (seeds.length >= MAX) seeds.shift();
           const m = Math.hypot(dirX, dirY) || 1,
@@ -3352,7 +3352,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         const cv = document.getElementById("motes");
         if (!cv || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         const ctx = cv.getContext("2d"),
-          N = innerWidth < 641 ? 22 : 52,
           dot = document.createElement("canvas"); // one pre-drawn glow, scaled per mote
         dot.width = dot.height = 32;
         const g = dot.getContext("2d").createRadialGradient(16, 16, 0, 16, 16, 16);
@@ -3391,7 +3390,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           H = cv.clientHeight;
           cv.width = W * dpr;
           cv.height = H * dpr;
-          if (!motes.length) motes = Array.from({ length: N }, () => mote(true));
+          const count = innerWidth < 641 ? 8 : 20;
+          if (motes.length !== count) motes = Array.from({ length: count }, () => mote(true));
         };
         size();
         addEventListener("resize", size);
@@ -3528,6 +3528,14 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       // Back to home: shows once section 3 is reached (its top is above the middle of the screen), and takes the reader to the top of the page.
       {
         const btn = document.getElementById("toTop");
+        // Years since Apr 2021 (first game job), rounded down; updates itself each April.
+        const yrs = document.getElementById("yearsExp");
+        if (yrs) {
+          const now = new Date();
+          const n = now.getFullYear() - 2021 - (now.getMonth() < 3 ? 1 : 0);
+          const words = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen"];
+          yrs.textContent = words[n] || n;
+        }
         const sec = document.getElementById("resume");
         const sync = () => btn.classList.toggle("is-on", sec.getBoundingClientRect().top < innerHeight * 0.5);
         addEventListener("scroll", sync, { passive: true });

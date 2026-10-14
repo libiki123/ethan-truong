@@ -6,10 +6,10 @@
   period: Sep 2025 – Present
   type: Full-time
   highlights:
-    - Design levels, systems and features for live mobile games, and write the GDDs and specs that developers and artists build from.
-    - Tune difficulty, economy and progression from player data (D1/D7 retention, ARPU), and playtest every update before release.
-    - Run A/B tests and LiveOps events, and work with developers and artists to ship each update.
-    - Design and refine the FTUE so new players learn the core loop quickly and stay past day one.
+    - Design levels, systems and features for live mobile games. Translate designs into GDDs and implementation specs for developers and artists.
+    - Use D1/D7 retention and ARPU data to tune level difficulty, economy and progression.
+    - Run A/B tests and LiveOps events with developers and artists, and playtest updates before release.
+    - Refine the FTUE to teach the core loop and support early-player retention.
 
 - company: Yield Guild Games
   url: https://ygg.io/
@@ -19,7 +19,7 @@
   period: Feb 2025 – Jul 2025
   type: Contract
   highlights:
-    - Built gameplay features for a Web3 idle game in Unity and C# for the WebGL pipeline, shipped in the browser.
+    - Built and shipped Unity/C# gameplay for a Web3 idle game running in the browser through WebGL.
     - Built a responsive, cross-browser UI/UX and cut load time by optimizing models, sound and images.
     - Connected the game to its Web3 layer, working directly with the team lead and the client.
 
@@ -56,5 +56,4 @@
   type: Co-op
   highlights:
     - Wrote automated tests in Java and C#, and extended the testing SDK for cloud integration.
-    - Ran the tests through Jenkins in an Agile team, which made testing more efficient.
     - Contributed UI design for a multi-server cloud feature.
