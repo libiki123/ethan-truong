@@ -335,6 +335,63 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .hero__l0 {
         transform: translateY(calc(var(--p, 0px) * -0.1));
       } /* sky plate: slowest layer. Pair it with L1's box below; it is 1635/1335 as tall (300px of extra sky on top) so it can drift behind L1 without exposing an edge */
+      .hero__sky {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .hero__cloud {
+        position: absolute;
+        left: var(--cloud-x);
+        top: var(--cloud-y);
+        width: var(--cloud-w);
+        height: auto;
+        pointer-events: none;
+        animation: cloud-drift var(--cloud-time, 24s) linear var(--cloud-delay, 0s) infinite alternate;
+      }
+      .hero__l0.is-paused .hero__cloud {
+        animation-play-state: paused;
+      }
+      @keyframes cloud-drift {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(var(--cloud-shift, 85%)); opacity: var(--cloud-end-opacity, 0.88); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero__cloud { animation: none; }
+      }
+      .hero__foam { pointer-events: none; }
+      .hero__foam img {
+        position: absolute;
+        left: var(--x); top: var(--y);
+        width: var(--w); height: auto;
+        transform-origin: var(--origin, 50% 0%);
+        filter: drop-shadow(0 0 0.7px rgba(240, 255, 255, 0.45));
+        opacity: 0;
+        animation: foam-wash calc(var(--t, 4s) * 0.75) linear var(--delay, 0s) infinite;
+      }
+      .hero__foam.is-paused img { animation-play-state: paused; }
+      @keyframes foam-wash {
+        0% { opacity: 0.08; transform: translateY(0) scale(1); }
+        12%, 45% { opacity: 0.55; }
+        72% { opacity: 0.35; }
+        100% { opacity: 0; transform: translateY(clamp(4px, 0.55vw, 8px)) scale(var(--spread, 1.14)); }
+      }
+      @media (prefers-reduced-motion: reduce) { .hero__foam { display: none; } }
+      .hero__windmill { pointer-events: none; }
+      .hero__windmill-rotor {
+        position: absolute;
+        left: 39.71875%; top: 25.54307%; width: 5%; height: auto;
+        transform-origin: 50% 50%;
+        animation: windmill-turn 16s linear infinite;
+      }
+      .hero__windmill-repair {
+        position: absolute;
+        left: 36.25%; top: 20.97378%; width: 11.25%; height: auto;
+      }
+      .hero__windmill.is-paused .hero__windmill-rotor { animation-play-state: paused; }
+      @keyframes windmill-turn { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .hero__windmill-rotor { animation: none; } }
       .hero__l1 {
         transform: translateY(calc(var(--p, 0px) * -0.25));
       }
@@ -368,9 +425,93 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .hero__l3 {
         pointer-events: none;
       }
+      .hero__foliage-base {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; object-position: left center;
+      }
+      .hero__foliage-sprite {
+        position: absolute; left: var(--leaf-x); top: var(--leaf-y);
+        width: var(--leaf-w); height: auto;
+        transform-origin: var(--leaf-pivot);
+        animation: foliage-bend var(--leaf-time) ease-in-out var(--leaf-delay) infinite alternate;
+      }
+      .hero__foliage.is-paused .hero__foliage-sprite { animation-play-state: paused; }
+      @keyframes foliage-bend {
+        from { transform: rotate(calc(var(--leaf-bend) * -1)) skewX(calc(var(--leaf-flex, 0deg) * -1)); }
+        to { transform: rotate(var(--leaf-bend)) skewX(var(--leaf-flex, 0deg)); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero__foliage-sprite { animation: none; transform: none; }
+      }
       .hero__l3 {
         z-index: 6;
       } /* L3 belongs to section 1: it sits above the dandelion canvas (z 5), so seeds drift behind the foreground bush and paper edge */
+
+      .hero__flags { pointer-events: none; }
+      .hero__flag, .hero__flag-repair, .hero__boat, .hero__boat-water { position: absolute; left: var(--flag-x); top: var(--flag-y); width: var(--flag-w); height: auto; }
+      .hero__flag { aspect-ratio: var(--flag-ratio); }
+      .hero__flag-source { display: block; width: 100%; height: 100%; }
+      .hero__flag-cloth { position: absolute; left: 0; top: var(--cloth-top); width: 100%; height: var(--cloth-height); }
+      .hero__flag.cloth-ready .hero__flag-source { visibility: hidden; }
+      @media (prefers-reduced-motion: reduce) {
+        .hero__flag.cloth-ready .hero__flag-source { visibility: visible; }
+        .hero__flag-cloth { display: none; }
+      }
+      .hero__boat { aspect-ratio: var(--boat-ratio); transform-origin: 50% 75%; animation: boat-bob var(--boat-time) ease-in-out var(--boat-delay) infinite alternate; }
+      .hero__boat-art { width: 100%; height: 100%; }
+      .hero__flags.is-paused .hero__boat { animation-play-state: paused; }
+      @keyframes boat-bob { from { transform: translateY(-1.5px) rotate(-.35deg); } to { transform: translateY(1.5px) rotate(.35deg); } }
+      @media (max-width: 640px) { @keyframes boat-bob { from { transform: translateY(-.8px) rotate(-.25deg); } to { transform: translateY(.8px) rotate(.25deg); } } }
+      @media (prefers-reduced-motion: reduce) { .hero__flag, .hero__boat { animation: none; transform: none; } }
+
+      .hero__birds, .hero__smoke { pointer-events: none; }
+      .hero__flock { position: absolute; inset: 0; opacity: 0; animation: birds-pass 38s linear 3s infinite; }
+      .hero__bird { position: absolute; left: 54%; top: 28%; width: 16px; height: 10px; overflow: visible; color: #376785; opacity: .72; }
+      .hero__bird:nth-child(2) { left: calc(54% - 29px); top: calc(28% + 14px); width: 12px; opacity: .58; }
+      .hero__bird:nth-child(3) { left: calc(54% - 48px); top: calc(28% - 10px); width: 14px; opacity: .65; }
+      .hero__bird-wing { transform-origin: 10px 6px; animation: birds-wingbeat 38s ease-in-out 3s infinite; }
+      .hero__bird:nth-child(2) .hero__bird-wing { animation-delay: 3.18s; }
+      .hero__bird:nth-child(3) .hero__bird-wing { animation-delay: 3.35s; }
+      @keyframes birds-pass {
+        0% { opacity: 0; transform: translate(0, 0); }
+        1.5% { opacity: 1; }
+        21% { opacity: 1; }
+        24%, 100% { opacity: 0; transform: translate(36%, -1.5%); }
+      }
+      @keyframes birds-wingbeat {
+        0%, 3%, 8%, 13%, 18%, 24%, 100% { transform: rotate(0deg); }
+        4%, 9%, 14%, 19% { transform: rotate(calc(var(--wing) * 24deg)); }
+        5%, 10%, 15%, 20% { transform: rotate(calc(var(--wing) * -16deg)); }
+        6%, 11%, 16%, 21% { transform: rotate(0deg); }
+      }
+      .hero__smoke { container-type: inline-size; }
+      .hero__chimney { position: absolute; left: var(--smoke-x); top: var(--smoke-y); width: 0; height: 0; }
+      /* Source-sized wisps follow the L1 painting, including its phone crop. */
+      .hero__wisp { position: absolute; bottom: 0; left: -.35cqw; width: .77cqw; height: min(2.1cqw, 22px);
+        border-radius: 75% 25% 65% 35% / 45% 65% 35% 55%;
+        background: linear-gradient(transparent, #f3ece0 35%, #eee8de 70%, transparent);
+        filter: blur(.07cqw); opacity: 0; transform-origin: center bottom;
+        animation: chimney-wisp var(--smoke-time, 5.4s) ease-out var(--wisp-delay) infinite; }
+      @keyframes chimney-wisp {
+        0% { opacity: 0; transform: translate(0, .21cqw) scale(.45, .35); }
+        18% { opacity: .35; }
+        48% { opacity: .65; }
+        100% { opacity: 0; transform: translate(.91cqw, max(-2.73cqw, -24px)) scale(1.55, 1.7); }
+      }
+      .hero__birds.is-paused *, .hero__smoke.is-paused * { animation-play-state: paused; }
+      @media (max-width: 640px) {
+        .hero__flock { animation-name: birds-pass-phone; }
+        @keyframes birds-pass-phone {
+          0% { opacity: 0; transform: translate(12%, 0); }
+          1.5% { opacity: 1; }
+          21% { opacity: 1; }
+          24%, 100% { opacity: 0; transform: translate(36%, -1.5%); }
+        }
+        .hero__bird { width: 11px; height: 7px; }
+        .hero__bird:nth-child(2) { width: 8px; }
+        .hero__bird:nth-child(3) { width: 10px; }
+      }
+      @media (prefers-reduced-motion: reduce) { .hero__birds, .hero__smoke { display: none; } }
 
       .hero__fox {
         position: absolute;
@@ -389,6 +530,14 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         z-index: 5;
         display: none;
       }
+      .motes {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        transform: translateY(calc(var(--p, 0px) * -0.25));
+      } /* ambient pollen: inside the scene and on L1's parallax (0.25), so it stays with the map; the script skips it under reduced motion */
       @media (hover: hover) and (pointer: fine) and (min-width: 641px) and (prefers-reduced-motion: no-preference) {
         .seeds {
           display: block;
@@ -2510,7 +2659,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           scroll-behavior: auto;
         }
         .hero__sprite,
-        .zzz {
+        .zzz,
+        .hero__l2,
+        .hero__l3 {
           animation: none;
         }
         .hero__hill,
@@ -2559,22 +2710,112 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         <canvas class="seeds" id="seeds" aria-hidden="true"></canvas>
         <div class="hero__stage">
           <div class="hero__scene">
-            <img
-              class="hero__layer hero__l0"
-              src="{{ art }}sky-l0-s.webp"
-              alt=""
-            />
+            <div class="hero__layer hero__l0 is-paused" id="heroSky" aria-hidden="true">
+              <img class="hero__sky" src="{{ art }}sky-l0-s.webp" alt="" />
+              <img class="hero__cloud hero__cloud--bank" src="{{ art }}cloud-bank-left.webp" alt="" style="--cloud-x: -2.5%; --cloud-y: 19.81651%; --cloud-w: 73.34375%; --cloud-time: 30s; --cloud-delay: -4s; --cloud-shift: 2.47%; --cloud-end-opacity: 1" />
+              <img class="hero__cloud hero__cloud--bank" src="{{ art }}cloud-bank-right.webp" alt="" style="--cloud-x: 80.90625%; --cloud-y: 21.77370%; --cloud-w: 19.09375%; --cloud-time: 34s; --cloud-delay: -12s; --cloud-shift: 9.49%; --cloud-end-opacity: 1" />
+              <img class="hero__cloud" src="{{ art }}cloud-01.webp" alt="" style="--cloud-x: 10.78125%; --cloud-y: 22.01835%; --cloud-w: 5.15625%; --cloud-time: 20s; --cloud-delay: -4s" />
+              <img class="hero__cloud" src="{{ art }}cloud-02.webp" alt="" style="--cloud-x: 14.9375%; --cloud-y: 25.44343%; --cloud-w: 5.9375%; --cloud-time: 27s; --cloud-delay: -10s" />
+              <img class="hero__cloud" src="{{ art }}cloud-03.webp" alt="" style="--cloud-x: 33.875%; --cloud-y: 23.97554%; --cloud-w: 6.53125%; --cloud-time: 23s; --cloud-delay: -7s" />
+              <img class="hero__cloud" src="{{ art }}cloud-04.webp" alt="" style="--cloud-x: 55.25%; --cloud-y: 27.95107%; --cloud-w: 7.46875%; --cloud-time: 29s; --cloud-delay: -14s" />
+              <img class="hero__cloud" src="{{ art }}cloud-05.webp" alt="" style="--cloud-x: 61.59375%; --cloud-y: 31.80428%; --cloud-w: 5.03125%; --cloud-time: 22s; --cloud-delay: -5s" />
+              <img class="hero__sky hero__sky-terrain" src="{{ art }}sky-terrain.webp" alt="" />
+            </div>
+            <div class="hero__layer hero__l0 hero__birds is-paused" id="heroBirds" aria-hidden="true"><div class="hero__flock">
+              <svg class="hero__bird" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9.7 6.1l1.2 1.4" /><path class="hero__bird-wing" style="--wing:1" d="M10 6Q5 2 1 3" /><path class="hero__bird-wing" style="--wing:-1" d="M10 6Q15 2 19 3" /></svg>
+              <svg class="hero__bird" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9.7 6.1l1.2 1.4" /><path class="hero__bird-wing" style="--wing:1" d="M10 6Q5 2 1 3" /><path class="hero__bird-wing" style="--wing:-1" d="M10 6Q15 2 19 3" /></svg>
+              <svg class="hero__bird" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9.7 6.1l1.2 1.4" /><path class="hero__bird-wing" style="--wing:1" d="M10 6Q5 2 1 3" /><path class="hero__bird-wing" style="--wing:-1" d="M10 6Q15 2 19 3" /></svg>
+            </div></div>
             <img
               class="hero__layer hero__l1"
               src="{{ art }}map-l1-nosky.webp"
               alt="A painted storybook valley with a village, castle and waterfall"
             />
+            <div class="hero__layer hero__l1 hero__smoke is-paused" id="heroSmoke" aria-hidden="true">
+              <span class="hero__chimney" style="--smoke-x:67.28125%; --smoke-y:29.36330%; --smoke-time:5.4s;">
+                <i class="hero__wisp" style="--wisp-delay:-0.00s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-1.35s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-2.70s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-4.05s;"></i>
+              </span>
+              <span class="hero__chimney" style="--smoke-x:85.65625%; --smoke-y:30.93633%; --smoke-time:5.9s;">
+                <i class="hero__wisp" style="--wisp-delay:-0.61s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-2.08s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-3.56s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-5.04s;"></i>
+              </span>
+              <span class="hero__chimney" style="--smoke-x:83.78125%; --smoke-y:39.25094%; --smoke-time:6.4s;">
+                <i class="hero__wisp" style="--wisp-delay:-1.22s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-2.82s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-4.42s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-6.02s;"></i>
+              </span>
+              <span class="hero__chimney" style="--smoke-x:59.00000%; --smoke-y:46.74157%; --smoke-time:6.2s;">
+                <i class="hero__wisp" style="--wisp-delay:-1.83s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-3.38s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-4.93s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-6.48s;"></i>
+              </span>
+              <span class="hero__chimney" style="--smoke-x:77.96875%; --smoke-y:43.59551%; --smoke-time:5.8s;">
+                <i class="hero__wisp" style="--wisp-delay:-2.44s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-3.89s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-5.34s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-6.79s;"></i>
+              </span>
+              <span class="hero__chimney" style="--smoke-x:36.46875%; --smoke-y:37.00375%; --smoke-time:6.6s;">
+                <i class="hero__wisp" style="--wisp-delay:-3.05s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-4.70s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-6.35s;"></i>
+                <i class="hero__wisp" style="--wisp-delay:-8.00s;"></i>
+              </span>
+            </div>
+            <div class="hero__layer hero__l1 hero__flags is-paused" id="heroFlags" aria-hidden="true">
+              <img class="hero__boat-water" src="{{ art }}flag-boats-water.webp" alt="" style="--flag-x:54.37500%; --flag-y:68.91386%; --flag-w:18.12500%; " />
+              <img class="hero__flag-repair" src="{{ art }}flag-castle-left-repair.webp" alt="" style="--flag-x:71.90625%; --flag-y:12.58427%; --flag-w:1.34375%; " />
+              <div class="hero__flag" style="--flag-x:71.90625%; --flag-y:12.58427%; --flag-w:1.34375%; --flag-pivot:4.651%; --flag-time:2.30s; --flag-delay:-0.00s; --flag-ratio:43/25;"><img class="hero__flag-source" src="{{ art }}flag-castle-left.webp" alt="" /></div>
+              <img class="hero__flag-repair" src="{{ art }}flag-castle-tall-repair.webp" alt="" style="--flag-x:75.93750%; --flag-y:8.61423%; --flag-w:1.46875%; " />
+              <div class="hero__flag" style="--flag-x:75.93750%; --flag-y:8.61423%; --flag-w:1.46875%; --flag-pivot:4.255%; --flag-time:2.47s; --flag-delay:-0.53s; --flag-ratio:47/29;"><img class="hero__flag-source" src="{{ art }}flag-castle-tall.webp" alt="" /></div>
+              <img class="hero__flag-repair" src="{{ art }}flag-castle-right-repair.webp" alt="" style="--flag-x:80.12500%; --flag-y:11.31086%; --flag-w:1.43750%; " />
+              <div class="hero__flag" style="--flag-x:80.12500%; --flag-y:11.31086%; --flag-w:1.43750%; --flag-pivot:4.348%; --flag-time:2.64s; --flag-delay:-1.06s; --flag-ratio:46/31;"><img class="hero__flag-source" src="{{ art }}flag-castle-right.webp" alt="" /></div>
+              <img class="hero__flag-repair" src="{{ art }}flag-pirate-main-repair.webp" alt="" style="--flag-x:51.75000%; --flag-y:46.06742%; --flag-w:2.31250%; " />
+              <div class="hero__flag" style="--flag-x:51.75000%; --flag-y:46.06742%; --flag-w:2.31250%; --flag-pivot:2.703%; --flag-time:2.81s; --flag-delay:-1.59s; --flag-ratio:74/34;"><img class="hero__flag-source" src="{{ art }}flag-pirate-main.webp" alt="" /></div>
+              <img class="hero__flag-repair" src="{{ art }}flag-pirate-left-repair.webp" alt="" style="--flag-x:49.21875%; --flag-y:50.78652%; --flag-w:1.28125%; " />
+              <div class="hero__flag" style="--flag-x:49.21875%; --flag-y:50.78652%; --flag-w:1.28125%; --flag-pivot:4.878%; --flag-time:2.98s; --flag-delay:-2.12s; --flag-ratio:41/17;"><img class="hero__flag-source" src="{{ art }}flag-pirate-left.webp" alt="" /></div>
+              <div class="hero__boat" style="--flag-x:56.93750%; --flag-y:72.05993%; --flag-w:4.93750%; --boat-ratio:158/180; --boat-time:4.7s; --boat-delay:-4.0s;">
+                <img class="hero__boat-art" src="{{ art }}flag-boat-left-vessel.webp" alt="" />
+              <div class="hero__flag" style="--flag-x:48.73418%; --flag-y:9.44444%; --flag-w:26.58228%; --flag-pivot:4.762%; --flag-time:2.4s; --flag-delay:-2.65s; --flag-ratio:42/23;"><img class="hero__flag-source" src="{{ art }}flag-boat-left.webp" alt="" /></div>
+              </div>
+              <div class="hero__boat" style="--flag-x:66.81250%; --flag-y:74.90637%; --flag-w:5.62500%; --boat-ratio:180/212; --boat-time:5.5s; --boat-delay:-4.8s;">
+                <img class="hero__boat-art" src="{{ art }}flag-boat-right-vessel.webp" alt="" />
+              <div class="hero__flag" style="--flag-x:48.33333%; --flag-y:4.71698%; --flag-w:26.66667%; --flag-pivot:4.167%; --flag-time:2.9s; --flag-delay:-3.18s; --flag-ratio:48/30;"><img class="hero__flag-source" src="{{ art }}flag-boat-right.webp" alt="" /></div>
+              </div>
+            </div>
+            <div class="hero__layer hero__l1 hero__windmill is-paused" id="heroWindmill" aria-hidden="true">
+              <img class="hero__windmill-repair" src="{{ art }}windmill-repair.webp" alt="" />
+              <img class="hero__windmill-rotor" src="{{ art }}windmill-blades.webp" alt="" />
+            </div>
+            <div class="hero__layer hero__l1 hero__foam is-paused" id="heroFoam" aria-hidden="true">
+              <img src="{{ art }}foam-01.webp" alt="" style="--x: 0.75%; --y: 33.33333%; --w: 5.90625%; --origin: 50% -20%; --t: 3.8s; --delay: -1s" />
+              <img src="{{ art }}foam-02.webp" alt="" style="--x: 7.84375%; --y: 41.34831%; --w: 9.1875%; --spread: 1.09; --t: 4.6s; --delay: -3s" />
+              <img src="{{ art }}foam-03.webp" alt="" style="--x: 47.625%; --y: 29.88764%; --w: 6.40625%; --origin: 50% -30%; --t: 4.2s; --delay: -2s" />
+              <img src="{{ art }}foam-04.webp" alt="" style="--x: 52.5%; --y: 36.55431%; --w: 4.96875%; --origin: 50% -50%; --t: 3.7s; --delay: -1.8s" />
+              <img src="{{ art }}foam-05.webp" alt="" style="--x: 45.1875%; --y: 63.74532%; --w: 7.40625%; --t: 4.5s; --delay: -3.5s" />
+              <img src="{{ art }}foam-06.webp" alt="" style="--x: 53.25%; --y: 68.68914%; --w: 6.28125%; --t: 3.9s; --delay: -1.5s" />
+              <img src="{{ art }}foam-07.webp" alt="" style="--x: 56.65625%; --y: 82.02247%; --w: 5.25%; --t: 3.6s; --delay: -2.8s" />
+              <img src="{{ art }}foam-08.webp" alt="" style="--x: 65.9375%; --y: 86.21723%; --w: 6.65625%; --t: 4.3s; --delay: -0.9s" />
+              <img src="{{ art }}foam-09.webp" alt="" style="--x: 66.96875%; --y: 71.83521%; --w: 15.03125%; --spread: 1.07; --t: 4.8s; --delay: -2.2s" />
+              <img src="{{ art }}foam-10.webp" alt="" style="--x: 83.53125%; --y: 80.82397%; --w: 9.9375%; --spread: 1.09; --t: 4.1s; --delay: -3.1s" />
+              <img src="{{ art }}foam-11.webp" alt="" style="--x: 48.375%; --y: 82.84644%; --w: 6.40625%; --origin: 50% -30%; --t: 3.9s; --delay: -0.6s" />
+              <img src="{{ art }}foam-12.webp" alt="" style="--x: 73.09375%; --y: 91.98502%; --w: 4.25%; --origin: 50% -30%; --t: 3.5s; --delay: -2s" />
+            </div>
             <div class="hero__hill">
-              <img
-                class="hero__layer hero__l2"
-                src="{{ art }}Home_L2_5_new.png"
-                alt=""
-              />
+              <div class="hero__layer hero__l2 hero__foliage is-paused" id="heroCanopy" aria-hidden="true">
+                <img class="hero__foliage-base" src="{{ art }}canopy-base-v2.webp" alt="" />
+                <img class="hero__foliage-sprite" src="{{ art }}canopy-foliage.webp" alt="" style="--leaf-x: 47.7870813%; --leaf-y: 5.6188307%; --leaf-w: 10.4066986%; --leaf-pivot: 6.3218391% 47.0198675%; --leaf-bend: 2.7deg; --leaf-flex: 0.3deg; --leaf-time: 7.1s; --leaf-delay: -1.2s" />
+                <img class="hero__foliage-sprite" src="{{ art }}canopy-left-foliage.webp" alt="" style="--leaf-x: 14.5933014%; --leaf-y: 16.6287016%; --leaf-w: 9.8086124%; --leaf-pivot: 46.9512195% 27.7027027%; --leaf-bend: 2.3deg; --leaf-flex: 0.32deg; --leaf-time: 7.3s; --leaf-delay: -2.8s" />
+                <img class="hero__foliage-sprite" src="{{ art }}canopy-middle-foliage.webp" alt="" style="--leaf-x: 19.5574163%; --leaf-y: 7.5170843%; --leaf-w: 8.7918660%; --leaf-pivot: 37.4149660% 35.3383459%; --leaf-bend: 1.9deg; --leaf-flex: 0.25deg; --leaf-time: 6.1s; --leaf-delay: -4.2s" />
+                <img class="hero__foliage-sprite" src="{{ art }}canopy-hanging-foliage.webp" alt="" style="--leaf-x: 31.0406699%; --leaf-y: 7.0615034%; --leaf-w: 13.6961722%; --leaf-pivot: 43.6681223% 58.6206897%; --leaf-bend: 2.4deg; --leaf-flex: 0.4deg; --leaf-time: 7.8s; --leaf-delay: -1.4s" />
+              </div>
               <div
                 class="hero__fox"
                 id="heroFox"
@@ -2590,12 +2831,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               <a class="pin" href="#design" data-go="design" style="--x: 70.7%; --y: 59%"><span class="pin__label">Design</span></a>
               <a class="pin" href="#resume" data-go="resume" style="--x: 51.4%; --y: 57%"><span class="pin__label">Exp</span></a>
             </nav>
+            <canvas class="motes" id="motes" aria-hidden="true"></canvas>
           </div>
-          <img
-            class="hero__layer hero__l3"
-            src="{{ art }}Home_L3_8.png"
-            alt=""
-          />
+          <div class="hero__layer hero__l3 hero__foliage is-paused" id="heroForeground" aria-hidden="true">
+            <img class="hero__foliage-base" src="{{ art }}foreground-base.webp" alt="" />
+                <img class="hero__foliage-sprite" src="{{ art }}foreground-foliage.webp" alt="" style="--leaf-x: 1.4961101%; --leaf-y: 76.1955367%; --leaf-w: 8.2585278%; --leaf-pivot: 76.0869565% 100%; --leaf-bend: 1deg; --leaf-time: 8.4s; --leaf-delay: -2.7s" />
+          </div>
         </div>
       </section>
       <div class="hero__intro">
@@ -2918,7 +3159,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         addEventListener("resize", size);
         const rnd = (a, b) => a + Math.random() * (b - a);
         const spawn = (x, y) => {
-          const long = Math.random() < 0.1;
+          const long = Math.random() < 0.04;
           if (!long && Math.random() > SHORT_KEEP) return;
           if (seeds.length >= MAX) seeds.shift();
           const m = Math.hypot(dirX, dirY) || 1,
@@ -3011,6 +3252,178 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           { passive: true },
         );
         document.addEventListener("mouseleave", reset);
+      })();
+
+      // The cloud sprites share the sky's crop and parallax. Pause CSS drift off
+      // screen and in background tabs; reduced motion keeps the original positions.
+      (() => {
+        const sky = document.getElementById("heroSky");
+        const foam = document.getElementById("heroFoam");
+        const windmill = document.getElementById("heroWindmill");
+        const flags = document.getElementById("heroFlags");
+        const birds = document.getElementById("heroBirds");
+        const smoke = document.getElementById("heroSmoke");
+        const foliage = document.querySelectorAll(".hero__foliage");
+        let visible = false;
+        const pause = () => {
+          const paused = !visible || document.hidden;
+          sky.classList.toggle("is-paused", paused);
+          foam.classList.toggle("is-paused", paused);
+          windmill.classList.toggle("is-paused", paused);
+          flags.classList.toggle("is-paused", paused);
+          birds.classList.toggle("is-paused", paused);
+          smoke.classList.toggle("is-paused", paused);
+          foliage.forEach((layer) => layer.classList.toggle("is-paused", paused));
+        };
+        new IntersectionObserver(([entry]) => {
+          visible = entry.isIntersecting;
+          pause();
+        }).observe(hero);
+        document.addEventListener("visibilitychange", pause);
+      })();
+
+      // Original cloth columns bend independently; the pole seam stays fixed.
+      (() => {
+        const layer = document.getElementById("heroFlags");
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+        const cloth = [];
+        let raf = 0, last = 0, elapsed = 0;
+        const active = () => !reduced.matches && !document.hidden && !layer.classList.contains("is-paused");
+        const draw = (flag) => {
+          const { ctx, image, width, height, padding, period, offset } = flag;
+          const phase = elapsed / period * Math.PI * 2 + offset;
+          ctx.clearRect(0, 0, width, height + padding * 2);
+          for (let x = 0; x < width; x++) {
+            const u = Math.max(0, (x - 2) / (width - 3));
+            const wave = Math.sin(phase - u * Math.PI * 2.3);
+            const shift = 5.5 * Math.pow(u, 1.25) * wave;
+            const fold = 1 - .055 * u * (.5 + .5 * Math.cos(phase - u * Math.PI * 2.3));
+            const h = height * fold;
+            ctx.drawImage(image, x, 0, 1, height, x, padding + shift + (height - h) / 2, 1, h);
+          }
+        };
+        const frame = (now) => {
+          raf = 0;
+          if (!active()) { last = 0; return; }
+          if (!last || now - last >= 1000 / 24) {
+            if (last) elapsed += Math.min(now - last, 100);
+            last = now;
+            cloth.forEach(draw);
+          }
+          raf = requestAnimationFrame(frame);
+        };
+        const sync = () => {
+          if (active() && cloth.length) { if (!raf) raf = requestAnimationFrame(frame); }
+          else { cancelAnimationFrame(raf); raf = 0; last = 0; }
+        };
+        layer.querySelectorAll(".hero__flag").forEach((wrapper) => {
+          const image = wrapper.querySelector("img");
+          const initialize = () => {
+            if (!image.naturalWidth) return;
+            const width = image.naturalWidth, height = image.naturalHeight, padding = 7;
+            const canvas = document.createElement("canvas");
+            canvas.className = "hero__flag-cloth";
+            canvas.width = width; canvas.height = height + padding * 2;
+            canvas.setAttribute("aria-hidden", "true");
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+            wrapper.style.setProperty("--cloth-top", `${-padding / height * 100}%`);
+            wrapper.style.setProperty("--cloth-height", `${(height + padding * 2) / height * 100}%`);
+            const style = getComputedStyle(wrapper);
+            const flag = { ctx, image, width, height, padding,
+              period: parseFloat(style.getPropertyValue("--flag-time")) * 1000,
+              offset: parseFloat(style.getPropertyValue("--flag-delay")) * Math.PI * 2 };
+            draw(flag);
+            wrapper.append(canvas);
+            cloth.push(flag);
+            wrapper.classList.add("cloth-ready");
+            sync();
+          };
+          if (image.complete) initialize(); else image.addEventListener("load", initialize, { once: true });
+        });
+        new MutationObserver(sync).observe(layer, { attributes: true, attributeFilter: ["class"] });
+        reduced.addEventListener("change", sync);
+        document.addEventListener("visibilitychange", sync);
+      })();
+
+      // Ambient pollen: soft warm motes drift up and across the home scene and twinkle. Fewer on phones; idle while the hero is off screen.
+      (() => {
+        const cv = document.getElementById("motes");
+        if (!cv || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const ctx = cv.getContext("2d"),
+          N = innerWidth < 641 ? 22 : 52,
+          dot = document.createElement("canvas"); // one pre-drawn glow, scaled per mote
+        dot.width = dot.height = 32;
+        const g = dot.getContext("2d").createRadialGradient(16, 16, 0, 16, 16, 16);
+        g.addColorStop(0, "rgba(255,252,225,1)");
+        g.addColorStop(0.4, "rgba(255,236,150,0.8)");
+        g.addColorStop(1, "rgba(255,215,110,0)");
+        dot.getContext("2d").fillStyle = g;
+        dot.getContext("2d").fillRect(0, 0, 32, 32);
+        const rnd = (a, b) => a + Math.random() * (b - a);
+        let W = 0,
+          H = 0; // hero size in css px: the motes live in the hero's own space
+        const mote = (anywhere) => {
+          const y = anywhere ? rnd(0, H) : rnd(0.35, 1) * H; // a respawn starts anywhere in the lower 65%, so there is never a long empty climb from the bottom
+          return {
+          x: rnd(0, W),
+          y,
+          y0: y,
+          reach: rnd(0.2, 0.8) * H, // how far it climbs before it has faded out: some stop halfway, some go all the way up
+          s: rnd(5, 12),
+          vy: rnd(14, 30), // px/s upward
+          vx: rnd(2, 8), // px/s drift with the breeze
+          sw: rnd(0, 6.28),
+          sf: rnd(0.3, 0.9),
+          tw: rnd(0, 6.28),
+          tf: rnd(0.6, 1.6),
+          };
+        };
+        let motes = [];
+        let dpr = 1,
+          t0 = 0,
+          raf = 0,
+          on = false;
+        const size = () => {
+          dpr = Math.min(devicePixelRatio || 1, 2);
+          W = cv.clientWidth;
+          H = cv.clientHeight;
+          cv.width = W * dpr;
+          cv.height = H * dpr;
+          if (!motes.length) motes = Array.from({ length: N }, () => mote(true));
+        };
+        size();
+        addEventListener("resize", size);
+        new IntersectionObserver(([e]) => {
+          if (on === e.isIntersecting) return;
+          on = e.isIntersecting;
+          if (on) {
+            t0 = performance.now();
+            raf = requestAnimationFrame(frame);
+          } else {
+            cancelAnimationFrame(raf);
+            raf = 0;
+          }
+        }).observe(hero);
+        function frame(now) {
+          raf = 0;
+          if (!on) return;
+          const dt = Math.min((now - t0) / 1000, 0.05);
+          t0 = now;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, W, H);
+          motes.forEach((m, i) => {
+            m.sw += dt * m.sf;
+            m.tw += dt * m.tf;
+            m.x += (m.vx + Math.sin(m.sw) * 10) * dt;
+            m.y -= (m.vy + Math.cos(m.sw * 0.7) * 4) * dt;
+            const k = (m.y0 - m.y) / m.reach; // 0 at its start, 1 where it is gone
+            if (k >= 1 || m.x > W + 20) return (motes[i] = mote(false));
+            ctx.globalAlpha = (0.55 + 0.45 * (0.5 + 0.5 * Math.sin(m.tw))) * Math.min(1, k / 0.08 + 0.3) * Math.min(1, (1 - k) / 0.3); // fade in at the start, fade out over the last 35% of its climb
+            ctx.drawImage(dot, m.x - m.s / 2, m.y - m.s / 2, m.s, m.s);
+          });
+          raf = requestAnimationFrame(frame);
+        }
       })();
 
       // Nav menu: hover/focus opens it on desktop; the button also toggles it for touch. Click outside closes.
