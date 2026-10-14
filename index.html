@@ -214,6 +214,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         opacity: 0;
         transition-delay: 0s;
       }
+      .nav__audio { flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; }
+      .nav__audio:hover, .nav__audio[aria-pressed="true"] { background: rgba(59, 36, 20, .08); }
+      .nav__audio:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+      .nav__audio svg { width: 19px; height: 19px; }
+      .nav__audio[aria-pressed="false"] .audio-on, .nav__audio[aria-pressed="true"] .audio-off { display: none; }
+
       .nav__burger,
       .nav__mode {
         flex: none;
@@ -2688,6 +2694,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           <a href="#dev">Dev</a>
           <a href="#resume">Exp</a>
         </div>
+        <button class="nav__audio" id="ambientToggle" type="button" aria-label="Enable sound" aria-pressed="false" title="Enable sound" data-waves-url="{{ '/assets/audio/shore-waves.mp3' | relative_url }}" data-gull-url="{{ '/assets/audio/seagull.mp3' | relative_url }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z" /><path class="audio-on" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" /><path class="audio-off" d="m16 9 5 6m0-6-5 6" /></svg>
+        </button>
         <button class="nav__mode" id="modeToggle" type="button" aria-label="Night mode (planned, no visual change yet)" aria-pressed="false" title="Morning / night (planned)">
           <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4" />
@@ -3988,5 +3997,6 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         });
       }
     </script>
+    <script src="{{ '/assets/js/ambient-audio.js' | relative_url }}" defer></script>
   </body>
 </html>
