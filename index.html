@@ -2784,6 +2784,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           height: var(--art-h);
           pointer-events: none;
         }
+        html[data-mode="night"] .hero__intro .fireflies {
+          height: 62%; /* the desk painting fills about the lower 60% of the intro */
+        }
       }
       .firefly {
         position: absolute;
@@ -3792,9 +3795,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         modeBtn.blur(); // ponytail: a focused button keeps .nav__links:focus-within open, so the tab would never collapse
       });
 
-      // Fireflies: seven per scene in the painted band at the bottom: five over the left and right edges, two low in the middle under the cards. CSS shows them only at night.
+      // Fireflies: seven per scene (the intro desk and the three sections) in the painted band at the bottom: five over the left and right edges, two low in the middle. CSS shows them only at night.
       if (!still) {
-        for (const id of ["design", "dev", "resume"]) {
+        for (const scene of document.querySelectorAll(".hero__intro, #design, #dev, #resume")) {
           const box = document.createElement("div");
           box.className = "fireflies";
           box.setAttribute("aria-hidden", "true");
@@ -3808,7 +3811,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             f.style.cssText = `--x:${x.toFixed(1)}%;--y:${y.toFixed(1)}%;--t:${t.toFixed(1)}s;--delay:${(-Math.random() * t).toFixed(1)}s;--dx:${Math.round(Math.random() * 80 - 40)}px;--dy:${Math.round(Math.random() * 50 - 25)}px`;
             box.append(f);
           }
-          document.getElementById(id).prepend(box);
+          scene.prepend(box);
         }
       }
 
