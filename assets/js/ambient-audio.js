@@ -1,4 +1,5 @@
 // Seaside ambience, on by default; bird calls follow the visible flock's actual CSS clock.
+// At night (html[data-mode="night"]) the birds are hidden, so the gulls fall quiet, and crickets fade in over the waves.
 // Browsers only allow sound after the visitor interacts, so it starts on their first click, tap or key press.
 // Muting is remembered; a muted visitor stays muted on their next visit.
 (() => {
@@ -7,7 +8,8 @@
   const flock = birds.querySelector(".hero__flock");
   const dialog = document.getElementById("projDialog");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  let context, master, waves, gull, buffers, loading;
+  let context, master, waves, gull, crickets, buffers, loading;
+  const night = () => document.documentElement.dataset.mode === "night";
   let enabled = true, version = 0, poll = 0, suspendTimer = 0, lastIteration = -1;
   try { enabled = localStorage.getItem("sound") !== "off"; } catch (_) { /* storage blocked: keep the default */ }
   const label = (error = false) => {
@@ -68,11 +70,11 @@
   };
   const load = () => {
     if (buffers) return Promise.resolve(buffers);
-    if (!loading) loading = Promise.all([button.dataset.wavesUrl, button.dataset.gullUrl].map(async (url) => {
+    if (!loading) loading = Promise.all([button.dataset.wavesUrl, button.dataset.gullUrl, button.dataset.cricketsUrl].map(async (url) => {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Audio unavailable");
       return context.decodeAudioData(await response.arrayBuffer());
-    })).then(([waveBuffer, gullBuffer]) => (buffers = { waves: waveBuffer, gull: gullBuffer }))
+    })).then(([waveBuffer, gullBuffer, cricketBuffer]) => (buffers = { waves: waveBuffer, gull: gullBuffer, crickets: cricketBuffer }))
       .catch((error) => { loading = null; throw error; });
     return loading;
   };
@@ -92,6 +94,12 @@
         const gain = context.createGain();
         waves.buffer = buffers.waves; waves.loop = true; gain.gain.value = .075;
         waves.connect(gain).connect(master); waves.start();
+      }
+      if (!crickets) {
+        const source = context.createBufferSource(), gain = context.createGain();
+        source.buffer = buffers.crickets; source.loop = true; gain.gain.value = night() ? .05 : 0;
+        source.connect(gain).connect(master); source.start();
+        crickets = gain;
       }
       sync();
     } catch (_) {
@@ -115,6 +123,12 @@
   label();
   new MutationObserver(sync).observe(birds, { attributes: true, attributeFilter: ["class"] });
   new MutationObserver(sync).observe(dialog, { attributes: true, attributeFilter: ["open"] });
+  // Crickets follow the morning / night switch with a slow fade, like the page.
+  new MutationObserver(() => {
+    if (!crickets) return;
+    crickets.gain.cancelScheduledValues(context.currentTime);
+    crickets.gain.setTargetAtTime(night() ? .05 : 0, context.currentTime, .45);
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
   document.addEventListener("visibilitychange", sync);
   for (const event of ["play", "pause", "ended", "volumechange"]) document.addEventListener(event, sync, true);
   reduced.addEventListener("change", sync);

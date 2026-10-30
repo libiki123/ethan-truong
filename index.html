@@ -2860,9 +2860,91 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       html[data-mode="night"] .proj-dialog__scroll::-webkit-scrollbar-thumb:hover {
         background: rgb(248 235 214 / 0.4);
       }
+
+      /* Night map: the big layers swap to baked *-night.webp copies (markup), the small moving pieces take the same grade live through the #moonlit SVG filters, the sky gets stars and a moon, the birds stay home, and the pollen turns into fireflies (JS). */
+      html[data-mode="night"] .hero__scene {
+        background: linear-gradient(#06091c 0%, #1c2858 30%, #2c3c70 75%);
+      }
+      html[data-mode="night"] .hero__cloud {
+        filter: url(#moonlit) brightness(0.9);
+      }
+      html[data-mode="night"] .hero__flag,
+      html[data-mode="night"] .hero__flag-repair,
+      html[data-mode="night"] .hero__boat,
+      html[data-mode="night"] .hero__boat-water,
+      html[data-mode="night"] .hero__windmill img {
+        filter: url(#moonlit);
+      }
+      html[data-mode="night"] .hero__foam img {
+        filter: url(#moonlit) drop-shadow(0 0 0.7px rgba(200, 220, 255, 0.35));
+      }
+      html[data-mode="night"] .hero__foliage-sprite,
+      html[data-mode="night"] .hero__sprite {
+        filter: url(#moonlit-near);
+      }
+      html[data-mode="night"] .hero__fox {
+        filter: drop-shadow(0 10px 6px rgba(4, 6, 20, 0.45));
+      }
+      html[data-mode="night"] .hero__wisp {
+        background: linear-gradient(transparent, #7d87a8 35%, #6f7898 70%, transparent);
+      }
+      html[data-mode="night"] .hero__birds {
+        display: none;
+      }
+      html[data-mode="night"] .zzz {
+        color: #e8e6ff;
+      }
+      /* Stars: a few twinkle over the baked ones. JS ("Stars") places them in the strip of sky that shows. */
+      .hero__stars {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .hero__star {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: var(--s);
+        height: var(--s);
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 4px 1px rgb(200 215 255 / 0.7);
+        animation: star-twinkle var(--t) ease-in-out var(--d) infinite;
+      }
+      @keyframes star-twinkle {
+        0%,
+        100% {
+          opacity: 0.15;
+          transform: scale(0.7);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .hero__l0.is-paused .hero__star {
+        animation-play-state: paused;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero__star {
+          animation: none;
+          opacity: 0.8;
+        }
+      }
+      /* Dusk fade: pressing the moon or sun cross-fades the whole page (View Transitions); instant without support or with reduced motion */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 1.4s;
+        animation-timing-function: ease-in-out;
+      }
     </style>
   </head>
   <body>
+    <!-- Night grade for the small moving pieces of the map (flags, boats, foam, windmill, leaves, fox); the same numbers baked the *-night.webp layers -->
+    <svg class="sr-only" aria-hidden="true" focusable="false">
+      <filter id="moonlit" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.2467 0.0957 0.0097 0 0.0075 0.0341 0.3767 0.0116 0 0.0113 0.0526 0.177 0.4216 0 0.0273 0 0 0 1 0" /></filter>
+      <filter id="moonlit-near" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.3576 0.1022 0.0103 0 0.006 0.0341 0.4822 0.0116 0 0.009 0.0463 0.1557 0.514 0 0.0218 0 0 0 1 0" /></filter>
+    </svg>
     <nav class="nav" id="nav">
       <a class="nav__brand" href="#intro" aria-label="Ethan Truong, introduction">
         <img src="{{ '/assets/images/fox-face.png' | relative_url }}" alt="" width="168" height="153" />
@@ -2875,7 +2957,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           <a href="#dev">Dev</a>
           <a href="#resume">Exp</a>
         </div>
-        <button class="nav__audio" id="ambientToggle" type="button" aria-label="Enable sound" aria-pressed="false" title="Enable sound" data-waves-url="{{ '/assets/audio/shore-waves.mp3' | relative_url }}" data-gull-url="{{ '/assets/audio/seagull.mp3' | relative_url }}">
+        <button class="nav__audio" id="ambientToggle" type="button" aria-label="Enable sound" aria-pressed="false" title="Enable sound" data-waves-url="{{ '/assets/audio/shore-waves.mp3' | relative_url }}" data-gull-url="{{ '/assets/audio/seagull.mp3' | relative_url }}" data-crickets-url="{{ '/assets/audio/crickets.mp3' | relative_url }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z" /><path class="audio-on" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" /><path class="audio-off" d="m16 9 5 6m0-6-5 6" /></svg>
         </button>
         <button class="nav__mode" id="modeToggle" type="button" aria-label="Switch to night" aria-pressed="false" title="Switch to night">
@@ -2901,7 +2983,9 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         <div class="hero__stage">
           <div class="hero__scene">
             <div class="hero__layer hero__l0 is-paused" id="heroSky" aria-hidden="true">
-              <img class="hero__sky" src="{{ art }}sky-l0-s.webp" alt="" />
+              <img class="hero__sky for-morning" src="{{ art }}sky-l0-s.webp" alt="" />
+              <img class="hero__sky for-night" src="{{ art }}sky-l0-night.webp" alt="" loading="lazy" />
+              <div class="hero__stars for-night" id="heroStars"></div>
               <img class="hero__cloud hero__cloud--bank" src="{{ art }}cloud-bank-left.webp" alt="" style="--cloud-x: -2.5%; --cloud-y: 19.81651%; --cloud-w: 73.34375%; --cloud-time: 30s; --cloud-delay: -4s; --cloud-shift: 2.47%; --cloud-end-opacity: 1" />
               <img class="hero__cloud hero__cloud--bank" src="{{ art }}cloud-bank-right.webp" alt="" style="--cloud-x: 80.90625%; --cloud-y: 21.77370%; --cloud-w: 19.09375%; --cloud-time: 34s; --cloud-delay: -12s; --cloud-shift: 9.49%; --cloud-end-opacity: 1" />
               <img class="hero__cloud" src="{{ art }}cloud-01.webp" alt="" style="--cloud-x: 10.78125%; --cloud-y: 22.01835%; --cloud-w: 5.15625%; --cloud-time: 20s; --cloud-delay: -4s" />
@@ -2909,7 +2993,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               <img class="hero__cloud" src="{{ art }}cloud-03.webp" alt="" style="--cloud-x: 33.875%; --cloud-y: 23.97554%; --cloud-w: 6.53125%; --cloud-time: 23s; --cloud-delay: -7s" />
               <img class="hero__cloud" src="{{ art }}cloud-04.webp" alt="" style="--cloud-x: 55.25%; --cloud-y: 27.95107%; --cloud-w: 7.46875%; --cloud-time: 29s; --cloud-delay: -14s" />
               <img class="hero__cloud" src="{{ art }}cloud-05.webp" alt="" style="--cloud-x: 61.59375%; --cloud-y: 31.80428%; --cloud-w: 5.03125%; --cloud-time: 22s; --cloud-delay: -5s" />
-              <img class="hero__sky hero__sky-terrain" src="{{ art }}sky-terrain.webp" alt="" />
+              <img class="hero__sky hero__sky-terrain for-morning" src="{{ art }}sky-terrain.webp" alt="" />
+              <img class="hero__sky hero__sky-terrain for-night" src="{{ art }}sky-terrain-night.webp" alt="" loading="lazy" />
             </div>
             <div class="hero__layer hero__l0 hero__birds is-paused" id="heroBirds" aria-hidden="true"><div class="hero__flock">
               <svg class="hero__bird" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9.7 6.1l1.2 1.4" /><path class="hero__bird-wing" style="--wing:1" d="M10 6Q5 2 1 3" /><path class="hero__bird-wing" style="--wing:-1" d="M10 6Q15 2 19 3" /></svg>
@@ -2917,9 +3002,15 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               <svg class="hero__bird" viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9.7 6.1l1.2 1.4" /><path class="hero__bird-wing" style="--wing:1" d="M10 6Q5 2 1 3" /><path class="hero__bird-wing" style="--wing:-1" d="M10 6Q15 2 19 3" /></svg>
             </div></div>
             <img
-              class="hero__layer hero__l1"
+              class="hero__layer hero__l1 for-morning"
               src="{{ art }}map-l1-nosky.webp"
               alt="A painted storybook valley with a village, castle and waterfall"
+            />
+            <img
+              class="hero__layer hero__l1 for-night"
+              src="{{ art }}map-l1-nosky-night.webp"
+              loading="lazy"
+              alt="The storybook valley at night, its windows and lanterns lit under the moon"
             />
             <div class="hero__layer hero__l1 hero__smoke is-paused" id="heroSmoke" aria-hidden="true">
               <span class="hero__chimney" style="--smoke-x:67.28125%; --smoke-y:29.36330%; --smoke-time:5.4s;">
@@ -3001,7 +3092,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             </div>
             <div class="hero__hill">
               <div class="hero__layer hero__l2 hero__foliage is-paused" id="heroCanopy" aria-hidden="true">
-                <img class="hero__foliage-base" src="{{ art }}canopy-base-v2.webp" alt="" />
+                <img class="hero__foliage-base for-morning" src="{{ art }}canopy-base-v2.webp" alt="" />
+                <img class="hero__foliage-base for-night" src="{{ art }}canopy-base-v2-night.webp" alt="" loading="lazy" />
                 <img class="hero__foliage-sprite" src="{{ art }}canopy-foliage.webp" alt="" style="--leaf-x: 47.7870813%; --leaf-y: 5.6188307%; --leaf-w: 10.4066986%; --leaf-pivot: 6.3218391% 47.0198675%; --leaf-bend: 2.7deg; --leaf-flex: 0.3deg; --leaf-time: 7.1s; --leaf-delay: -1.2s" />
                 <img class="hero__foliage-sprite" src="{{ art }}canopy-left-foliage.webp" alt="" style="--leaf-x: 14.5933014%; --leaf-y: 16.6287016%; --leaf-w: 9.8086124%; --leaf-pivot: 46.9512195% 27.7027027%; --leaf-bend: 2.3deg; --leaf-flex: 0.32deg; --leaf-time: 7.3s; --leaf-delay: -2.8s" />
                 <img class="hero__foliage-sprite" src="{{ art }}canopy-middle-foliage.webp" alt="" style="--leaf-x: 19.5574163%; --leaf-y: 7.5170843%; --leaf-w: 8.7918660%; --leaf-pivot: 37.4149660% 35.3383459%; --leaf-bend: 1.9deg; --leaf-flex: 0.25deg; --leaf-time: 6.1s; --leaf-delay: -4.2s" />
@@ -3026,7 +3118,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           </div>
           <div class="hero__layer hero__l3 hero__foliage is-paused" id="heroForeground" aria-hidden="true">
             <img class="hero__foliage-base for-morning" src="{{ art }}foreground-base.webp" alt="" />
-            <img class="hero__foliage-base for-night" src="{{ art }}foreground-base-night.webp" alt="" loading="lazy" /><!-- same painting; only the paper strip under the torn edge is the night page colour -->
+            <img class="hero__foliage-base for-night" src="{{ art }}foreground-base-night.webp" alt="" loading="lazy" /><!-- moonlit, and the paper strip under the torn edge is the night page colour -->
                 <img class="hero__foliage-sprite" src="{{ art }}foreground-foliage.webp" alt="" style="--leaf-x: 1.4961101%; --leaf-y: 76.1955367%; --leaf-w: 8.2585278%; --leaf-pivot: 76.0869565% 100%; --leaf-bend: 1deg; --leaf-time: 8.4s; --leaf-delay: -2.7s" />
           </div>
         </div>
@@ -3563,6 +3655,16 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         g.addColorStop(1, "rgba(255,215,110,0)");
         dot.getContext("2d").fillStyle = g;
         dot.getContext("2d").fillRect(0, 0, 32, 32);
+        // At night the same motes are fireflies: a greener glow that blinks slowly and drifts at half speed.
+        const fly = document.createElement("canvas");
+        fly.width = fly.height = 32;
+        const fg = fly.getContext("2d").createRadialGradient(16, 16, 0, 16, 16, 16);
+        fg.addColorStop(0, "rgba(250,255,215,1)");
+        fg.addColorStop(0.22, "rgba(225,255,130,0.95)");
+        fg.addColorStop(0.55, "rgba(190,240,90,0.32)");
+        fg.addColorStop(1, "rgba(160,220,70,0)");
+        fly.getContext("2d").fillStyle = fg;
+        fly.getContext("2d").fillRect(0, 0, 32, 32);
         const rnd = (a, b) => a + Math.random() * (b - a);
         let W = 0,
           H = 0; // hero size in css px: the motes live in the hero's own space
@@ -3612,7 +3714,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         function frame(now) {
           raf = 0;
           if (!on) return;
-          const dt = Math.min((now - t0) / 1000, 0.05);
+          const night = document.documentElement.dataset.mode === "night",
+            dt = Math.min((now - t0) / 1000, 0.05) * (night ? 0.5 : 1);
           t0 = now;
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
           ctx.clearRect(0, 0, W, H);
@@ -3623,8 +3726,14 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             m.y -= (m.vy + Math.cos(m.sw * 0.7) * 4) * dt;
             const k = (m.y0 - m.y) / m.reach; // 0 at its start, 1 where it is gone
             if (k >= 1 || m.x > W + 20) return (motes[i] = mote(false));
-            ctx.globalAlpha = (0.55 + 0.45 * (0.5 + 0.5 * Math.sin(m.tw))) * Math.min(1, k / 0.08 + 0.3) * Math.min(1, (1 - k) / 0.3); // fade in at the start, fade out over the last 35% of its climb
-            ctx.drawImage(dot, m.x - m.s / 2, m.y - m.s / 2, m.s, m.s);
+            const fade = Math.min(1, k / 0.08 + 0.3) * Math.min(1, (1 - k) / 0.3); // fade in at the start, fade out over the last 35% of its climb
+            if (night) {
+              ctx.globalAlpha = Math.max(0, Math.sin(m.tw)) ** 1.5 * fade; // on, then dark for a while
+              ctx.drawImage(fly, m.x - m.s, m.y - m.s, m.s * 2, m.s * 2);
+            } else {
+              ctx.globalAlpha = (0.55 + 0.45 * (0.5 + 0.5 * Math.sin(m.tw))) * fade;
+              ctx.drawImage(dot, m.x - m.s / 2, m.y - m.s / 2, m.s, m.s);
+            }
           });
           raf = requestAnimationFrame(frame);
         }
@@ -3787,13 +3896,45 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         modeBtn.title = text;
       };
       showMode();
-      modeBtn.addEventListener("click", () => {
+      // The switch waits (up to 1.5 s) for the other mode's map art, so the fade never lands on a half-loaded map, then cross-fades the page (View Transitions). Instant without support or with reduced motion.
+      const artFor = (mode) =>
+        [...document.querySelectorAll(`.hero .for-${mode}`)].flatMap((el) => (el.tagName === "IMG" ? [el.currentSrc || el.src] : []));
+      const preload = (mode) =>
+        Promise.race([
+          Promise.all(artFor(mode).map((src) => { const i = new Image(); i.src = src; return i.decode().catch(() => {}); })),
+          new Promise((r) => setTimeout(r, 1500)),
+        ]);
+      let switching = false;
+      // Start fetching the other mode's art as soon as the button is pointed at or focused, so the click itself is quick.
+      for (const type of ["pointerenter", "focus", "touchstart"])
+        modeBtn.addEventListener(type, () => preload(document.documentElement.dataset.mode === "night" ? "morning" : "night"), { once: true, passive: true });
+      modeBtn.addEventListener("click", async () => {
+        if (switching) return;
+        switching = true;
         const mode = document.documentElement.dataset.mode === "night" ? "morning" : "night";
-        document.documentElement.dataset.mode = mode;
-        try { localStorage.setItem("mode", mode); } catch (_) {}
-        showMode();
         modeBtn.blur(); // ponytail: a focused button keeps .nav__links:focus-within open, so the tab would never collapse
+        await preload(mode);
+        const apply = () => {
+          document.documentElement.dataset.mode = mode;
+          try { localStorage.setItem("mode", mode); } catch (_) {}
+          showMode();
+        };
+        if (document.startViewTransition && !still) await document.startViewTransition(apply).finished.catch(() => {});
+        else apply();
+        switching = false;
       });
+
+      // Stars: a few twinkling ones over the baked night sky, in the strip of sky that shows above the hills (desktop and phone).
+      {
+        const box = document.getElementById("heroStars");
+        for (let i = 0; i < 26; i++) {
+          const star = document.createElement("i"),
+            t = 2.4 + Math.random() * 3.6;
+          star.className = "hero__star";
+          star.style.cssText = `--x:${(17 + Math.random() * 82).toFixed(1)}%;--y:${(6 + Math.random() * 24).toFixed(1)}%;--s:${(1.4 + Math.random() * 1.8).toFixed(1)}px;--t:${t.toFixed(1)}s;--d:${(-Math.random() * t).toFixed(1)}s`;
+          box.append(star);
+        }
+      }
 
       // Fireflies: seven per scene (the intro desk and the three sections) in the painted band at the bottom: five over the left and right edges, two low in the middle. CSS shows them only at night.
       if (!still) {
