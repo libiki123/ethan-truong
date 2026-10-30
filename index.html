@@ -31,12 +31,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
     />
     <script>
       document.documentElement.classList.add("js");
-      // Night mode is set before first paint so the page never flashes cream: a saved choice wins, otherwise the system setting.
+      // Morning is the default; a visitor who picked night gets it back, set before first paint so the page never flashes cream.
       (() => {
         let mode;
         try { mode = localStorage.getItem("mode"); } catch (_) {}
-        if (mode !== "night" && mode !== "morning") mode = matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "morning";
-        document.documentElement.dataset.mode = mode;
+        document.documentElement.dataset.mode = mode === "night" ? "night" : "morning";
       })();
     </script>
     <style>
