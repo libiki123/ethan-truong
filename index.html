@@ -3808,9 +3808,10 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           sheet = new Image();
         sheet.src = "{{ art }}sky-lanterns.webp"; // 4 cells of 64x96, bottom-centred
         const MAP_W = 3200, MAP_H = 1335, ABOVE = 0.4 * MAP_H, HORIZON = 358, TOP = -170; // TOP: where they have faded out, just above the sky that shows on desktop and phone
-        // where they lift off (map px boxes: x0, x1, y0, y1, weight): the town, the castle hill, the harbour, and the village on the left hill.
-        // The village is off the phone crop, so phones only use the town.
-        const TOWN = [[1950, 2950, 330, 800, 5], [2150, 2600, 150, 330, 2], [1700, 2000, 560, 780, 1]];
+        // where they lift off (map px boxes: x0, x1, y0, y1, weight, slope): mostly low in the town (the market square and harbour front)
+        // and along the bridge, whose deck slopes down to the right (slope = y per x); a few higher up the town, and the village on the
+        // left hill. The village is off the phone crop, so phones only use the town.
+        const TOWN = [[1850, 2650, 700, 880, 5], [2620, 3180, 785, 815, 4, 0.27], [1900, 2900, 560, 720, 2], [1950, 2950, 330, 560, 1]];
         const VILLAGE = [[560, 1300, 330, 620, 3], [700, 1250, 620, 900, 2]];
         const rnd = (a, b) => a + Math.random() * (b - a);
         const pick = () => {
@@ -3831,11 +3832,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           h.fillRect(0, 0, 64, 64);
         }
         const lantern = (anywhere) => {
-          const z = pick(), y0 = rnd(z[2], z[3]);
+          const z = pick(), x = rnd(z[0], z[1]), y0 = rnd(z[2], z[3]) + (x - z[0]) * (z[5] || 0);
           return {
-            x: rnd(z[0], z[1]),
+            x,
             y0,
-            y: anywhere ? rnd(TOP, y0) : y0, // a full sky at once when night starts
+            y: anywhere ? y0 - (y0 - TOP) * Math.random() ** 1.5 : y0, // a full sky at once when night starts, denser low down where they linger
             size: Math.random() ** 2.2, // most are far and small, a few near and big
             cell: Math.floor(Math.random() * 4),
             vy: rnd(12, 24), // map px/s upward: slow, so they linger
@@ -3867,11 +3868,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             const rise = (l.y0 - l.y) / (l.y0 - TOP); // 0 at lift-off, 1 at the top
             const depth = l.size * (1 - 0.55 * rise); // they shrink as they climb away
             l.sw += dt * l.sf; l.fl += dt * 7;
-            l.y -= l.vy * (0.5 + depth) * dt;
-            l.x += (l.vx * (0.4 + depth) + Math.sin(l.sw) * 6) * dt;
+            const lift = 0.3 + 0.7 * Math.min(1, rise * 4); // they hang low over the town for a while, then climb faster
+            l.y -= l.vy * (0.5 + depth) * lift * dt;
+            l.x += (l.vx * (0.4 + depth) * lift + Math.sin(l.sw) * 6) * dt;
             if (l.y < TOP || l.x < -60 || l.x > MAP_W + 60) { list[i] = lantern(false); continue; }
             const h = 10 + 52 * depth, w = h * 64 / 96; // map px
-            const fade = Math.min(1, rise * 12) * Math.min(1, (1 - rise) * 4);
+            const fade = Math.min(1, 0.35 + rise * 30) * Math.min(1, (1 - rise) * 4);
             const flick = 0.9 + 0.1 * Math.sin(l.fl) * Math.sin(l.fl * 0.37);
             const cx = l.x * k, cy = (l.y + ABOVE) * k, sx = w * k, sy = h * k;
             ctx.globalAlpha = fade * flick * (0.8 - 0.25 * depth); // the far, small ones are mostly glow
