@@ -2861,7 +2861,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         background: rgb(248 235 214 / 0.4);
       }
 
-      /* Night map: the big layers swap to baked *-night.webp copies (markup), the small moving pieces take the same grade live through the #moonlit SVG filters, the sky gets stars and a moon, the birds stay home, and the pollen turns into fireflies (JS). */
+      /* Night map: the big layers and the repair patches swap to baked *-night.webp copies (markup; moonlight, window glow and light pools are baked in), the small moving pieces take the same grade live through the #moonlit SVG filters, the sky gets stars and a moon, the birds stay home, and the pollen turns into fireflies (JS). */
       html[data-mode="night"] .hero__scene {
         background: linear-gradient(#06091c 0%, #1c2858 30%, #2c3c70 75%);
       }
@@ -2869,10 +2869,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         filter: url(#moonlit) brightness(0.9);
       }
       html[data-mode="night"] .hero__flag,
-      html[data-mode="night"] .hero__flag-repair,
       html[data-mode="night"] .hero__boat,
-      html[data-mode="night"] .hero__boat-water,
-      html[data-mode="night"] .hero__windmill img {
+      html[data-mode="night"] .hero__windmill-rotor {
         filter: url(#moonlit);
       }
       html[data-mode="night"] .hero__foam img {
@@ -2890,6 +2888,37 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       html[data-mode="night"] .hero__birds {
         display: none;
+      }
+      /* Moon path: silver glints on the water under the moon. Two glint layers cross-fade so the water shimmers. */
+      .hero__moonpath {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .hero__moonpath img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        mix-blend-mode: screen;
+        animation: moon-shimmer 3.6s ease-in-out infinite alternate;
+      }
+      .hero__moonpath img + img {
+        animation-delay: -1.8s;
+      }
+      @keyframes moon-shimmer {
+        from {
+          opacity: 0.45;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero__moonpath img {
+          animation: none;
+          opacity: 0.6;
+        }
       }
       html[data-mode="night"] .zzz {
         color: #e8e6ff;
@@ -3051,16 +3080,23 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               </span>
             </div>
             <div class="hero__layer hero__l1 hero__flags is-paused" id="heroFlags" aria-hidden="true">
-              <img class="hero__boat-water" src="{{ art }}flag-boats-water.webp" alt="" style="--flag-x:54.37500%; --flag-y:68.91386%; --flag-w:18.12500%; " />
-              <img class="hero__flag-repair" src="{{ art }}flag-castle-left-repair.webp" alt="" style="--flag-x:71.90625%; --flag-y:12.58427%; --flag-w:1.34375%; " />
+              <img class="hero__boat-water for-morning" src="{{ art }}flag-boats-water.webp" alt="" style="--flag-x:54.37500%; --flag-y:68.91386%; --flag-w:18.12500%; " />
+              <img class="hero__boat-water for-night" src="{{ art }}flag-boats-water-night.webp" alt="" loading="lazy" style="--flag-x:54.37500%; --flag-y:68.91386%; --flag-w:18.12500%; " />
+              <div class="hero__moonpath for-night" aria-hidden="true"><img src="{{ art }}moon-path-a.webp" alt="" loading="lazy" /><img src="{{ art }}moon-path-b.webp" alt="" loading="lazy" /></div><!-- over the boats' water patch, under the boats -->
+              <img class="hero__flag-repair for-morning" src="{{ art }}flag-castle-left-repair.webp" alt="" style="--flag-x:71.90625%; --flag-y:12.58427%; --flag-w:1.34375%; " />
+              <img class="hero__flag-repair for-night" src="{{ art }}flag-castle-left-repair-night.webp" alt="" loading="lazy" style="--flag-x:71.90625%; --flag-y:12.58427%; --flag-w:1.34375%; " />
               <div class="hero__flag" style="--flag-x:71.90625%; --flag-y:12.58427%; --flag-w:1.34375%; --flag-pivot:4.651%; --flag-time:2.30s; --flag-delay:-0.00s; --flag-ratio:43/25;"><img class="hero__flag-source" src="{{ art }}flag-castle-left.webp" alt="" /></div>
-              <img class="hero__flag-repair" src="{{ art }}flag-castle-tall-repair.webp" alt="" style="--flag-x:75.93750%; --flag-y:8.61423%; --flag-w:1.46875%; " />
+              <img class="hero__flag-repair for-morning" src="{{ art }}flag-castle-tall-repair.webp" alt="" style="--flag-x:75.93750%; --flag-y:8.61423%; --flag-w:1.46875%; " />
+              <img class="hero__flag-repair for-night" src="{{ art }}flag-castle-tall-repair-night.webp" alt="" loading="lazy" style="--flag-x:75.93750%; --flag-y:8.61423%; --flag-w:1.46875%; " />
               <div class="hero__flag" style="--flag-x:75.93750%; --flag-y:8.61423%; --flag-w:1.46875%; --flag-pivot:4.255%; --flag-time:2.47s; --flag-delay:-0.53s; --flag-ratio:47/29;"><img class="hero__flag-source" src="{{ art }}flag-castle-tall.webp" alt="" /></div>
-              <img class="hero__flag-repair" src="{{ art }}flag-castle-right-repair.webp" alt="" style="--flag-x:80.12500%; --flag-y:11.31086%; --flag-w:1.43750%; " />
+              <img class="hero__flag-repair for-morning" src="{{ art }}flag-castle-right-repair.webp" alt="" style="--flag-x:80.12500%; --flag-y:11.31086%; --flag-w:1.43750%; " />
+              <img class="hero__flag-repair for-night" src="{{ art }}flag-castle-right-repair-night.webp" alt="" loading="lazy" style="--flag-x:80.12500%; --flag-y:11.31086%; --flag-w:1.43750%; " />
               <div class="hero__flag" style="--flag-x:80.12500%; --flag-y:11.31086%; --flag-w:1.43750%; --flag-pivot:4.348%; --flag-time:2.64s; --flag-delay:-1.06s; --flag-ratio:46/31;"><img class="hero__flag-source" src="{{ art }}flag-castle-right.webp" alt="" /></div>
-              <img class="hero__flag-repair" src="{{ art }}flag-pirate-main-repair.webp" alt="" style="--flag-x:51.75000%; --flag-y:46.06742%; --flag-w:2.31250%; " />
+              <img class="hero__flag-repair for-morning" src="{{ art }}flag-pirate-main-repair.webp" alt="" style="--flag-x:51.75000%; --flag-y:46.06742%; --flag-w:2.31250%; " />
+              <img class="hero__flag-repair for-night" src="{{ art }}flag-pirate-main-repair-night.webp" alt="" loading="lazy" style="--flag-x:51.75000%; --flag-y:46.06742%; --flag-w:2.31250%; " />
               <div class="hero__flag" style="--flag-x:51.75000%; --flag-y:46.06742%; --flag-w:2.31250%; --flag-pivot:2.703%; --flag-time:2.81s; --flag-delay:-1.59s; --flag-ratio:74/34;"><img class="hero__flag-source" src="{{ art }}flag-pirate-main.webp" alt="" /></div>
-              <img class="hero__flag-repair" src="{{ art }}flag-pirate-left-repair.webp" alt="" style="--flag-x:49.21875%; --flag-y:50.78652%; --flag-w:1.28125%; " />
+              <img class="hero__flag-repair for-morning" src="{{ art }}flag-pirate-left-repair.webp" alt="" style="--flag-x:49.21875%; --flag-y:50.78652%; --flag-w:1.28125%; " />
+              <img class="hero__flag-repair for-night" src="{{ art }}flag-pirate-left-repair-night.webp" alt="" loading="lazy" style="--flag-x:49.21875%; --flag-y:50.78652%; --flag-w:1.28125%; " />
               <div class="hero__flag" style="--flag-x:49.21875%; --flag-y:50.78652%; --flag-w:1.28125%; --flag-pivot:4.878%; --flag-time:2.98s; --flag-delay:-2.12s; --flag-ratio:41/17;"><img class="hero__flag-source" src="{{ art }}flag-pirate-left.webp" alt="" /></div>
               <div class="hero__boat" style="--flag-x:56.93750%; --flag-y:72.05993%; --flag-w:4.93750%; --boat-ratio:158/180; --boat-time:4.7s; --boat-delay:-4.0s;">
                 <img class="hero__boat-art" src="{{ art }}flag-boat-left-vessel.webp" alt="" />
@@ -3072,7 +3108,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               </div>
             </div>
             <div class="hero__layer hero__l1 hero__windmill is-paused" id="heroWindmill" aria-hidden="true">
-              <img class="hero__windmill-repair" src="{{ art }}windmill-repair.webp" alt="" />
+              <img class="hero__windmill-repair for-morning" src="{{ art }}windmill-repair.webp" alt="" />
+              <img class="hero__windmill-repair for-night" src="{{ art }}windmill-repair-night.webp" alt="" loading="lazy" />
               <img class="hero__windmill-rotor" src="{{ art }}windmill-blades.webp" alt="" />
             </div>
             <div class="hero__layer hero__l1 hero__foam is-paused" id="heroFoam" aria-hidden="true">
