@@ -3798,7 +3798,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }
       })();
 
-      // Sky lanterns: lanterns lift off from the rooftops of the town and castle, drift with the wind out over the open sea, sway, and shrink as they climb into the sky, so the sky fills with near and far lights. Their glow is mirrored on the sea. Night only; idle when the map is off screen or the tab is hidden; one still frame under reduced motion. Positions are in map px (the 3200x1335 painting).
+      // Sky lanterns: lanterns lift off from the rooftops of the town, the castle and the village on the left hill, drift with the wind out over the open sea, sway, and shrink as they climb into the sky, so the sky fills with near and far lights. Their glow is mirrored on the sea. Night only; idle when the map is off screen or the tab is hidden; one still frame under reduced motion. Positions are in map px (the 3200x1335 painting).
       (() => {
         const cv = document.getElementById("skyLanterns"),
           gv = document.getElementById("lanternGlints");
@@ -3808,13 +3808,16 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           sheet = new Image();
         sheet.src = "{{ art }}sky-lanterns.webp"; // 4 cells of 64x96, bottom-centred
         const MAP_W = 3200, MAP_H = 1335, ABOVE = 0.4 * MAP_H, HORIZON = 358, TOP = -170; // TOP: where they have faded out, just above the sky that shows on desktop and phone
-        // where they lift off: the town, the castle hill and the harbour (map px boxes: x0, x1, y0, y1, weight)
-        const TOWN = [[1950, 2950, 330, 800, 5], [2150, 2600, 150, 330, 2], [1700, 2000, 560, 780, 1], [500, 1300, 380, 760, 1]];
+        // where they lift off (map px boxes: x0, x1, y0, y1, weight): the town, the castle hill, the harbour, and the village on the left hill.
+        // The village is off the phone crop, so phones only use the town.
+        const TOWN = [[1950, 2950, 330, 800, 5], [2150, 2600, 150, 330, 2], [1700, 2000, 560, 780, 1]];
+        const VILLAGE = [[560, 1300, 330, 620, 3], [700, 1250, 620, 900, 2]];
         const rnd = (a, b) => a + Math.random() * (b - a);
         const pick = () => {
-          let r = Math.random() * TOWN.reduce((t, z) => t + z[4], 0);
-          for (const z of TOWN) if ((r -= z[4]) <= 0) return z;
-          return TOWN[0];
+          const from = innerWidth < 641 ? TOWN : TOWN.concat(VILLAGE);
+          let r = Math.random() * from.reduce((t, z) => t + z[4], 0);
+          for (const z of from) if ((r -= z[4]) <= 0) return z;
+          return from[0];
         };
         // glow sprite, drawn once
         const halo = document.createElement("canvas");
