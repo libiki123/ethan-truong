@@ -2889,6 +2889,26 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       html[data-mode="night"] .hero__birds {
         display: none;
       }
+      /* Sky lanterns: hundreds of paper lanterns rise from the town into the night sky (JS "Sky lanterns"). Their canvas shares the map's box but reaches 40% higher, so they can climb above the mountains; the glints canvas draws their reflections and is masked to the water. */
+      .hero__lanterns,
+      .hero__lantern-glints {
+        pointer-events: none;
+      }
+      .hero__lanterns canvas {
+        position: absolute;
+        left: 0;
+        top: -40%;
+        width: 100%;
+        height: 140%;
+      }
+      .hero__lantern-glints canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        -webkit-mask: url("{{ art }}water-mask.webp") 0 0 / 100% 100% no-repeat;
+        mask: url("{{ art }}water-mask.webp") 0 0 / 100% 100% no-repeat;
+      }
       /* Moon path: soft silver glints on the open sea under the moon, fading out above the harbour. Two glint layers cross-fade so the water shimmers. */
       .hero__moonpath {
         position: absolute;
@@ -3041,6 +3061,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               loading="lazy"
               alt="The storybook valley at night, its windows and lanterns lit under the moon"
             />
+            <div class="hero__layer hero__l1 hero__lantern-glints for-night" aria-hidden="true"><canvas id="lanternGlints"></canvas></div>
             <div class="hero__layer hero__l1 hero__smoke is-paused" id="heroSmoke" aria-hidden="true">
               <span class="hero__chimney" style="--smoke-x:67.28125%; --smoke-y:29.36330%; --smoke-time:5.4s;">
                 <i class="hero__wisp" style="--wisp-delay:-0.00s;"></i>
@@ -3127,6 +3148,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
               <img src="{{ art }}foam-12.webp" alt="" style="--x: 73.09375%; --y: 91.98502%; --w: 4.25%; --origin: 50% -30%; --t: 3.5s; --delay: -2s" />
               <img src="{{ art }}foam-harbor.webp" alt="" style="--x: 59.56250%; --y: 70.63670%; --w: 7.15625%; --origin: 50% -25%; --t: 4.1s; --delay: -1.4s" />
             </div>
+            <div class="hero__layer hero__l1 hero__lanterns for-night" aria-hidden="true"><canvas id="skyLanterns"></canvas></div>
             <div class="hero__hill">
               <div class="hero__layer hero__l2 hero__foliage is-paused" id="heroCanopy" aria-hidden="true">
                 <img class="hero__foliage-base for-morning" src="{{ art }}canopy-base-v2.webp" alt="" />
@@ -3774,6 +3796,121 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           });
           raf = requestAnimationFrame(frame);
         }
+      })();
+
+      // Sky lanterns: lanterns lift off from the rooftops of the town and castle, drift with the wind out over the open sea, sway, and shrink as they climb into the sky, so the sky fills with near and far lights. Their glow is mirrored on the sea. Night only; idle when the map is off screen or the tab is hidden; one still frame under reduced motion. Positions are in map px (the 3200x1335 painting).
+      (() => {
+        const cv = document.getElementById("skyLanterns"),
+          gv = document.getElementById("lanternGlints");
+        if (!cv || !gv) return;
+        const ctx = cv.getContext("2d"),
+          gtx = gv.getContext("2d"),
+          sheet = new Image();
+        sheet.src = "{{ art }}sky-lanterns.webp"; // 4 cells of 64x96, bottom-centred
+        const MAP_W = 3200, MAP_H = 1335, ABOVE = 0.4 * MAP_H, HORIZON = 358, TOP = -170; // TOP: where they have faded out, just above the sky that shows on desktop and phone
+        // where they lift off: the town, the castle hill and the harbour (map px boxes: x0, x1, y0, y1, weight)
+        const TOWN = [[1950, 2950, 330, 800, 5], [2150, 2600, 150, 330, 2], [1700, 2000, 560, 780, 1], [500, 1300, 380, 760, 1]];
+        const rnd = (a, b) => a + Math.random() * (b - a);
+        const pick = () => {
+          let r = Math.random() * TOWN.reduce((t, z) => t + z[4], 0);
+          for (const z of TOWN) if ((r -= z[4]) <= 0) return z;
+          return TOWN[0];
+        };
+        // glow sprite, drawn once
+        const halo = document.createElement("canvas");
+        halo.width = halo.height = 64;
+        {
+          const h = halo.getContext("2d"), g = h.createRadialGradient(32, 32, 0, 32, 32, 32);
+          g.addColorStop(0, "rgba(255,190,100,0.55)");
+          g.addColorStop(0.35, "rgba(255,150,60,0.22)");
+          g.addColorStop(1, "rgba(255,120,40,0)");
+          h.fillStyle = g;
+          h.fillRect(0, 0, 64, 64);
+        }
+        const lantern = (anywhere) => {
+          const z = pick(), y0 = rnd(z[2], z[3]);
+          return {
+            x: rnd(z[0], z[1]),
+            y0,
+            y: anywhere ? rnd(TOP, y0) : y0, // a full sky at once when night starts
+            size: Math.random() ** 2.2, // most are far and small, a few near and big
+            cell: Math.floor(Math.random() * 4),
+            vy: rnd(12, 24), // map px/s upward: slow, so they linger
+            vx: -rnd(6, 22), // a light breeze to the left, out over the open sea where their light is mirrored
+            sw: rnd(0, 6.28),
+            sf: rnd(0.4, 0.9),
+            fl: rnd(0, 6.28),
+          };
+        };
+        let list = [], W = 0, H = 0, k = 1, dpr = 1, raf = 0, t0 = 0, seen = false;
+        const size = () => {
+          dpr = Math.min(devicePixelRatio || 1, 2);
+          W = cv.clientWidth;
+          H = cv.clientHeight;
+          k = W / MAP_W; // css px per map px
+          cv.width = W * dpr; cv.height = H * dpr;
+          gv.width = gv.clientWidth * dpr; gv.height = gv.clientHeight * dpr;
+          const count = innerWidth < 641 ? 80 : 160;
+          if (list.length !== count) list = Array.from({ length: count }, () => lantern(true));
+        };
+        const draw = (dt) => {
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, W, H);
+          gtx.setTransform(dpr * k, 0, 0, dpr * k, 0, 0);
+          gtx.clearRect(0, 0, MAP_W, MAP_H);
+          list.sort((a, b) => a.size - b.size); // far ones first
+          for (let i = 0; i < list.length; i++) {
+            const l = list[i];
+            const rise = (l.y0 - l.y) / (l.y0 - TOP); // 0 at lift-off, 1 at the top
+            const depth = l.size * (1 - 0.55 * rise); // they shrink as they climb away
+            l.sw += dt * l.sf; l.fl += dt * 7;
+            l.y -= l.vy * (0.5 + depth) * dt;
+            l.x += (l.vx * (0.4 + depth) + Math.sin(l.sw) * 6) * dt;
+            if (l.y < TOP || l.x < -60 || l.x > MAP_W + 60) { list[i] = lantern(false); continue; }
+            const h = 10 + 52 * depth, w = h * 64 / 96; // map px
+            const fade = Math.min(1, rise * 12) * Math.min(1, (1 - rise) * 4);
+            const flick = 0.9 + 0.1 * Math.sin(l.fl) * Math.sin(l.fl * 0.37);
+            const cx = l.x * k, cy = (l.y + ABOVE) * k, sx = w * k, sy = h * k;
+            ctx.globalAlpha = fade * flick * (0.8 - 0.25 * depth); // the far, small ones are mostly glow
+            ctx.globalCompositeOperation = "lighter";
+            ctx.drawImage(halo, cx - sx * 2, cy - sx * 2, sx * 4, sx * 4);
+            ctx.globalCompositeOperation = "source-over";
+            ctx.globalAlpha = fade * (0.7 + 0.3 * depth);
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(Math.sin(l.sw) * 0.06);
+            ctx.drawImage(sheet, l.cell * 64, 0, 64, 96, -sx / 2, -sy / 2, sx, sy);
+            ctx.restore();
+            // reflection: mirrored across the horizon, squashed; the canvas is masked to the water
+            if (l.y < HORIZON) {
+              const ry = HORIZON + (HORIZON - l.y) * 0.32, rh = h * 2.2;
+              gtx.globalAlpha = fade * flick * (0.45 + 0.55 * depth) * Math.max(0, 1 - (ry - HORIZON) / 560);
+              gtx.globalCompositeOperation = "lighter";
+              gtx.drawImage(halo, l.x - w, ry - rh / 2, w * 2, rh); // a soft, stretched glow on the water
+            }
+          }
+          ctx.globalAlpha = gtx.globalAlpha = 1;
+        };
+        const frame = (now) => {
+          raf = 0;
+          const dt = Math.min((now - t0) / 1000, 0.05);
+          t0 = now;
+          draw(dt);
+          loop();
+        };
+        const night = () => document.documentElement.dataset.mode === "night";
+        const loop = () => {
+          if (raf || !seen || document.hidden || !night() || !sheet.complete) return;
+          if (still) { draw(0); return; }
+          t0 = performance.now();
+          raf = requestAnimationFrame(frame);
+        };
+        const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+        sheet.decode().catch(() => {}).then(() => { size(); loop(); });
+        addEventListener("resize", () => { size(); if (still) loop(); });
+        new IntersectionObserver(([e]) => { seen = e.isIntersecting; seen ? loop() : stop(); }).observe(hero);
+        document.addEventListener("visibilitychange", () => (document.hidden ? stop() : loop()));
+        new MutationObserver(() => { stop(); if (night()) { size(); loop(); } }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
       })();
 
       // Nav menu: hover/focus opens it on desktop; the button also toggles it for touch. Click outside closes.
