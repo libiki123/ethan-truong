@@ -2692,7 +2692,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }
       }
 
-      /* Night mode (html[data-mode="night"], set in <head> and by the nav toggle). Dusk-blue page, cream ink, fox orange. The scene paintings swap to *-night.webp copies whose cream is cut out and whose colours are moonlit, so they sit on the dark page. The hero map is left as it is: .hero gets the morning tokens back. */
+      /* Night mode (html[data-mode="night"], set in <head> and by the nav toggle): a deep indigo evening with cream ink and lantern orange. The scene paintings swap to *-night.webp copies (cream cut out, evening grade, warm lights kept bright). The hero map keeps its painting and pins: .hero gets the morning tokens back, and only the flat paper strip under the torn edge turns to night. */
       .for-night {
         display: none;
       }
@@ -2704,29 +2704,30 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       html[data-mode="night"] {
         color-scheme: dark;
-        --paper: #141c28;
-        --paper-2: #1a2432;
-        --ink: #f4ede1;
-        --ink-soft: #b9c3cd;
-        --accent: #ff8a2a;
-        --line: #2e3c4e;
-        --surface: #1c2736;
-        --surface-sunk: #10161f;
-        --border: #2e3c4e;
-        --border-strong: #4a5d73;
-        --ink-muted: #a3b1bd;
-        --fox: #ff8a2a;
-        --accent-ink: #ffa45c;
-        --leaf: #b5d396;
-        --leaf-tint: #24331f;
-        --dusk: #8fc7d6;
-        --dusk-tint: #1b3440;
-        --fox-tint: #3a2616;
-        --night: #0a0f16;
-        --fox-on-night: #ff9a4a;
-        --ring: #4a5d73;
-        --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.25);
-        --shadow-2: 0 2px 4px rgb(0 0 0 / 0.3), 0 12px 28px rgb(0 0 0 / 0.45);
+        --paper: #161936;
+        --night-page: #161936; /* = --paper; .hero pins --paper back to cream, so the hero reads this one */
+        --paper-2: #1d2145;
+        --ink: #f6ecdc;
+        --ink-soft: #cfc6dd;
+        --accent: #ffa04a;
+        --line: #33386c;
+        --surface: #22264f;
+        --surface-sunk: #12142c;
+        --border: #33386c;
+        --border-strong: #4c5296;
+        --ink-muted: #b2abcd;
+        --fox: #ff9440;
+        --accent-ink: #ffb370;
+        --leaf: #bfe39a;
+        --leaf-tint: rgb(150 205 110 / 0.16);
+        --dusk: #a9d8ef;
+        --dusk-tint: rgb(120 190 230 / 0.16);
+        --fox-tint: rgb(255 150 70 / 0.16);
+        --night: #0d0f22;
+        --fox-on-night: #ffa04a;
+        --ring: #474d8e;
+        --shadow-1: 0 1px 2px rgb(5 6 20 / 0.4), 0 2px 8px rgb(5 6 20 / 0.3);
+        --shadow-2: 0 2px 4px rgb(5 6 20 / 0.4), 0 12px 28px rgb(5 6 20 / 0.55);
       }
       html[data-mode="night"] .hero {
         color-scheme: light;
@@ -2737,10 +2738,13 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         --accent: #e8741c;
         --line: #d9bf9c;
       }
+      html[data-mode="night"] .hero__l3 {
+        box-shadow: 0 30vh 0 var(--night-page); /* the strip under the lifted paper matches the night page, not the cream */
+      }
       html[data-mode="night"] .nav__brand,
       html[data-mode="night"] .nav__links,
       html[data-mode="night"] .to-top {
-        box-shadow: 0 2px 0 rgb(0 0 0 / 0.5);
+        box-shadow: 0 2px 0 rgb(5 6 20 / 0.55);
       }
       html[data-mode="night"] .to-top:hover,
       html[data-mode="night"] .to-top:focus-visible {
@@ -2751,24 +2755,10 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       html[data-mode="night"] .nav__burger:hover,
       html[data-mode="night"] .nav__links:hover .nav__burger,
       html[data-mode="night"] .nav__mode:hover {
-        background: rgb(244 237 225 / 0.1);
+        background: rgb(246 236 220 / 0.12);
       }
       html[data-mode="night"] .nav__links.is-open .nav__burger {
-        background: rgb(255 138 42 / 0.18);
-      }
-      /* The page under the torn paper edge: the map's cream fades into the night over --drop, and the name starts below the fade. The art's margin cancels --drop, so the painting does not move. */
-      html[data-mode="night"] .hero__intro {
-        --drop: 64px;
-        background: linear-gradient(
-          #fcf0db,
-          color-mix(in srgb, #fcf0db 62%, var(--paper)) calc(var(--drop) * 0.3),
-          color-mix(in srgb, #fcf0db 22%, var(--paper)) calc(var(--drop) * 0.62),
-          color-mix(in srgb, #fcf0db 5%, var(--paper)) calc(var(--drop) * 0.86),
-          var(--paper) var(--drop)
-        ); /* eased, so the fade has no visible bottom edge */
-      }
-      html[data-mode="night"] .hero__intro__text {
-        padding-top: var(--drop); /* phone sets its own padding, so this covers it too */
+        background: rgb(255 148 64 / 0.2);
       }
       html[data-mode="night"] #design {
         background-image: url("{{ art }}bg-design-night.webp");
@@ -2781,37 +2771,38 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       html[data-mode="night"] .d-tile {
         box-shadow:
-          0 1px 0 rgb(0 0 0 / 0.2),
-          0 10px 28px -12px rgb(0 0 0 / 0.6);
+          0 1px 0 rgb(5 6 20 / 0.3),
+          0 10px 28px -12px rgb(5 6 20 / 0.7);
       }
+      /* Tags glow instead of sitting in dark boxes: a see-through tint of their hue with a light label */
       html[data-mode="night"] .chip--plain {
-        background: #1e3440;
-        color: #a9cbd6;
+        background: rgb(150 190 215 / 0.16);
+        color: #bfdcec;
       }
       html[data-mode="night"] .chip[data-tag] {
-        background: hsl(var(--h, 25) 40% 22%);
-        color: hsl(var(--h, 25) 85% 84%);
+        background: hsl(var(--h, 25) 80% 62% / 0.18);
+        color: hsl(var(--h, 25) 95% 82%);
       }
       html[data-mode="night"] .proj-dialog .chip[data-tag] {
-        background: hsl(var(--h, 25) 30% 22%);
-        color: hsl(var(--h, 25) 60% 84%);
+        background: hsl(var(--h, 25) 60% 62% / 0.16);
+        color: hsl(var(--h, 25) 80% 84%);
       }
       html[data-mode="night"] .d-tile__genre,
       html[data-mode="night"] .p-card__genre {
-        color: #e9a26a;
+        color: #f0ad78;
       }
       html[data-mode="night"] .pdf-dialog::backdrop,
       html[data-mode="night"] .proj-dialog::backdrop {
-        background: rgb(4 7 12 / 0.6);
+        background: rgb(8 9 26 / 0.6);
       }
       html[data-mode="night"] .proj-dialog__scroll {
-        scrollbar-color: rgb(244 237 225 / 0.22) transparent;
+        scrollbar-color: rgb(246 236 220 / 0.22) transparent;
       }
       html[data-mode="night"] .proj-dialog__scroll::-webkit-scrollbar-thumb {
-        background: rgb(244 237 225 / 0.22);
+        background: rgb(246 236 220 / 0.22);
       }
       html[data-mode="night"] .proj-dialog__scroll::-webkit-scrollbar-thumb:hover {
-        background: rgb(244 237 225 / 0.4);
+        background: rgb(246 236 220 / 0.4);
       }
     </style>
   </head>
@@ -2978,7 +2969,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
             <canvas class="motes" id="motes" aria-hidden="true"></canvas>
           </div>
           <div class="hero__layer hero__l3 hero__foliage is-paused" id="heroForeground" aria-hidden="true">
-            <img class="hero__foliage-base" src="{{ art }}foreground-base.webp" alt="" />
+            <img class="hero__foliage-base for-morning" src="{{ art }}foreground-base.webp" alt="" />
+            <img class="hero__foliage-base for-night" src="{{ art }}foreground-base-night.webp" alt="" loading="lazy" /><!-- same painting; only the paper strip under the torn edge is the night page colour -->
                 <img class="hero__foliage-sprite" src="{{ art }}foreground-foliage.webp" alt="" style="--leaf-x: 1.4961101%; --leaf-y: 76.1955367%; --leaf-w: 8.2585278%; --leaf-pivot: 76.0869565% 100%; --leaf-bend: 1deg; --leaf-time: 8.4s; --leaf-delay: -2.7s" />
           </div>
         </div>
