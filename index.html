@@ -3808,10 +3808,11 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           sheet = new Image();
         sheet.src = "{{ art }}sky-lanterns.webp"; // 4 cells of 64x96, bottom-centred
         const MAP_W = 3200, MAP_H = 1335, ABOVE = 0.4 * MAP_H, HORIZON = 358, TOP = -170; // TOP: where they have faded out, just above the sky that shows on desktop and phone
-        // where they lift off (map px boxes: x0, x1, y0, y1, weight, slope): mostly low in the town (the market square and harbour front)
-        // and along the bridge, whose deck slopes down to the right (slope = y per x); a few higher up the town, and the village on the
+        // where they lift off (map px boxes: x0, x1, y0, y1, weight, slope): mostly low in the town (the market square and harbour front),
+        // the ships in the harbour, and along the bridge, whose deck slopes down to the right (slope = y per x); a few higher up the town, and the village on the
         // left hill. The village is off the phone crop, so phones only use the town.
-        const TOWN = [[1850, 2650, 700, 880, 5], [2620, 3180, 785, 815, 4, 0.27], [1900, 2900, 560, 720, 2], [1950, 2950, 330, 560, 1]];
+        const TOWN = [[1850, 2650, 700, 880, 5], [2620, 3180, 785, 815, 4, 0.27], [1900, 2900, 560, 720, 2], [1950, 2950, 330, 560, 1],
+          [1480, 1780, 760, 860, 2], [1830, 1980, 1040, 1100, 2], [2150, 2300, 1070, 1130, 2]]; // the last three: the big ship's deck and the two small boats in the harbour
         const VILLAGE = [[560, 1300, 330, 620, 3], [700, 1250, 620, 900, 2]];
         const rnd = (a, b) => a + Math.random() * (b - a);
         const pick = () => {
