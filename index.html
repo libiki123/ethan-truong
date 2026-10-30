@@ -29,7 +29,16 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
-    <script>document.documentElement.classList.add("js");</script>
+    <script>
+      document.documentElement.classList.add("js");
+      // Night mode is set before first paint so the page never flashes cream: a saved choice wins, otherwise the system setting.
+      (() => {
+        let mode;
+        try { mode = localStorage.getItem("mode"); } catch (_) {}
+        if (mode !== "night" && mode !== "morning") mode = matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "morning";
+        document.documentElement.dataset.mode = mode;
+      })();
+    </script>
     <style>
       :root {
         --paper: #fcf0db; /* = intro-bg.webp wall colour and the solid bottom of Home_L3_7 */
@@ -257,7 +266,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .nav__links.is-open .nav__burger svg {
         transform: rotate(-90deg); /* turns left, the way the menu slides out */
       }
-      /* ponytail: placeholder for plans/261003-night-mode-hero/plan.md. Only swaps the icon; no art changes yet. */
+      /* Morning / night toggle: the sun shows in the morning, the moon at night. The night colours are at the end of this stylesheet. */
       .nav__mode .i-moon,
       html[data-mode="night"] .nav__mode .i-sun {
         display: none;
@@ -894,6 +903,8 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         --fox-tint: #fbe0c4;
         --night: #2a190d;
         --fox-on-night: #f08a3a;
+        --cream: #fcf0db; /* text on dark surfaces (footer, labels on art); the same in both modes */
+        --ring: #a8794a; /* card border at rest */
         --step--1: clamp(0.8125rem, 0.78rem + 0.15vw, 0.9rem);
         --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
         --step-1: clamp(1.25rem, 1.12rem + 0.6vw, 1.5rem);
@@ -1538,10 +1549,12 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       .p-card,
       .d-tile {
+        --beam-c: var(--ring);
+        --beam-t: var(--ring);
         border: 2px solid transparent;
         background:
           linear-gradient(var(--surface), var(--surface)) padding-box,
-          conic-gradient(from var(--beam-a), #a8794a 0 72%, var(--beam-c) 94%, var(--beam-t) 98%, #a8794a) border-box;
+          conic-gradient(from var(--beam-a), var(--ring) 0 72%, var(--beam-c) 94%, var(--beam-t) 98%, var(--ring)) border-box;
         transition:
           transform 280ms var(--ease),
           box-shadow 280ms var(--ease),
@@ -1804,7 +1817,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         padding: 3px 10px 3px 3px;
         border-radius: 999px;
         background: rgb(42 25 13 / 0.82);
-        color: var(--paper);
+        color: var(--cream);
         -webkit-backdrop-filter: blur(6px);
         backdrop-filter: blur(6px);
         box-shadow: var(--shadow-1);
@@ -2455,7 +2468,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         position: relative;
         padding: clamp(32px, 4vw, 48px) 0 16px;
         background: var(--night);
-        color: var(--paper);
+        color: var(--cream);
         font-size: var(--step-0);
       }
       .site-foot__cta {
@@ -2470,7 +2483,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       }
       .site-foot__sub {
         margin: 0;
-        color: var(--paper);
+        color: var(--cream);
         opacity: 0.8;
       }
       .site-foot__bar {
@@ -2496,7 +2509,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       .site-foot__nav a {
         display: inline-block;
         padding: 6px 0;
-        color: var(--paper);
+        color: var(--cream);
       }
       .site-foot__nav a:hover {
         color: var(--fox-on-night);
@@ -2527,7 +2540,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         margin: -14px 0 0 -14px;
         padding: 5px;
         border-radius: 50%;
-        background: var(--paper);
+        background: var(--cream);
         box-shadow: 0 2px 6px rgb(0 0 0 / 0.35);
         will-change: transform;
       }
@@ -2679,6 +2692,127 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }
       }
 
+      /* Night mode (html[data-mode="night"], set in <head> and by the nav toggle). Dusk-blue page, cream ink, fox orange. The scene paintings swap to *-night.webp copies whose cream is cut out and whose colours are moonlit, so they sit on the dark page. The hero map is left as it is: .hero gets the morning tokens back. */
+      .for-night {
+        display: none;
+      }
+      html[data-mode="night"] .for-night {
+        display: block;
+      }
+      html[data-mode="night"] .for-morning {
+        display: none;
+      }
+      html[data-mode="night"] {
+        color-scheme: dark;
+        --paper: #141c28;
+        --paper-2: #1a2432;
+        --ink: #f4ede1;
+        --ink-soft: #b9c3cd;
+        --accent: #ff8a2a;
+        --line: #2e3c4e;
+        --surface: #1c2736;
+        --surface-sunk: #10161f;
+        --border: #2e3c4e;
+        --border-strong: #4a5d73;
+        --ink-muted: #a3b1bd;
+        --fox: #ff8a2a;
+        --accent-ink: #ffa45c;
+        --leaf: #b5d396;
+        --leaf-tint: #24331f;
+        --dusk: #8fc7d6;
+        --dusk-tint: #1b3440;
+        --fox-tint: #3a2616;
+        --night: #0a0f16;
+        --fox-on-night: #ff9a4a;
+        --ring: #4a5d73;
+        --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.25);
+        --shadow-2: 0 2px 4px rgb(0 0 0 / 0.3), 0 12px 28px rgb(0 0 0 / 0.45);
+      }
+      html[data-mode="night"] .hero {
+        color-scheme: light;
+        --paper: #fcf0db;
+        --paper-2: #f6e3c8;
+        --ink: #3b2414;
+        --ink-soft: #7a5a42;
+        --accent: #e8741c;
+        --line: #d9bf9c;
+      }
+      html[data-mode="night"] .nav__brand,
+      html[data-mode="night"] .nav__links,
+      html[data-mode="night"] .to-top {
+        box-shadow: 0 2px 0 rgb(0 0 0 / 0.5);
+      }
+      html[data-mode="night"] .to-top:hover,
+      html[data-mode="night"] .to-top:focus-visible {
+        background: var(--surface);
+      }
+      html[data-mode="night"] .nav__audio:hover,
+      html[data-mode="night"] .nav__audio[aria-pressed="true"],
+      html[data-mode="night"] .nav__burger:hover,
+      html[data-mode="night"] .nav__links:hover .nav__burger,
+      html[data-mode="night"] .nav__mode:hover {
+        background: rgb(244 237 225 / 0.1);
+      }
+      html[data-mode="night"] .nav__links.is-open .nav__burger {
+        background: rgb(255 138 42 / 0.18);
+      }
+      /* The page under the torn paper edge: the map's cream fades into the night over --drop, and the name starts below the fade. The art's margin cancels --drop, so the painting does not move. */
+      html[data-mode="night"] .hero__intro {
+        --drop: 64px;
+        background: linear-gradient(
+          #fcf0db,
+          color-mix(in srgb, #fcf0db 62%, var(--paper)) calc(var(--drop) * 0.3),
+          color-mix(in srgb, #fcf0db 22%, var(--paper)) calc(var(--drop) * 0.62),
+          color-mix(in srgb, #fcf0db 5%, var(--paper)) calc(var(--drop) * 0.86),
+          var(--paper) var(--drop)
+        ); /* eased, so the fade has no visible bottom edge */
+      }
+      html[data-mode="night"] .hero__intro__text {
+        padding-top: var(--drop); /* phone sets its own padding, so this covers it too */
+      }
+      html[data-mode="night"] #design {
+        background-image: url("{{ art }}bg-design-night.webp");
+      }
+      html[data-mode="night"] #dev {
+        background-image: url("{{ art }}bg-dev-night.webp");
+      }
+      html[data-mode="night"] #resume {
+        background-image: url("{{ art }}bg-exp-night.webp");
+      }
+      html[data-mode="night"] .d-tile {
+        box-shadow:
+          0 1px 0 rgb(0 0 0 / 0.2),
+          0 10px 28px -12px rgb(0 0 0 / 0.6);
+      }
+      html[data-mode="night"] .chip--plain {
+        background: #1e3440;
+        color: #a9cbd6;
+      }
+      html[data-mode="night"] .chip[data-tag] {
+        background: hsl(var(--h, 25) 40% 22%);
+        color: hsl(var(--h, 25) 85% 84%);
+      }
+      html[data-mode="night"] .proj-dialog .chip[data-tag] {
+        background: hsl(var(--h, 25) 30% 22%);
+        color: hsl(var(--h, 25) 60% 84%);
+      }
+      html[data-mode="night"] .d-tile__genre,
+      html[data-mode="night"] .p-card__genre {
+        color: #e9a26a;
+      }
+      html[data-mode="night"] .pdf-dialog::backdrop,
+      html[data-mode="night"] .proj-dialog::backdrop {
+        background: rgb(4 7 12 / 0.6);
+      }
+      html[data-mode="night"] .proj-dialog__scroll {
+        scrollbar-color: rgb(244 237 225 / 0.22) transparent;
+      }
+      html[data-mode="night"] .proj-dialog__scroll::-webkit-scrollbar-thumb {
+        background: rgb(244 237 225 / 0.22);
+      }
+      html[data-mode="night"] .proj-dialog__scroll::-webkit-scrollbar-thumb:hover {
+        background: rgb(244 237 225 / 0.4);
+      }
     </style>
   </head>
   <body>
@@ -2697,7 +2831,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         <button class="nav__audio" id="ambientToggle" type="button" aria-label="Enable sound" aria-pressed="false" title="Enable sound" data-waves-url="{{ '/assets/audio/shore-waves.mp3' | relative_url }}" data-gull-url="{{ '/assets/audio/seagull.mp3' | relative_url }}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z" /><path class="audio-on" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" /><path class="audio-off" d="m16 9 5 6m0-6-5 6" /></svg>
         </button>
-        <button class="nav__mode" id="modeToggle" type="button" aria-label="Night mode (planned, no visual change yet)" aria-pressed="false" title="Morning / night (planned)">
+        <button class="nav__mode" id="modeToggle" type="button" aria-label="Switch to night" aria-pressed="false" title="Switch to night">
           <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4" />
             <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4" />
@@ -2861,13 +2995,25 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           </p>
           <div class="rv" style="--i: 3">{% include social.html %}</div>
         </div>
-        <picture
+        <!-- One painting per mode; CSS hides the other, and loading="lazy" keeps a hidden one from downloading. -->
+        <picture class="for-morning"
           ><source
             media="(max-width: 640px)"
             srcset="{{ art }}intro-bg-m.webp" />
           <img
             class="hero__intro__art rv" style="--i: 2"
             src="{{ art }}intro-bg.webp"
+            loading="lazy"
+            alt="The fox in an open storybook: planning at a chart whiteboard on one page, coding on a laptop on the other"
+        /></picture>
+        <picture class="for-night"
+          ><source
+            media="(max-width: 640px)"
+            srcset="{{ art }}intro-bg-m-night.webp" />
+          <img
+            class="hero__intro__art rv" style="--i: 2"
+            src="{{ art }}intro-bg-night.webp"
+            loading="lazy"
             alt="The fox in an open storybook: planning at a chart whiteboard on one page, coding on a laptop on the other"
         /></picture>
       </div>
@@ -3583,12 +3729,21 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         }
       }
 
-      // ponytail: night-mode placeholder (plans/261003-night-mode-hero/plan.md). Flips html[data-mode] and the button state only.
+      // Morning / night: flips html[data-mode] (first set in <head>) and remembers the choice. The hero map keeps its daytime art either way.
       const modeBtn = document.getElementById("modeToggle");
-      modeBtn.addEventListener("click", () => {
-        const night = document.documentElement.dataset.mode !== "night";
-        document.documentElement.dataset.mode = night ? "night" : "morning";
+      const showMode = () => {
+        const night = document.documentElement.dataset.mode === "night";
+        const text = night ? "Switch to morning" : "Switch to night";
         modeBtn.setAttribute("aria-pressed", night);
+        modeBtn.setAttribute("aria-label", text);
+        modeBtn.title = text;
+      };
+      showMode();
+      modeBtn.addEventListener("click", () => {
+        const mode = document.documentElement.dataset.mode === "night" ? "morning" : "night";
+        document.documentElement.dataset.mode = mode;
+        try { localStorage.setItem("mode", mode); } catch (_) {}
+        showMode();
         modeBtn.blur(); // ponytail: a focused button keeps .nav__links:focus-within open, so the tab would never collapse
       });
 

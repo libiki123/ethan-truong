@@ -1,4 +1,6 @@
-// Opt-in seaside ambience; bird calls follow the visible flock's actual CSS clock.
+// Seaside ambience, on by default; bird calls follow the visible flock's actual CSS clock.
+// Browsers only allow sound after the visitor interacts, so it starts on their first click, tap or key press.
+// Muting is remembered; a muted visitor stays muted on their next visit.
 (() => {
   const button = document.getElementById("ambientToggle");
   const birds = document.getElementById("heroBirds");
@@ -6,7 +8,8 @@
   const dialog = document.getElementById("projDialog");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   let context, master, waves, gull, buffers, loading;
-  let enabled = false, version = 0, poll = 0, suspendTimer = 0, lastIteration = -1;
+  let enabled = true, version = 0, poll = 0, suspendTimer = 0, lastIteration = -1;
+  try { enabled = localStorage.getItem("sound") !== "off"; } catch (_) { /* storage blocked: keep the default */ }
   const label = (error = false) => {
     const text = enabled ? "Mute sound" : "Enable sound";
     button.setAttribute("aria-pressed", String(enabled));
@@ -73,18 +76,15 @@
       .catch((error) => { loading = null; throw error; });
     return loading;
   };
-  button.addEventListener("click", async () => {
-    enabled = !enabled;
+  const start = async () => {
     const attempt = ++version;
-    label();
-    if (!enabled) { sync(); return; }
     try {
       if (!context) {
         context = new (window.AudioContext || window.webkitAudioContext)();
         master = context.createGain(); master.gain.value = 0; master.connect(context.destination);
       }
       clearTimeout(suspendTimer);
-      // Resume in the click handler, before fetching, to satisfy browser activation rules.
+      // Resume inside the gesture handler, before fetching, to satisfy browser activation rules.
       await Promise.all([context.resume(), load()]);
       if (attempt !== version || !enabled) return;
       if (!waves) {
@@ -97,7 +97,22 @@
     } catch (_) {
       if (attempt === version) { enabled = false; label(true); sync(); }
     }
+  };
+  button.addEventListener("click", () => {
+    enabled = !enabled;
+    try { localStorage.setItem("sound", enabled ? "on" : "off"); } catch (_) { /* not remembered */ }
+    label();
+    if (enabled) start(); else { version++; sync(); }
   });
+  // First interaction anywhere else starts the default-on sound. A press on the button itself is left to its click handler (it means "mute").
+  const unlock = (event) => {
+    if (button.contains(event.target)) return;
+    for (const type of unlockEvents) document.removeEventListener(type, unlock, true);
+    if (enabled && !master) start();
+  };
+  const unlockEvents = ["pointerup", "keydown", "touchend"]; // the events browsers accept as a gesture that unlocks sound
+  for (const type of unlockEvents) document.addEventListener(type, unlock, true);
+  label();
   new MutationObserver(sync).observe(birds, { attributes: true, attributeFilter: ["class"] });
   new MutationObserver(sync).observe(dialog, { attributes: true, attributeFilter: ["open"] });
   document.addEventListener("visibilitychange", sync);
