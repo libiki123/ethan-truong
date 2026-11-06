@@ -136,7 +136,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         transform: translateY(-2px);
       }
 
-      /* Dancing Toothless: a small looping cut-out in the bottom-left corner once the reader has left the home section (JS "Dancer"). It fades out again over the footer so it never covers the footer links, and stays still under reduced motion. */
+      /* Dancing Toothless: a small looping cut-out in the bottom-left corner once the home map is off screen (JS "Dancer"). Over the footer it rides just above the footer bar (JS sets translate) so it never covers the footer links, and stays still under reduced motion. */
       .dancer {
         position: fixed;
         left: 12px;
@@ -3946,25 +3946,25 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         new MutationObserver(() => { stop(); if (night()) { size(); loop(); } }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
       })();
 
-      // Dancer: Toothless dances in the bottom-left corner while neither the home map nor the intro is on screen, and hides over the footer. The animation loads the first time it is shown; under reduced motion it is left out.
+      // Dancer: Toothless dances in the bottom-left corner once the home map is mostly scrolled away, so he is there for the intro too. Over the footer he rides just above the footer bar, so he never covers its links. The animation loads the first time he shows; under reduced motion he is left out.
       {
         const dancer = document.getElementById("dancer");
         if (!still) {
-          const seen = new Map();
+          const bar = document.querySelector(".site-foot__bar");
+          let queued = false;
           const update = () => {
-            if (seen.size < 3) return; // wait until all three have reported, or it would flash on load
-            const show = !seen.get("home") && !seen.get("intro") && !seen.get("foot");
+            queued = false;
+            const r = hero.getBoundingClientRect();
+            const show = r.bottom < Math.min(innerHeight * 0.5, r.height * 0.4); // the phone map is short, so it must also be mostly scrolled past
             if (show && !dancer.src) dancer.src = "{{ '/assets/images/toothless-dance.webp' | relative_url }}";
             dancer.classList.toggle("is-on", show);
+            const lift = Math.max(0, innerHeight - bar.getBoundingClientRect().top);
+            dancer.style.translate = lift ? `0 ${-lift}px` : "";
           };
-          const watch = (el, key) =>
-            new IntersectionObserver(([e]) => {
-              seen.set(key, e.isIntersecting);
-              update();
-            }).observe(el);
-          watch(document.getElementById("home"), "home");
-          watch(document.querySelector(".hero__intro"), "intro");
-          watch(document.querySelector(".site-foot__bar"), "foot");
+          const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+          addEventListener("scroll", queue, { passive: true });
+          addEventListener("resize", queue);
+          update();
         } else dancer.remove();
       }
 
