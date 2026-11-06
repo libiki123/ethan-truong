@@ -136,6 +136,32 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         transform: translateY(-2px);
       }
 
+      /* Dancing Toothless: a small looping cut-out in the bottom-left corner once the reader has left the home section (JS "Dancer"). It fades out again over the footer so it never covers the footer links, and stays still under reduced motion. */
+      .dancer {
+        position: fixed;
+        left: 12px;
+        bottom: 8px;
+        z-index: 9;
+        width: auto;
+        height: 84px;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+      }
+      .dancer.is-on {
+        opacity: 1;
+        transform: none;
+      }
+      @media (max-width: 640px) {
+        .dancer {
+          height: 64px;
+          left: 4px;
+        }
+      }
+
       .site-foot__bar {
         padding-right: 64px; /* keeps the footer line clear of the back-to-home button */
       }
@@ -3428,6 +3454,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
       </div>
     </footer>
 
+    <img class="dancer" id="dancer" alt="" aria-hidden="true" width="144" height="140" />
     <button class="to-top" id="toTop" type="button" aria-label="Back to home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg>
     </button>
@@ -3918,6 +3945,28 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         document.addEventListener("visibilitychange", () => (document.hidden ? stop() : loop()));
         new MutationObserver(() => { stop(); if (night()) { size(); loop(); } }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
       })();
+
+      // Dancer: Toothless dances in the bottom-left corner while neither the home map nor the intro is on screen, and hides over the footer. The animation loads the first time it is shown; under reduced motion it is left out.
+      {
+        const dancer = document.getElementById("dancer");
+        if (!still) {
+          const seen = new Map();
+          const update = () => {
+            if (seen.size < 3) return; // wait until all three have reported, or it would flash on load
+            const show = !seen.get("home") && !seen.get("intro") && !seen.get("foot");
+            if (show && !dancer.src) dancer.src = "{{ '/assets/images/toothless-dance.webp' | relative_url }}";
+            dancer.classList.toggle("is-on", show);
+          };
+          const watch = (el, key) =>
+            new IntersectionObserver(([e]) => {
+              seen.set(key, e.isIntersecting);
+              update();
+            }).observe(el);
+          watch(document.getElementById("home"), "home");
+          watch(document.querySelector(".hero__intro"), "intro");
+          watch(document.querySelector(".site-foot__bar"), "foot");
+        } else dancer.remove();
+      }
 
       // Nav menu: hover/focus opens it on desktop; the button also toggles it for touch. Click outside closes.
       const navLinks = document.getElementById("navLinks");
