@@ -136,7 +136,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         transform: translateY(-2px);
       }
 
-      /* Dancing Toothless: a small looping cut-out in the bottom-left corner once the home map is off screen (JS "Dancer"). Over the footer it rides just above the footer bar (JS sets translate) so it never covers the footer links, and stays still under reduced motion. */
+      /* Dancing Toothless: a small looping cut-out in the bottom-left corner on the whole page (JS "Dancer"). Over the footer it rides just above the footer bar (JS sets translate) so it never covers the footer links, and stays still under reduced motion. */
       .dancer {
         position: fixed;
         left: 12px;
@@ -3946,7 +3946,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
         new MutationObserver(() => { stop(); if (night()) { size(); loop(); } }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-mode"] });
       })();
 
-      // Dancer: Toothless dances in the bottom-left corner once the home map is mostly scrolled away, so he is there for the intro too. Over the footer he rides just above the footer bar, so he never covers its links. The animation loads the first time he shows; under reduced motion he is left out.
+      // Dancer: Toothless dances in the bottom-left corner on the whole page, the home map included. Over the footer he rides just above the footer bar, so he never covers its links. The animation loads the first time he shows; under reduced motion he is left out.
       {
         const dancer = document.getElementById("dancer");
         if (!still) {
@@ -3954,8 +3954,7 @@ assign art = '/assets/images/Redesign/' | relative_url %}
           let queued = false;
           const update = () => {
             queued = false;
-            const r = hero.getBoundingClientRect();
-            const show = r.bottom < Math.min(innerHeight * 0.5, r.height * 0.4); // the phone map is short, so it must also be mostly scrolled past
+            const show = true;
             if (show && !dancer.src) dancer.src = "{{ '/assets/images/toothless-dance.webp' | relative_url }}";
             dancer.classList.toggle("is-on", show);
             const lift = Math.max(0, innerHeight - bar.getBoundingClientRect().top);
